@@ -1,0 +1,103 @@
+.item {
+  position: relative;
+  cursor: pointer;
+  padding: 8px;
+  white-space: nowrap;
+  border-radius: 8px;
+
+  &:hover .title {
+    text-decoration: underline;
+  }
+
+  &:hover .savedTabIcon {
+    display: none;
+  }
+
+  &:hover .close {
+    visibility: visible;
+  }
+}
+
+.active {
+  background-color: var(--colors-blue-200);
+}
+
+.recentItem {
+  .savedTabIcon {
+    display: block;
+  }
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 6px;
+  margin-top: 2px;
+  pointer-events: none;
+}
+
+.text {
+  vertical-align: top;
+  display: inline-flex;
+  flex-direction: column;
+  width: 282px;
+}
+
+.close {
+  display: inline-block;
+  font-size: 16px;
+  width: 30px;
+  height: 30px;
+  vertical-align: top;
+  margin-top: -4px;
+  margin-left: -6px;
+  text-align: center;
+  visibility: hidden;
+  color: var(--colors-gray-600);
+  padding-top: 2px;
+  box-sizing: border-box;
+
+  &:hover {
+    color: var(--main-text-color);
+  }
+}
+
+.savedTabIcon {
+  color: var(--active-control-color);
+  position: absolute;
+  right: 11px;
+  top: 14px;
+  width: 10px;
+  height: 9px;
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 14px;
+}
+
+.title,
+.url {
+  display: inline-block;
+  vertical-align: top;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.url {
+  color: var(--colors-gray-600);
+}
+
+.alreadySaved {
+  vertical-align: top;
+  max-width: 100%;
+  display: none;
+  white-space: normal;
+  color: var(--colors-blue-600);
+}

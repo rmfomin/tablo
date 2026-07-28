@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "short_name": "Tablo",
+  "name": "Tablo",
+  "description": "Tablo",
+  "version": "0.92",
+  "author": "Tablo",
+  "icons": {
+    "16": "icon_16.png",
+    "32": "icon_32.png",
+    "48": "icon_48.png",
+    "128": "icon_128.png"
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyfCXu3/Szn4kolV/SF+YGhm1dIHJRykZBMBM9GHBqF5M+t0rU6BxeZLt8a8DNKx+yk9dAV1Mzl8obRkV9IlziaZN04gQwsEYYqpw4sQVlhskys8Iek5dUgt4fLHTr6KPu6E92T4ubE7NQxoU7QMrz3KU67pXP0sZ/oO24brt4zPZYm6Mtc0VyzIsGTM3HfOHswbbta8dstvV7OEk8y5xwdbwX3h86+/hRD2AtWOVHmMDeEFktZmiFgdqipmKm+QhlTlaGlz5qj9HH7D+tIn1UgV1KoSz7u5ec8OfQfsqeevIMMn8MT7TDGloSKjFo9oWFY7oaZqxDR4e+m7KMn8NAwIDAQAB",
+  "background": {
+    "service_worker": "js/background.js"
+  },
+  "action": {
+    "default_icon": "icon_48.png",
+    "default_title": "Tablo"
+  },
+  "permissions": ["bookmarks", "storage", "history", "tabs"]
+}

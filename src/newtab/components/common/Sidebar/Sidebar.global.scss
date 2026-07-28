@@ -1,0 +1,33 @@
+@use "@/styles/variables" as *;
+
+.history-item {
+  cursor: pointer;
+  margin-bottom: 12px;
+  width: 320px;
+}
+
+.history-item:hover .history-item__title {
+  text-decoration: underline;
+}
+
+.history-item__title {
+  font-size: 14px;
+}
+
+.history-item__url {
+  color: var(--colors-gray-600);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-message {
+  padding: 20px;
+  text-align: center;
+  color: var(--colors-gray-600);
+}
+
+.sidebar-message__btn {
+  cursor: pointer;
+  text-decoration: underline;
+}

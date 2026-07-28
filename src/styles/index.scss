@@ -1,0 +1,9 @@
+@use "./variables";
+@use "./base";
+@use "./shared-controls";
+@use "../newtab/components/common/DropdownMenu/DropdownMenu.global";
+@use "../newtab/components/common/ImportBookmarksFromSettings/ImportBookmarksFromSettings.global";
+@use "../newtab/components/common/Modal/Modal.global";
+@use "../newtab/components/common/Notification/NotificationTransitions";
+@use "../newtab/components/common/Sidebar/Sidebar.global";
+@use "../newtab/feature/dragging/dragAndDrop";

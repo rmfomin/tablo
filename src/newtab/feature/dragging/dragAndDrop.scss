@@ -1,0 +1,54 @@
+@use "@/styles/variables" as *;
+
+body.dragging * {
+  pointer-events: none;
+}
+
+body.spaces-drag-outside,
+body.spaces-drag-outside * {
+  cursor: not-allowed !important;
+}
+
+.dad-dummy {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  box-sizing: content-box;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.dad-dummy--folder-item {
+  padding: 0 6px;
+  left: -7px;
+}
+
+.dad-dummy [data-selected="true"] {
+  background-color: transparent !important;
+}
+
+.dad-drop-preview {
+  opacity: 0.18;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+}
+
+.dad-folder-drop-indicator {
+  position: fixed;
+  z-index: 3;
+  width: 3px;
+  pointer-events: none;
+  border-radius: 3px;
+  background: var(--colors-blue-500);
+  transform: translateX(-1px);
+}
+
+.tablo-caption {
+  font-size: 22px;
+  padding-top: 6px;
+  padding-left: 12px;
+  font-weight: 100;
+  font-style: italic;
+  color: var(--colors-gray-600);
+}

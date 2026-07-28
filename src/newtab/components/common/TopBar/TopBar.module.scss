@@ -1,0 +1,31 @@
+.root {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  height: 68px;
+  box-sizing: border-box;
+  padding: 12px 0 16px 72px;
+}
+
+.scrolled {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.searchResultsHeader {
+  line-height: 40px;
+  margin-right: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 0 6px;
+  opacity: 0.7;
+}
+
+.stretchingSpace {
+  flex-grow: 1;
+}
+
+.menuButtons {
+  display: flex;
+  height: 40px;
+  margin-right: 8px;
+}

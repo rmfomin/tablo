@@ -1,0 +1,130 @@
+.root {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.actions {
+  position: absolute;
+  left: -48px;
+  top: 0;
+  height: 40px;
+  border-radius: 8px;
+
+  &:hover {
+    background-color: var(--input-background-color);
+  }
+}
+
+.spacesList {
+  display: flex;
+  align-items: center;
+  padding: 0 2px 0 2px;
+  border-radius: 8px;
+
+  input {
+    font-family: var(--title-font-family);
+    font-size: 18px;
+    font-weight: 400;
+    padding: 0 4px;
+  }
+
+  &.dummy,
+  &:hover {
+    background-color: var(--input-background-color);
+  }
+}
+
+.item {
+  line-height: 40px;
+  margin-right: 14px;
+  font-family: var(--title-font-family);
+  font-size: 18px;
+  font-weight: 400;
+  padding: 0 6px;
+  cursor: pointer;
+  opacity: 0.7;
+  user-select: none;
+  border: none;
+  background: none;
+  white-space: nowrap;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  input {
+    margin: 0 -6px;
+  }
+}
+
+.active {
+  opacity: 1;
+  color: var(--active-control-color);
+}
+
+.deleteButton {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background: none;
+  width: 38px;
+  padding: 0;
+  padding-top: 8px;
+  margin-left: 4px;
+  margin-right: -16px;
+  vertical-align: top;
+  cursor: pointer;
+
+  svg {
+    color: var(--colors-red-600);
+    pointer-events: none;
+  }
+
+  &:hover svg {
+    color: var(--colors-red-600);
+    opacity: 1;
+  }
+}
+
+.deleteButton svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.dropdownDeleteIcon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.menuButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  opacity: 0.7;
+  cursor: pointer;
+  padding: 0 8px;
+  border: none;
+  background: none;
+  color: inherit;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.menuButton svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.importInput {
+  display: none;
+}

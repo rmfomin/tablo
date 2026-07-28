@@ -1,0 +1,187 @@
+@use "./variables" as *;
+
+.whats-new {
+  display: flex;
+  color: #ff00dd;
+  align-items: center;
+  margin-right: 16px;
+  cursor: pointer;
+
+  svg {
+    color: #ff00dd;
+    transition: transform 0.2s ease;
+  }
+
+  .whats-new__text {
+    font-size: 16px;
+    padding-left: 6px;
+  }
+
+  &:hover svg {
+    transform: scale(1.2) rotate(5deg);
+  }
+}
+
+.btn__icon {
+  appearance: none;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+
+  svg {
+    opacity: 0.7;
+  }
+
+  &:hover {
+    svg {
+      opacity: 1;
+    }
+  }
+
+  &.active {
+    svg {
+      color: var(--active-control-color);
+      opacity: 1;
+    }
+  }
+
+  &:disabled {
+    svg {
+      opacity: 0.2 !important;
+    }
+
+    cursor: default;
+  }
+}
+
+.btn__icon svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.btn__setting {
+  appearance: none;
+  background-color: var(--button-background-color);
+  border: 1px solid var(--button-border-color);
+  box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0,
+    rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+  box-sizing: border-box;
+  height: 36px;
+  color: var(--button-text-color);
+  display: inline-block;
+
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  list-style: none;
+  padding: 5px 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+  word-wrap: break-word;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--button-hover-background-color);
+    text-decoration: none;
+  }
+
+  &:active {
+    background-color: var(--button-active-background-color);
+  }
+
+  &.btn__setting--active {
+    background-color: #bebebe;
+  }
+
+  &[disabled] {
+    color: var(--colors-gray-600);
+    background-color: var(--colors-gray-200);
+    pointer-events: none;
+  }
+}
+
+.btn__setting.primary {
+  color: #fff;
+  background-color: var(--colors-blue-600);
+
+  &:hover {
+    background-color: var(--colors-blue-700);
+    text-decoration: none;
+  }
+
+  &:active {
+    background-color: var(--colors-blue-800);
+  }
+
+  &:focus {
+    outline: 1px solid var(--colors-gray-900);
+  }
+
+  &[disabled] {
+    color: var(--colors-gray-600);
+    background-color: var(--colors-gray-200);
+    pointer-events: none;
+  }
+}
+
+.btn__setting.borderless {
+  background-color: transparent;
+  border: 1px solid transparent;
+  box-shadow: none;
+
+  &:hover,
+  &:active {
+    background-color: var(--button-background-color);
+    border: 1px solid var(--button-border-color);
+  }
+}
+
+.bookmarks-menu .file-input-container {
+  position: relative;
+  display: inline-block;
+}
+
+.hidden-file-input {
+  position: absolute;
+  top: 0;
+  left: 4px;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.beta-mode-label {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 8px;
+  cursor: pointer;
+  opacity: 0.7;
+  user-select: none;
+
+  svg {
+    pointer-events: none;
+  }
+
+  &.active {
+    opacity: 1;
+    color: var(--active-control-color);
+
+    svg {
+      color: var(--active-control-color);
+    }
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+}

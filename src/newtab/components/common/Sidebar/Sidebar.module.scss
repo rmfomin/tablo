@@ -1,0 +1,111 @@
+.floating {
+  position: absolute;
+  width: 360px;
+  z-index: 2;
+  border-radius: 0 8px 8px 0;
+  border: 1px solid var(--border-color);
+  filter: drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.1));
+}
+
+.root {
+  position: relative;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  width: 360px;
+  background-color: var(--popup-background-color);
+  border-right: 1px solid var(--border-color);
+  padding: 0 16px 16px 16px;
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  user-select: none;
+  transition: width 100ms;
+  transition-delay: 100ms;
+
+  &.collapsed {
+    width: 48px;
+
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+
+    .search,
+    .header {
+      opacity: 0;
+    }
+  }
+}
+
+.search {
+  position: sticky;
+  z-index: 2;
+  top: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 16px 0 8px;
+  background-color: var(--popup-background-color);
+  box-sizing: border-box;
+  transition: opacity 50ms;
+  transition-delay: 100ms;
+}
+
+.header {
+  position: sticky;
+  z-index: 1;
+  top: 64px;
+  left: 0;
+  width: 349px;
+  padding-left: 18px;
+  padding-top: 20px;
+  padding-bottom: 16px;
+  background-color: var(--popup-background-color);
+  box-sizing: border-box;
+  margin-left: -19px;
+  transition: opacity 50ms;
+  transition-delay: 100ms;
+}
+
+.openTabsHeader {
+  margin-left: -20px;
+  display: flex;
+  align-items: center;
+}
+
+.headerText {
+  flex-grow: 1;
+  font-size: 16px;
+  vertical-align: middle;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.stashPopup {
+  align-items: flex-start;
+  justify-content: flex-start;
+  font-size: 14px;
+  padding: 16px;
+
+  input[type="checkbox"] {
+    padding: 0;
+    margin: 0;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+}
+
+.duplicateCount {
+  background-color: var(--active-control-color);
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  color: var(--active-control-text);
+  border-radius: 50%;
+  font-size: 10px;
+  top: -3px;
+  left: 22px;
+  border: 1px solid var(--popup-background-color);
+  line-height: 16px;
+  text-align: center;
+}

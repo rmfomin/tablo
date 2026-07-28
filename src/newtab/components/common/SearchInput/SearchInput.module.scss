@@ -1,0 +1,243 @@
+.searchBlock {
+  width: 100%;
+}
+
+.searchWrapper {
+  width: 100%;
+  display: flex;
+  position: relative;
+}
+
+.searchIcon {
+  position: absolute;
+  margin-top: 13px;
+  margin-left: 8px;
+  opacity: 0.5;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.filterToggleButton {
+  position: absolute;
+  right: 8px;
+  top: 9px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+
+  svg {
+    pointer-events: none;
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+}
+
+.filterToggleButton.accentActive,
+.filterButton.accentActive,
+.filterModeButton.accentActive {
+  border-color: var(--active-control-color);
+  background-color: var(--active-control-color);
+  color: var(--popup-background-color);
+
+  svg {
+    color: var(--popup-background-color);
+  }
+}
+
+.filterToggleButton.panelOpened:not(.accentActive) {
+  border-color: var(--active-control-color);
+}
+
+.filterPanel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  width: 100%;
+  margin-top: 8px;
+  align-items: flex-start;
+}
+
+.filterButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background-color: var(--colors-gray-300);
+  cursor: pointer;
+
+  svg {
+    pointer-events: none;
+  }
+}
+
+.filterToggleButton svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.filterButton svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.filterModeButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 32px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background-color: var(--colors-gray-300);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.filterButtonWrap {
+  position: relative;
+  display: flex;
+}
+
+.addFilterIcon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.filterLabel {
+  max-width: 22px;
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.addFilterForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+.filterModal {
+  max-width: 760px;
+}
+
+.filterModalTitle {
+  margin: 0 0 4px;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.filterModalLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.addFilterInput {
+  width: 100%;
+  height: 42px;
+  min-width: 0;
+  padding: 0 12px;
+  border: 1px solid var(--colors-gray-400);
+  border-radius: 8px;
+  box-sizing: border-box;
+  background: var(--colors-gray-300);
+  color: inherit;
+  font-size: 14px;
+}
+
+.addFilterTextarea {
+  width: 100%;
+  min-height: 132px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--colors-gray-400);
+  border-radius: 8px;
+  box-sizing: border-box;
+  background: var(--colors-gray-300);
+  color: inherit;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.filterModalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.addFilterBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 88px;
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background-color: var(--active-control-color);
+  color: var(--popup-background-color);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.cancelEditBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 88px;
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background-color: var(--colors-gray-300);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.addFilterError {
+  color: var(--colors-red-600);
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.active {
+  border-color: var(--active-control-color);
+  background-color: var(--active-control-color);
+  color: var(--popup-background-color);
+  opacity: 1;
+
+  svg {
+    color: var(--popup-background-color);
+  }
+}
+
+.editingFilter {
+  box-shadow: 0 0 0 1px var(--popup-background-color) inset;
+}

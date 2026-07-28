@@ -1,0 +1,49 @@
+.box {
+  position: absolute;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  z-index: 1;
+  top: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+.notification {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+  background-color: var(--notification-background-color);
+  color: var(--notification-text-color);
+  min-width: 80px;
+  margin-top: 5px;
+  border-radius: 8px;
+  font-size: 14px;
+  pointer-events: auto;
+  height: 48px;
+
+  svg {
+    color: var(--notification-text-color);
+    margin-right: 8px;
+    animation: rotate 2s linear infinite;
+  }
+}
+
+.notification svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.error {
+  background-color: var(--colors-red-600);
+}
+
+.button {
+  vertical-align: top;
+  display: inline-block;
+  margin-left: 16px;
+  text-decoration: underline;
+  cursor: pointer;
+}

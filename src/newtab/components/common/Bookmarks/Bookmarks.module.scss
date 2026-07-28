@@ -1,0 +1,33 @@
+.bookmarksBox {
+  flex-grow: 1;
+}
+
+.withCollapsedSidebar {
+  padding-left: 24px;
+}
+
+.bookmarks {
+  position: relative;
+  padding-left: 20px;
+  flex-grow: 1;
+  height: calc(100% - 68px);
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  padding-bottom: 150px;
+  box-sizing: border-box;
+}
+
+.noBookmarksFound {
+  margin-left: 58px;
+}
+
+.areaSelectionFrame {
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+  box-sizing: border-box;
+  border: 1px solid var(--colors-blue-500);
+  background: color-mix(in srgb, var(--colors-blue-500) 15%, transparent 85%);
+}
