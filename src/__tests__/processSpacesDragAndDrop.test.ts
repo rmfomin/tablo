@@ -1,16 +1,16 @@
 let onMouseMove: ((event: MouseEvent, mouseMoved: boolean) => void) | undefined;
 let onMouseUp: (() => void) | undefined;
 
-jest.mock("@/newtab/04-features/dragging/model/dragAndDropUtils", () => ({
-  subscribeMouseEvents: jest.fn((_event, onMove, onUp) => {
+vi.mock("@/newtab/04-features/dragging/model/dragAndDropUtils", () => ({
+  subscribeMouseEvents: vi.fn((_event, onMove, onUp) => {
     onMouseMove = onMove;
     onMouseUp = onUp;
-    return jest.fn();
+    return vi.fn();
   }),
 }));
 
-jest.mock("@/newtab/01-app/model/selection", () => ({
-  unselectAllItems: jest.fn(),
+vi.mock("@/newtab/01-app/model/selection", () => ({
+  unselectAllItems: vi.fn(),
 }));
 
 import {
@@ -19,7 +19,7 @@ import {
 } from "@/newtab/04-features/dragging/model/processSpacesDragAndDrop";
 
 test("space source keeps its place while hidden until the drag ends", () => {
-  const clearSelectedItemIds = jest.fn();
+  const clearSelectedItemIds = vi.fn();
   const source = createSpaceElement("1", "a", { left: 100, right: 150 });
   const spacesList = ({
     getBoundingClientRect: () =>
@@ -35,12 +35,12 @@ test("space source keeps its place while hidden until the drag ends", () => {
     cloneNode: () => createSpacesListClone(),
   } as unknown) as HTMLElement;
   const body = {
-    appendChild: jest.fn(),
-    classList: { add: jest.fn(), remove: jest.fn() },
+    appendChild: vi.fn(),
+    classList: { add: vi.fn(), remove: vi.fn() },
   };
   (global as any).document = {
     body,
-    querySelector: jest.fn(() => spacesList),
+    querySelector: vi.fn(() => spacesList),
   };
 
   processSpacesDragAndDrop(
@@ -49,7 +49,7 @@ test("space source keeps its place while hidden until the drag ends", () => {
       clientY: 20,
       target: { closest: () => source },
     } as unknown) as React.MouseEvent,
-    { canSortSpaces: jest.fn(() => true), onChangeSpacePosition: jest.fn() },
+    { canSortSpaces: vi.fn(() => true), onChangeSpacePosition: vi.fn() },
     { selectedItemIds: [], clearSelectedItemIds }
   );
 
@@ -79,12 +79,12 @@ test("dragged space returns to its initial position below the spaces list", () =
     cloneNode: () => createSpacesListClone(),
   } as unknown) as HTMLElement;
   const body = {
-    appendChild: jest.fn(),
-    classList: { add: jest.fn(), remove: jest.fn() },
+    appendChild: vi.fn(),
+    classList: { add: vi.fn(), remove: vi.fn() },
   };
   (global as any).document = {
     body,
-    querySelector: jest.fn(() => spacesList),
+    querySelector: vi.fn(() => spacesList),
   };
 
   processSpacesDragAndDrop(
@@ -93,13 +93,13 @@ test("dragged space returns to its initial position below the spaces list", () =
       clientY: 20,
       target: { closest: () => source },
     } as unknown) as React.MouseEvent,
-    { canSortSpaces: jest.fn(() => true), onChangeSpacePosition: jest.fn() },
-    { selectedItemIds: [], clearSelectedItemIds: jest.fn() }
+    { canSortSpaces: vi.fn(() => true), onChangeSpacePosition: vi.fn() },
+    { selectedItemIds: [], clearSelectedItemIds: vi.fn() }
   );
 
   onMouseMove!({ clientX: 160, clientY: 20 } as MouseEvent, true);
   const clonedSpacesList = body.appendChild.mock.calls[0][0] as HTMLElement;
-  const draggedSpace = (clonedSpacesList.append as jest.Mock).mock
+  const draggedSpace = (clonedSpacesList.append as VitestMock).mock
     .calls[0][0] as HTMLElement;
 
   onMouseMove!({ clientX: 170, clientY: 20 } as MouseEvent, true);
@@ -142,7 +142,7 @@ function createSpaceElement(
   const element = ({
     dataset: { spaceId, position },
     style: { display: "", visibility: "" },
-    classList: { add: jest.fn() },
+    classList: { add: vi.fn() },
     getBoundingClientRect: () =>
       ({ ...rect, width: rect.right - rect.left } as DOMRect),
   } as unknown) as HTMLElement;
@@ -153,8 +153,8 @@ function createSpaceElement(
 function createSpacesListClone() {
   return ({
     style: {},
-    classList: { add: jest.fn() },
-    append: jest.fn(),
-    remove: jest.fn(),
+    classList: { add: vi.fn() },
+    append: vi.fn(),
+    remove: vi.fn(),
   } as unknown) as HTMLElement;
 }

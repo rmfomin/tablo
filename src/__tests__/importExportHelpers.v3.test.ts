@@ -1,10 +1,29 @@
-import { SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
+import {
+  type DataBackupV3Input,
+  SpaceV3,
+} from "@/newtab/05-entities/dashboard/model/types";
+import {
+  createExportBackupV3,
+  createExportSpaceBackupV3,
+  onExportJson,
+} from "@/newtab/04-features/bookmarks-export/model/dashboardExport";
+import {
+  importFromJsonWithCallbacks,
+  importSpaceFromJsonWithCallback,
+  parseDashboardImportJson,
+  parseSpaceImportJson,
+} from "@/newtab/04-features/bookmarks-import/model/dashboardImportExport";
+import { normalizeBackupV3 } from "@/newtab/04-features/bookmarks-import/model/adapters";
+import { createBrowserBookmarksFolderInputs } from "@/newtab/06-shared/api/chrome/bookmarks";
+import rawV3ExportFixture from "../../docs/fixtures/v3-dashboard-backup.json";
+
+const v3ExportFixture = rawV3ExportFixture as DataBackupV3Input;
 
 const localStorageMock = {
-  getItem: jest.fn(() => null),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
+  getItem: vi.fn(() => null),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
 };
 
 Object.defineProperty(global, "localStorage", {
@@ -36,23 +55,6 @@ Object.defineProperty(global, "window", {
   configurable: true,
 });
 
-const {
-  createExportBackupV3,
-  createExportSpaceBackupV3,
-  onExportJson,
-} = require("../newtab/04-features/bookmarks-export/model/dashboardExport");
-const {
-  parseDashboardImportJson,
-  parseSpaceImportJson,
-  importFromJsonWithCallbacks,
-  importSpaceFromJsonWithCallback,
-} = require("../newtab/04-features/bookmarks-import/model/dashboardImportExport");
-const {
-  createBrowserBookmarksFolderInputs,
-} = require("../newtab/06-shared/api/chrome/bookmarks");
-const { normalizeBackupV3 } = require("../newtab/04-features/bookmarks-import/model/adapters");
-const v3ExportFixture = require("../../docs/fixtures/v3-dashboard-backup.json");
-
 function mockFileReaderWithContents(fileContents: string) {
   Object.defineProperty(global, "FileReader", {
     value: class {
@@ -68,14 +70,14 @@ function mockFileReaderWithContents(fileContents: string) {
 
 test("onExportJson downloads a backup with the current date in its filename", () => {
   const anchor = {
-    setAttribute: jest.fn(),
-    click: jest.fn(),
-    remove: jest.fn(),
+    setAttribute: vi.fn(),
+    click: vi.fn(),
+    remove: vi.fn(),
   };
   Object.defineProperty(global, "document", {
     value: {
       createElement: () => anchor,
-      body: { appendChild: jest.fn() },
+      body: { appendChild: vi.fn() },
     },
     configurable: true,
   });
@@ -176,7 +178,7 @@ test("createExportBackupV3 preserves grouped and collapsed v3 structure", () => 
 });
 
 test("createExportBackupV3 is compatible with the committed v3 backup fixture", () => {
-  expect(createExportBackupV3(v3ExportFixture.spaces).spaces).toEqual(
+  expect(createExportBackupV3(v3ExportFixture.spaces as SpaceV3[]).spaces).toEqual(
     normalizeBackupV3(v3ExportFixture).spaces
   );
 });
@@ -377,9 +379,9 @@ test("importFromJsonWithCallbacks hydrates through callback and resets input", (
       folders: [],
     }],
   }));
-  const onImported = jest.fn();
-  const onMessage = jest.fn();
-  const event = { target: { files: [{}], value: "backup.json" } };
+  const onImported = vi.fn();
+  const onMessage = vi.fn();
+  const event = { target: { files: [{} as Blob], value: "backup.json" } };
 
   importFromJsonWithCallbacks(event, onImported, onMessage);
 
@@ -447,6 +449,7 @@ test("parseSpaceImportJson remaps one imported space backup", () => {
   const importedSpace = result.space;
   const importedFolder = importedSpace.folders[0];
   const importedGroup = importedFolder.items[0];
+  if (importedGroup.type !== "group") throw new Error("Expected a group");
   const importedBookmark = importedGroup.groupItems[0];
 
   expect(importedSpace.title).toBe("Imported");
@@ -479,9 +482,9 @@ test("parseSpaceImportJson accepts a v3 backup with exactly one space", () => {
 
 test("importSpaceFromJsonWithCallback reports an invalid file through callback", () => {
   mockFileReaderWithContents("not json");
-  const onImported = jest.fn();
-  const onError = jest.fn();
-  const event = { target: { files: [{}], value: "broken.json" } };
+  const onImported = vi.fn();
+  const onError = vi.fn();
+  const event = { target: { files: [{} as Blob], value: "broken.json" } };
 
   importSpaceFromJsonWithCallback(event, [], onImported, onError);
 

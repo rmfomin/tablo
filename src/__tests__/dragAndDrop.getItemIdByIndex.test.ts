@@ -1,21 +1,21 @@
 import fs from "fs";
 import path from "path";
 
-jest.mock("@/newtab/01-app/model/selection", () => ({
-  getSelectedItemsElements: jest.fn(() => []),
-  unselectAllItems: jest.fn(),
+vi.mock("@/newtab/01-app/model/selection", () => ({
+  getSelectedItemsElements: vi.fn(() => []),
+  unselectAllItems: vi.fn(),
 }));
 
-jest.mock("@/newtab/04-features/dragging/model/processFolderDragAndDrop", () => ({
-  processFolderDragAndDrop: jest.fn(),
+vi.mock("@/newtab/04-features/dragging/model/processFolderDragAndDrop", () => ({
+  processFolderDragAndDrop: vi.fn(),
 }));
 
-jest.mock("@/newtab/04-features/dragging/model/processItemDragAndDrop", () => ({
-  processItemDragAndDrop: jest.fn(),
+vi.mock("@/newtab/04-features/dragging/model/processItemDragAndDrop", () => ({
+  processItemDragAndDrop: vi.fn(),
 }));
 
-jest.mock("@/newtab/04-features/dragging/model/processSpacesDragAndDrop", () => ({
-  processSpacesDragAndDrop: jest.fn(),
+vi.mock("@/newtab/04-features/dragging/model/processSpacesDragAndDrop", () => ({
+  processSpacesDragAndDrop: vi.fn(),
 }));
 
 import {
@@ -35,7 +35,7 @@ import { DOM_ROLE, roleSelector } from "@/newtab/06-shared/lib/dom/roles";
 
 test("getItemIdByIndex returns group id for top-level group drop target", () => {
   const groupEl = {
-    querySelector: jest.fn((selector: string) => {
+    querySelector: vi.fn((selector: string) => {
       if (selector.includes(roleSelector(DOM_ROLE.groupHeader))) {
         return { dataset: { id: "100" } };
       }
@@ -48,7 +48,7 @@ test("getItemIdByIndex returns group id for top-level group drop target", () => 
   const folderItemsBox = ({
     children: {
       length: 1,
-      item: jest.fn(() => groupEl),
+      item: vi.fn(() => groupEl),
     },
   } as unknown) as HTMLElement;
 
@@ -57,12 +57,12 @@ test("getItemIdByIndex returns group id for top-level group drop target", () => 
 
 test("getItemIdByIndex returns bookmark id for top-level bookmark drop target", () => {
   const bookmarkEl = {
-    querySelector: jest.fn(() => ({ dataset: { id: "102" } })),
+    querySelector: vi.fn(() => ({ dataset: { id: "102" } })),
   };
   const folderItemsBox = ({
     children: {
       length: 1,
-      item: jest.fn(() => bookmarkEl),
+      item: vi.fn(() => bookmarkEl),
     },
   } as unknown) as HTMLElement;
 
@@ -72,7 +72,7 @@ test("getItemIdByIndex returns bookmark id for top-level bookmark drop target", 
 test("temporary preview is ignored when resolving the next item id", () => {
   const item = (id: string) => ({
     dataset: {},
-    querySelector: jest.fn(() => ({ dataset: { id } })),
+    querySelector: vi.fn(() => ({ dataset: { id } })),
   });
   const preview = { dataset: { dadPreview: "true" } };
   const children = [item("101"), preview, item("102")];
@@ -97,18 +97,18 @@ test("preview occupies a target position while source is hidden and is restored 
   };
   const preview = ({
     dataset: {},
-    classList: { add: jest.fn() },
+    classList: { add: vi.fn() },
     style: previewStyle,
-    remove: jest.fn(),
+    remove: vi.fn(),
   } as unknown) as HTMLElement;
   const source = ({
     dataset: {},
     style: { display: "" },
-    cloneNode: jest.fn(() => preview),
+    cloneNode: vi.fn(() => preview),
   } as unknown) as HTMLElement;
   const target = ({
-    children: { length: 0, item: jest.fn() },
-    insertBefore: jest.fn(),
+    children: { length: 0, item: vi.fn() },
+    insertBefore: vi.fn(),
   } as unknown) as HTMLElement;
   const restoreSource = setDragSourceHidden([source]);
   const previews = createDropPreview([source]);
@@ -237,7 +237,7 @@ test("group header can be used as a drop area that inserts into group end", () =
       dropInsert: "end",
     },
     children: [],
-    getBoundingClientRect: jest.fn(
+    getBoundingClientRect: vi.fn(
       () =>
         ({
           left: 10,
@@ -248,7 +248,7 @@ test("group header can be used as a drop area that inserts into group end", () =
           height: 28,
           x: 10,
           y: 20,
-          toJSON: jest.fn(),
+          toJSON: vi.fn(),
         } as DOMRect)
     ),
   } as unknown) as Element;
@@ -265,7 +265,7 @@ test("group header can be used as a drop area that inserts into group end", () =
 
 test("temporary preview is excluded from drop areas", () => {
   const preview = ({
-    closest: jest.fn(() => ({ dataset: { dadPreview: "true" } })),
+    closest: vi.fn(() => ({ dataset: { dadPreview: "true" } })),
   } as unknown) as Element;
 
   expect(calculateFoldersDropAreas([preview], true)).toEqual([]);

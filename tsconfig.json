@@ -9,9 +9,9 @@
     "outDir": "dist/js",
     "noEmitOnError": false,
     "skipLibCheck": true,
+    "resolveJsonModule": true,
     "jsx": "react",
-    "typeRoots": ["node_modules/@types"],
-    "types": ["chrome", "jest", "node"],
+    "types": ["chrome", "node", "vitest/globals"],
     "paths": {
       "@/*": ["./src/*"]
     },

@@ -29,18 +29,18 @@ function createAdapter(): {
   let onTabUpdated: ((tabId: number, info: Partial<chrome.tabs.Tab>, tab: chrome.tabs.Tab) => void) | undefined;
   return {
     adapter: {
-      getTabs: jest.fn().mockResolvedValue([createTab(1)]),
-      getHistory: jest.fn<Promise<RecentItem[]>, []>().mockResolvedValue([]),
-      getLastActiveTabIds: jest.fn().mockResolvedValue([1]),
-      getCurrentWindowId: jest.fn().mockResolvedValue(1),
-      closeTabs: jest.fn(),
-      onTabCreated: jest.fn().mockReturnValue(() => undefined),
-      onTabRemoved: jest.fn().mockReturnValue(() => undefined),
-      onTabUpdated: jest.fn().mockImplementation((listener) => {
+      getTabs: vi.fn().mockResolvedValue([createTab(1)]),
+      getHistory: vi.fn<() => Promise<RecentItem[]>>().mockResolvedValue([]),
+      getLastActiveTabIds: vi.fn().mockResolvedValue([1]),
+      getCurrentWindowId: vi.fn().mockResolvedValue(1),
+      closeTabs: vi.fn(),
+      onTabCreated: vi.fn().mockReturnValue(() => undefined),
+      onTabRemoved: vi.fn().mockReturnValue(() => undefined),
+      onTabUpdated: vi.fn().mockImplementation((listener) => {
         onTabUpdated = listener;
         return () => undefined;
       }),
-      onWindowFocused: jest.fn().mockReturnValue(() => undefined),
+      onWindowFocused: vi.fn().mockReturnValue(() => undefined),
     },
     emitTabUpdated(tab) {
       onTabUpdated?.(tab.id!, {}, tab);

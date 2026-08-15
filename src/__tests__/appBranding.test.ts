@@ -18,7 +18,7 @@ describe("app branding", () => {
   );
 
   test("newtab html title uses Tablo", () => {
-    const htmlPath = path.join(__dirname, "../../public/newtab.html");
+    const htmlPath = path.join(__dirname, "../../newtab.html");
     const html = fs.readFileSync(htmlPath, "utf8");
 
     expect(html).toContain("<title>Tablo</title>");

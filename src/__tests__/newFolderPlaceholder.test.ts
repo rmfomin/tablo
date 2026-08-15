@@ -3,7 +3,7 @@ import { NewFolderPlaceholder } from "@/newtab/03-widgets/dashboard/Folder/NewFo
 import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
 
 test("new folder placeholder создаёт папку по клику и сохраняет drag-and-drop contract", () => {
-  const onCreate = jest.fn();
+  const onCreate = vi.fn();
   const element = NewFolderPlaceholder({ onCreate });
   const [header, items] = React.Children.toArray(element.props.children) as React.ReactElement[];
 

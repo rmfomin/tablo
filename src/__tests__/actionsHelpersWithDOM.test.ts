@@ -6,18 +6,18 @@ import {
   type UiFeedbackCommands,
 } from "@/newtab/04-features/bookmarks/model/actionsHelpersWithDOM";
 
-function createUiCommands(): jest.Mocked<UiFeedbackCommands> {
+function createUiCommands(): VitestMocked<UiFeedbackCommands> {
   return {
-    showNotification: jest.fn(),
-    hideNotification: jest.fn(),
-    setItemInEdit: jest.fn(),
-    setPage: jest.fn(),
+    showNotification: vi.fn(),
+    hideNotification: vi.fn(),
+    setItemInEdit: vi.fn(),
+    setPage: vi.fn(),
   };
 }
 
 test("createFolderWithStat creates an id and sends a Zustand-shaped command", () => {
-  const commands: jest.Mocked<Pick<DashboardFolderCommands, "createFolder">> = {
-    createFolder: jest.fn(),
+  const commands: VitestMocked<Pick<DashboardFolderCommands, "createFolder">> = {
+    createFolder: vi.fn(),
   };
 
   const id = createFolderWithStat(commands, {
@@ -35,8 +35,8 @@ test("createFolderWithStat creates an id and sends a Zustand-shaped command", ()
 
 test("undo notification calls dashboard and UI commands without legacy dispatch", () => {
   const ui = createUiCommands();
-  const dashboard: jest.Mocked<Pick<DashboardFolderCommands, "undo">> = {
-    undo: jest.fn(),
+  const dashboard: VitestMocked<Pick<DashboardFolderCommands, "undo">> = {
+    undo: vi.fn(),
   };
 
   showMessageWithUndo("Folder removed", { ...ui, ...dashboard });

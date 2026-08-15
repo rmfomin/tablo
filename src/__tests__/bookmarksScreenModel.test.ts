@@ -43,7 +43,7 @@ function createSnapshot(): BookmarksScreenSnapshot {
 }
 
 test("buildBookmarksScreenModel provides Folder props and empty-screen state from snapshots", () => {
-  const onCreateFolder = jest.fn();
+  const onCreateFolder = vi.fn();
   const snapshot = createSnapshot();
 
   const model = buildBookmarksScreenModel(snapshot, { onCreateFolder });
@@ -75,7 +75,7 @@ test("buildBookmarksScreenModel hides creation affordance for an active filter a
   snapshot.dashboard.spaces[0].folders = [];
 
   const model = buildBookmarksScreenModel(snapshot, {
-    onCreateFolder: jest.fn(),
+    onCreateFolder: vi.fn(),
   });
 
   expect(model.showNewFolderPlaceholder).toBe(false);

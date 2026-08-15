@@ -33,12 +33,12 @@ const updateVersionInManifest = (isPatch, manifestFile) => {
 };
 
 // Function to build the project with the specified environment
-const buildProject = (env) => {
-  console.log(`Building project with BUILD_TYPE=${env.BUILD_TYPE}...`);
-  execSync(`npm run build -- --env BUILD_TYPE=${env.BUILD_TYPE}`, {
+const buildProject = (buildType) => {
+  console.log(`Building project with BUILD_TYPE=${buildType}...`);
+  execSync(`npm run build:${buildType}`, {
     stdio: "inherit",
   });
-  console.log(`Build completed for BUILD_TYPE=${env.BUILD_TYPE}`);
+  console.log(`Build completed for BUILD_TYPE=${buildType}`);
 };
 
 // Function to zip the /dist folder and save it in the /builds folder
@@ -79,7 +79,7 @@ const main = async () => {
     // Step 1: Update version in manifest.json for Tablo
     let newVersion = updateVersionInManifest(isPatch, "manifest-normal.json");
     // Step 2: Build the test version (window.isTest = true)
-    buildProject({ BUILD_TYPE: "normal" });
+    buildProject("normal");
     // Step 3: Zip the test version
     zipDistFolder(newVersion, "normal", () => {
       // now build without new tab
@@ -92,7 +92,7 @@ const main = async () => {
         "manifest-overrideless.json"
       );
       // // Step 5: Build the prod version (window.isTest = false)
-      buildProject({ BUILD_TYPE: "overrideless" });
+      buildProject("overrideless");
       // // Step 6: Zip the prod version
       zipDistFolder(newVersion, "overrideless", () => {
         console.log(

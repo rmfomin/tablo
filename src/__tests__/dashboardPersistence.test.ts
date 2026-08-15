@@ -29,16 +29,16 @@ function createDashboardState(): DashboardState {
 
 function createAdapter(
   loadedState: DashboardState,
-): jest.Mocked<DashboardPersistenceAdapter> {
+): VitestMocked<DashboardPersistenceAdapter> {
   return {
-    load: jest.fn().mockResolvedValue(loadedState),
-    save: jest.fn().mockResolvedValue(undefined),
-    broadcastUpdated: jest.fn(),
+    load: vi.fn().mockResolvedValue(loadedState),
+    save: vi.fn().mockResolvedValue(undefined),
+    broadcastUpdated: vi.fn(),
   };
 }
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test("hydrate загружает dashboard data и не запускает сохранение", async () => {
@@ -56,7 +56,7 @@ test("hydrate загружает dashboard data и не запускает со�
 });
 
 test("start сохраняет изменённый state с задержкой и stop отменяет подписку", async () => {
-  jest.useFakeTimers();
+  vi.useFakeTimers();
   const state = createDashboardState();
   const store = createDashboardStore(state);
   const adapter = createAdapter(state);
@@ -64,7 +64,7 @@ test("start сохраняет изменённый state с задержкой 
 
   persistence.start(store);
   store.getState().selectSpace(2);
-  jest.advanceTimersByTime(300);
+  vi.advanceTimersByTime(300);
   await Promise.resolve();
 
   expect(adapter.save).toHaveBeenCalledWith({
@@ -75,7 +75,7 @@ test("start сохраняет изменённый state с задержкой 
 
   persistence.stop();
   store.getState().selectSpace(1);
-  jest.advanceTimersByTime(300);
+  vi.advanceTimersByTime(300);
 
   expect(adapter.save).toHaveBeenCalledTimes(1);
 });

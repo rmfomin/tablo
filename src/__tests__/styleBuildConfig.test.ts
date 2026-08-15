@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const { getCommonConfig } = require("../../webpack/webpack.common");
 
 export {};
 
@@ -20,10 +19,10 @@ describe("style build configuration", () => {
   });
 
   test("newtab html keeps linking the compiled style.css asset", () => {
-    const htmlPath = path.join(__dirname, "../../public/newtab.html");
+    const htmlPath = path.join(__dirname, "../../newtab.html");
     const html = fs.readFileSync(htmlPath, "utf8");
 
-    expect(html).toContain('href="style.css"');
+    expect(html).toContain('src="/src/newtab/01-app/index.tsx"');
   });
 
   test("scss is the only source stylesheet for the compiled asset", () => {
@@ -41,35 +40,41 @@ describe("style build configuration", () => {
     expect(fs.existsSync(legacyCssPath)).toBe(false);
   });
 
-  test("webpack supports component scss modules", () => {
-    const config = getCommonConfig({});
-    const moduleRule = config.module.rules.find((rule: { test?: RegExp }) =>
-      String(rule.test).includes("module")
-    );
+  test("vite config keeps extension entry points and SVG viewBox", () => {
+    const configPath = path.join(__dirname, "../../vite.config.ts");
+    const config = fs.readFileSync(configPath, "utf8");
 
-    expect(moduleRule).toBeDefined();
+    expect(config).toContain('newtab: path.resolve(__dirname, "newtab.html")');
+    expect(config).toContain('background: path.resolve(__dirname, "src/background.ts")');
+    expect(config).toContain('alias: { "@": path.resolve(__dirname, "src") }');
+    expect(config).toContain("removeViewBox: false");
   });
 
-  test("webpack svg loader preserves viewBox for css resizing", () => {
-    const config = getCommonConfig({});
-    const svgRule = config.module.rules.find((rule: { test?: RegExp }) =>
-      String(rule.test).includes("svg")
-    );
+  test("vitest config keeps the source alias and isolates DOM tests", () => {
+    const configPath = path.join(__dirname, "../../vitest.config.ts");
+    const config = fs.readFileSync(configPath, "utf8");
 
-    expect(svgRule).toBeDefined();
-    expect(svgRule.use[0].loader).toBe("@svgr/webpack");
-    expect(svgRule.use[0].options.svgoConfig.plugins).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          name: "preset-default",
-          params: expect.objectContaining({
-            overrides: expect.objectContaining({
-              removeViewBox: false,
-            }),
-          }),
-        }),
-      ])
+    expect(config).toContain('alias: { "@": path.resolve(__dirname, "src") }');
+    expect(config).toContain('"**/*WithDOM.test.ts", "happy-dom"');
+  });
+
+  test("package scripts provide reproducible Vite checks and publishing", () => {
+    const packagePath = path.join(__dirname, "../../package.json");
+    const publishPath = path.join(__dirname, "../../webpack/publish.js");
+    const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf8"));
+    const publishSource = fs.readFileSync(publishPath, "utf8");
+
+    expect(packageJson.scripts.check).toBe(
+      "npm run typecheck && npm test && npm run build",
     );
+    expect(packageJson.scripts["build:normal"]).toBe("vite build --mode normal");
+    expect(packageJson.scripts["build:overrideless"]).toBe(
+      "vite build --mode overrideless",
+    );
+    expect(packageJson.volta).toEqual({ node: "24.15.0", npm: "11.12.1" });
+    expect(publishSource).toContain("npm run build:${buildType}");
+    expect(publishSource).toContain('buildProject("normal")');
+    expect(publishSource).toContain('buildProject("overrideless")');
   });
 
   test("notification uses the folder-based component structure", () => {

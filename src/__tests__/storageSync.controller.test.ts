@@ -6,9 +6,9 @@ import {
 import type { StorageSyncAdapter } from "@/newtab/01-app/model/storage-sync/types";
 import { createUiStore } from "@/newtab/01-app/model/ui/uiStore";
 
-function createAdapter(): jest.Mocked<StorageSyncAdapter> {
+function createAdapter(): VitestMocked<StorageSyncAdapter> {
   return {
-    load: jest.fn().mockResolvedValue({
+    load: vi.fn().mockResolvedValue({
       version: 3,
       spaces: [{ id: 1, position: "a0", objectType: "space", title: "Работа", folders: [] }],
       currentSpaceId: 1,
@@ -20,16 +20,16 @@ function createAdapter(): jest.Mocked<StorageSyncAdapter> {
       showNotUsed: false,
       hiddenFeatureIsEnabled: false,
     }),
-    save: jest.fn().mockResolvedValue(undefined),
-    broadcastUpdated: jest.fn(),
-    onUpdated: jest.fn().mockReturnValue(() => undefined),
+    save: vi.fn().mockResolvedValue(undefined),
+    broadcastUpdated: vi.fn(),
+    onUpdated: vi.fn().mockReturnValue(() => undefined),
   };
 }
 
-afterEach(() => jest.useRealTimers());
+afterEach(() => vi.useRealTimers());
 
 test("controller гидрирует stores и сохраняет изменение dashboard с задержкой", async () => {
-  jest.useFakeTimers();
+  vi.useFakeTimers();
   const dashboard = createDashboardStore();
   const ui = createUiStore();
   const adapter = createAdapter();
@@ -39,7 +39,7 @@ test("controller гидрирует stores и сохраняет изменен�
   controller.start();
   dashboard.getState().selectSpace(1);
   ui.getState().setSidebarCollapsed(true);
-  jest.advanceTimersByTime(300);
+  vi.advanceTimersByTime(300);
   await Promise.resolve();
 
   expect(dashboard.getState().spaces).toHaveLength(1);

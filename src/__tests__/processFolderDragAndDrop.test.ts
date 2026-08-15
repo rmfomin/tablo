@@ -6,40 +6,40 @@ const dropArea = {
     parentElement: {
       children: [],
     },
-    getBoundingClientRect: jest.fn(),
+    getBoundingClientRect: vi.fn(),
   },
   rect: { left: 0, width: 200 },
 };
 
-jest.mock("@/newtab/04-features/dragging/model/dragAndDropUtils", () => ({
-  setScrollByDummyClientY: jest.fn(),
-  subscribeMouseEvents: jest.fn(
+vi.mock("@/newtab/04-features/dragging/model/dragAndDropUtils", () => ({
+  setScrollByDummyClientY: vi.fn(),
+  subscribeMouseEvents: vi.fn(
     (_event, onMove: (event: MouseEvent, mouseMoved: boolean) => void) => {
       onMouseMove = onMove;
-      return jest.fn();
+      return vi.fn();
     }
   ),
 }));
 
-jest.mock("@/newtab/01-app/model/selection", () => ({
-  unselectAllItems: jest.fn(),
+vi.mock("@/newtab/01-app/model/selection", () => ({
+  unselectAllItems: vi.fn(),
 }));
 
-jest.mock("@/newtab/04-features/dragging/model/dragAndDrop", () => ({
-  calculateFoldersDropAreas: jest.fn(() => [dropArea]),
-  calculateSpacesDropAreas: jest.fn(() => []),
-  calculateTargetInsertBeforeFolderId: jest.fn(),
-  createFolderDropIndicator: jest.fn(() => ({ style: {}, remove: jest.fn() })),
-  createDropPreview: jest.fn(() => [{}]),
-  createFolderDummy: jest.fn(() => ({ style: {} })),
-  getFolderId: jest.fn(() => 10),
-  getOverlappedDropArea: jest.fn(() => dropArea),
-  getOverlappedSpaceDropArea: jest.fn(),
-  placeFolderDropIndicator: jest.fn(),
-  placeDropPreview: jest.fn(),
-  removeFolderDropIndicator: jest.fn(),
-  removeDropPreview: jest.fn(),
-  setDragSourceHidden: jest.fn(() => jest.fn()),
+vi.mock("@/newtab/04-features/dragging/model/dragAndDrop", () => ({
+  calculateFoldersDropAreas: vi.fn(() => [dropArea]),
+  calculateSpacesDropAreas: vi.fn(() => []),
+  calculateTargetInsertBeforeFolderId: vi.fn(),
+  createFolderDropIndicator: vi.fn(() => ({ style: {}, remove: vi.fn() })),
+  createDropPreview: vi.fn(() => [{}]),
+  createFolderDummy: vi.fn(() => ({ style: {} })),
+  getFolderId: vi.fn(() => 10),
+  getOverlappedDropArea: vi.fn(() => dropArea),
+  getOverlappedSpaceDropArea: vi.fn(),
+  placeFolderDropIndicator: vi.fn(),
+  placeDropPreview: vi.fn(),
+  removeFolderDropIndicator: vi.fn(),
+  removeDropPreview: vi.fn(),
+  setDragSourceHidden: vi.fn(() => vi.fn()),
 }));
 
 import {
@@ -52,24 +52,24 @@ import { processFolderDragAndDrop } from "@/newtab/04-features/dragging/model/pr
 
 test("folder drag does not insert a preview into the folder layout", () => {
   const body = {
-    classList: { add: jest.fn(), remove: jest.fn() },
-    append: jest.fn(),
+    classList: { add: vi.fn(), remove: vi.fn() },
+    append: vi.fn(),
   };
-  (createFolderDropIndicator as jest.Mock).mockClear();
-  (createDropPreview as jest.Mock).mockClear();
-  (placeFolderDropIndicator as jest.Mock).mockClear();
+  (createFolderDropIndicator as VitestMock).mockClear();
+  (createDropPreview as VitestMock).mockClear();
+  (placeFolderDropIndicator as VitestMock).mockClear();
   (global as any).document = {
     body,
-    querySelectorAll: jest.fn(() => []),
+    querySelectorAll: vi.fn(() => []),
   };
 
   processFolderDragAndDrop(
     { clientX: 0, clientY: 0 } as React.MouseEvent,
     {
-      onChangeSpace: jest.fn(),
-      onDragStarted: jest.fn(() => true),
-      onCancel: jest.fn(),
-      onDrop: jest.fn(),
+      onChangeSpace: vi.fn(),
+      onDragStarted: vi.fn(() => true),
+      onCancel: vi.fn(),
+      onDrop: vi.fn(),
     },
     ({ dataset: {}, style: {} } as unknown) as HTMLElement
   );
@@ -83,24 +83,24 @@ test("folder drag does not insert a preview into the folder layout", () => {
 
 test("folder drag recalculates target geometry after removing its source", () => {
   const body = {
-    classList: { add: jest.fn(), remove: jest.fn() },
-    append: jest.fn(),
+    classList: { add: vi.fn(), remove: vi.fn() },
+    append: vi.fn(),
   };
   const source = { dataset: {}, style: {} } as unknown as HTMLElement;
   const sibling = { dataset: {}, style: {} } as unknown as HTMLElement;
   (global as any).document = {
     body,
-    querySelectorAll: jest.fn(() => [source, sibling]),
+    querySelectorAll: vi.fn(() => [source, sibling]),
   };
-  (calculateFoldersDropAreas as jest.Mock).mockClear();
+  (calculateFoldersDropAreas as VitestMock).mockClear();
 
   processFolderDragAndDrop(
     { clientX: 0, clientY: 0 } as React.MouseEvent,
     {
-      onChangeSpace: jest.fn(),
-      onDragStarted: jest.fn(() => true),
-      onCancel: jest.fn(),
-      onDrop: jest.fn(),
+      onChangeSpace: vi.fn(),
+      onDragStarted: vi.fn(() => true),
+      onCancel: vi.fn(),
+      onDrop: vi.fn(),
     },
     source
   );
@@ -108,29 +108,29 @@ test("folder drag recalculates target geometry after removing its source", () =>
   onMouseMove!({ clientX: 10, clientY: 0 } as MouseEvent, true);
 
   expect(calculateFoldersDropAreas).toHaveBeenCalledTimes(2);
-  expect((calculateFoldersDropAreas as jest.Mock).mock.calls[1][0]).toEqual([
+  expect((calculateFoldersDropAreas as VitestMock).mock.calls[1][0]).toEqual([
     sibling,
   ]);
 });
 
 test("stable folder target does not recreate preview on every mouse move", () => {
   const body = {
-    classList: { add: jest.fn(), remove: jest.fn() },
-    append: jest.fn(),
+    classList: { add: vi.fn(), remove: vi.fn() },
+    append: vi.fn(),
   };
   (global as any).document = {
     body,
-    querySelectorAll: jest.fn(() => []),
+    querySelectorAll: vi.fn(() => []),
   };
-  (createDropPreview as jest.Mock).mockClear();
+  (createDropPreview as VitestMock).mockClear();
 
   processFolderDragAndDrop(
     { clientX: 0, clientY: 0 } as React.MouseEvent,
     {
-      onChangeSpace: jest.fn(),
-      onDragStarted: jest.fn(() => true),
-      onCancel: jest.fn(),
-      onDrop: jest.fn(),
+      onChangeSpace: vi.fn(),
+      onDragStarted: vi.fn(() => true),
+      onCancel: vi.fn(),
+      onDrop: vi.fn(),
     },
     ({ dataset: {}, style: {} } as unknown) as HTMLElement
   );

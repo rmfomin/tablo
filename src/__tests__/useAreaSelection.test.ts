@@ -14,7 +14,7 @@ function element(
       right: left + 20,
       bottom: 30,
     }),
-    closest: jest.fn(() =>
+    closest: vi.fn(() =>
       groupId === undefined ? null : { dataset: { groupId: String(groupId) } },
     ),
   } as unknown as HTMLElement;
