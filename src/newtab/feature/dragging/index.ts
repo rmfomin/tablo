@@ -25,5 +25,6 @@ export type {
   DropArea,
   PConfigFolder,
   PConfigItem,
+  PConfigItemDependencies,
   PConfigSpaces,
 } from "./dragAndDrop";

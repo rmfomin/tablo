@@ -31,12 +31,14 @@ const stateWithBookmarkAndGroup: DashboardState = {
               favIconUrl: "",
               position: "a",
               type: "bookmark",
+              objectType: "bookmark",
             },
             {
               id: 200,
               title: "Group",
               position: "b",
               type: "group",
+              objectType: "group",
               groupItems: [
                 {
                   id: 201,
@@ -45,6 +47,7 @@ const stateWithBookmarkAndGroup: DashboardState = {
                   favIconUrl: "",
                   position: "a",
                   type: "bookmark",
+                  objectType: "bookmark",
                 },
                 {
                   id: 202,
@@ -53,6 +56,7 @@ const stateWithBookmarkAndGroup: DashboardState = {
                   favIconUrl: "",
                   position: "b",
                   type: "bookmark",
+                  objectType: "bookmark",
                 },
               ],
             },
@@ -63,6 +67,7 @@ const stateWithBookmarkAndGroup: DashboardState = {
               favIconUrl: "",
               position: "c",
               type: "bookmark",
+              objectType: "bookmark",
             },
           ],
         },

@@ -1,60 +1,60 @@
 # Tablo
 
-Tablo is a Chrome extension that replaces the default New Tab page with a personal bookmark dashboard. It helps you organize links and quickly access browser activity without leaving the page.
+Tablo — расширение для Chrome, которое заменяет стандартную страницу новой вкладки персональной панелью закладок. Оно помогает организовать ссылки и быстро обращаться к активности браузера, не покидая страницу.
 
-## Features
+## Возможности
 
-- Organize bookmarks into spaces, folders, and groups.
-- Create, edit, move, and delete bookmarks and folders with drag and drop.
-- Search bookmarks and select multiple items for bulk actions.
-- View open tabs and recent browser history in the sidebar.
-- Switch between light, dark, and automatic themes.
-- Import and export dashboard or individual-space backups as JSON.
-- Keep application data locally in Chrome storage.
-- Undo the latest dashboard changes.
+- Организация закладок по пространствам, папкам и группам.
+- Создание, редактирование, перемещение и удаление закладок и папок с помощью drag-and-drop.
+- Поиск по закладкам и множественный выбор для массовых действий.
+- Просмотр открытых вкладок и недавней истории браузера в боковой панели.
+- Переключение между светлой, тёмной и автоматической темами.
+- Импорт и экспорт резервных копий всей панели или отдельного пространства в формате JSON.
+- Хранение данных приложения локально в Chrome Storage.
+- Отмена последнего изменения панели.
 
-## Requirements
+## Требования
 
-- Google Chrome or another Chromium-based browser.
-- Node.js and npm.
+- Google Chrome или другой браузер на базе Chromium.
+- Node.js и npm.
 
-## Install and run locally
+## Локальная установка и запуск
 
-1. Install dependencies:
+1. Установите зависимости:
 
    ```bash
    npm install
    ```
 
-2. Start the development build in watch mode:
+2. Запустите сборку для разработки в режиме отслеживания изменений:
 
    ```bash
    npm run watch
    ```
 
-3. Open `chrome://extensions` in Chrome.
-4. Enable **Developer mode**.
-5. Click **Load unpacked** and select the project's `dist` directory.
+3. Откройте в Chrome `chrome://extensions`.
+4. Включите **Режим разработчика**.
+5. Нажмите **Загрузить распакованное расширение** и выберите каталог `dist` проекта.
 
-Webpack updates `dist` after source changes. To apply an update in Chrome, click the extension's reload button on `chrome://extensions`.
+Webpack обновляет `dist` после изменения исходного кода. Чтобы применить обновление в Chrome, нажмите кнопку перезагрузки расширения на странице `chrome://extensions`.
 
-## Production build
+## Сборка для продакшена
 
-Create an optimized build:
+Создайте оптимизированную сборку:
 
 ```bash
 npm run build
 ```
 
-When the command completes, select the `dist` directory through **Load unpacked** in `chrome://extensions`.
+После завершения команды выберите каталог `dist` через **Загрузить распакованное расширение** на `chrome://extensions`.
 
-## Available commands
+## Доступные команды
 
-| Command | Description |
+| Команда | Описание |
 | --- | --- |
-| `npm run watch` | Build in development mode and rebuild on file changes. The extension replaces the New Tab page. |
-| `npm run watch2` | Build in development mode without replacing the New Tab page. |
-| `npm run build` | Run TypeScript checks and create an optimized production build in `dist`. |
-| `npm run typecheck` | Run TypeScript type checks without creating build files. |
-| `npm test` | Run the test suite. |
-| `npm run clean` | Remove the `dist` build directory. |
+| `npm run watch` | Собирает расширение в режиме разработки и пересобирает его при изменении файлов. Расширение заменяет страницу новой вкладки. |
+| `npm run watch2` | Собирает расширение в режиме разработки, не заменяя страницу новой вкладки. |
+| `npm run build` | Запускает проверку TypeScript и создаёт оптимизированную production-сборку в `dist`. |
+| `npm run typecheck` | Запускает проверку типов TypeScript без создания файлов сборки. |
+| `npm test` | Запускает тесты. |
+| `npm run clean` | Удаляет каталог сборки `dist`. |

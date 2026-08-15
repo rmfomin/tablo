@@ -1,8 +1,10 @@
-import type { PConfigSpaces } from "@/newtab/feature/dragging/dragAndDrop";
+import type {
+  PConfigItemDependencies,
+  PConfigSpaces,
+} from "@/newtab/feature/dragging/dragAndDrop";
 import { subscribeMouseEvents } from "@/newtab/feature/dragging/dragAndDropUtils";
 import { insertBetween } from "@/newtab/helpers/fractionalIndexes";
 import { DOM_ROLE, roleSelector } from "@/newtab/helpers/domRoles";
-import { uiStore } from "@/newtab/state/ui/uiStore";
 
 type InitRes = {
   clonedSpacesList: HTMLElement;
@@ -16,7 +18,8 @@ type InitRes = {
 
 export function processSpacesDragAndDrop(
   mouseDownEvent: React.MouseEvent,
-  config: PConfigSpaces
+  config: PConfigSpaces,
+  dependencies: PConfigItemDependencies
 ) {
   let dummy: InitRes | undefined;
   let restoreSource = () => {};
@@ -138,7 +141,7 @@ export function processSpacesDragAndDrop(
       // do nothing here
     }
 
-    uiStore.getState().clearSelectedItemIds();
+    dependencies.clearSelectedItemIds();
   };
 
   return subscribeMouseEvents(mouseDownEvent, onMouseMove, onMouseUp);

@@ -7,7 +7,7 @@ import { processFolderDragAndDrop } from "@/newtab/feature/dragging/processFolde
 import { processItemDragAndDrop } from "@/newtab/feature/dragging/processItemDragAndDrop";
 import { processSpacesDragAndDrop } from "@/newtab/feature/dragging/processSpacesDragAndDrop";
 import { DOM_ROLE, roleSelector } from "@/newtab/helpers/domRoles";
-import { uiStore } from "@/newtab/state/ui/uiStore";
+import type { PConfigItemDependencies } from "./dragAndDropDependencies";
 
 export type DropArea = {
   objectId: number;
@@ -31,6 +31,8 @@ export type PConfigItem = {
   onDragStarted: () => boolean; // return false to prevent action. Previously was named canDrag()
 };
 
+export type { PConfigItemDependencies } from "./dragAndDropDependencies";
+
 export type PConfigFolder = {
   onDrop: (
     draggedFolderId: number,
@@ -50,6 +52,7 @@ export type PConfigSpaces = {
 export function bindDADItemEffect(
   mouseDownEvent: React.MouseEvent,
   itemConfig: PConfigItem,
+  dependencies: PConfigItemDependencies,
   folderConfig?: PConfigFolder,
   spacesConfig?: PConfigSpaces
 ) {
@@ -70,11 +73,16 @@ export function bindDADItemEffect(
     if (targetRoot) {
       const targetRoots = getSelectedTargetRoots(
         targetRoot,
-        uiStore.getState().selectedItemIds,
+        dependencies.selectedItemIds
       );
-      return processItemDragAndDrop(mouseDownEvent, itemConfig, targetRoots);
+      return processItemDragAndDrop(
+        mouseDownEvent,
+        itemConfig,
+        targetRoots,
+        dependencies
+      );
     } else if (targetFolderHeader && folderConfig) {
-      uiStore.getState().clearSelectedItemIds();
+      dependencies.clearSelectedItemIds();
       return processFolderDragAndDrop(
         mouseDownEvent,
         folderConfig,
@@ -88,8 +96,8 @@ export function bindDADItemEffect(
         !target.closest(roleSelector(DOM_ROLE.spaceDelete)) &&
         spacesConfig.canSortSpaces()
       ) {
-        uiStore.getState().clearSelectedItemIds();
-        processSpacesDragAndDrop(mouseDownEvent, spacesConfig);
+        dependencies.clearSelectedItemIds();
+        processSpacesDragAndDrop(mouseDownEvent, spacesConfig, dependencies);
       }
     }
   }
@@ -98,17 +106,17 @@ export function bindDADItemEffect(
 export function getSelectedTargetRoots(
   pressedRoot: HTMLElement,
   selectedItemIds: number[],
-  root: ParentNode = document,
+  root: ParentNode = document
 ): HTMLElement[] {
   const pressedGroup = pressedRoot.closest(
-    roleSelector(DOM_ROLE.folderGroup),
+    roleSelector(DOM_ROLE.folderGroup)
   ) as HTMLElement | null;
   const directPressedId = getIdFromElement(pressedRoot);
   const pressedId = selectedItemIds.includes(directPressedId)
     ? directPressedId
     : pressedGroup
-      ? Number(pressedGroup.dataset.groupId)
-      : directPressedId;
+    ? Number(pressedGroup.dataset.groupId)
+    : directPressedId;
   if (!selectedItemIds.includes(pressedId)) {
     return [pressedRoot];
   }
@@ -116,8 +124,8 @@ export function getSelectedTargetRoots(
   return selectedItemIds.flatMap((id) => {
     const element = root.querySelector<HTMLElement>(
       `${roleSelector(DOM_ROLE.folderItem)}[data-id="${id}"], ${roleSelector(
-        DOM_ROLE.groupHeader,
-      )}[data-id="${id}"]`,
+        DOM_ROLE.groupHeader
+      )}[data-id="${id}"]`
     );
     return element ? [element] : [];
   });
@@ -125,13 +133,13 @@ export function getSelectedTargetRoots(
 
 export function getItemDropAreaElements(
   root: ParentNode = document,
-  canDropIntoGroups = true,
+  canDropIntoGroups = true
 ): Element[] {
   const selectors = [roleSelector(DOM_ROLE.folderItems)];
   if (canDropIntoGroups) {
     selectors.unshift(
       roleSelector(DOM_ROLE.groupHeader),
-      roleSelector(DOM_ROLE.groupItems),
+      roleSelector(DOM_ROLE.groupItems)
     );
   }
   return Array.from(root.querySelectorAll(selectors.join(", ")));
@@ -447,12 +455,14 @@ export function createFolderDropIndicator(): HTMLElement {
 export function placeFolderDropIndicator(
   indicator: HTMLElement,
   dropArea: DropArea,
-  insertBefore: boolean,
+  insertBefore: boolean
 ) {
   if (!indicator.isConnected) {
     document.body.append(indicator);
   }
-  indicator.style.left = `${insertBefore ? dropArea.rect.left : dropArea.rect.right}px`;
+  indicator.style.left = `${
+    insertBefore ? dropArea.rect.left : dropArea.rect.right
+  }px`;
   indicator.style.top = `${dropArea.rect.top}px`;
   indicator.style.height = `${dropArea.rect.height}px`;
 }

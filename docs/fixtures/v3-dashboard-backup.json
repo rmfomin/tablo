@@ -1,0 +1,43 @@
+{
+  "isTablo": true,
+  "version": 3,
+  "spaces": [
+    {
+      "id": 1,
+      "position": "a0",
+      "objectType": "space",
+      "title": "Рабочее пространство",
+      "folders": [
+        {
+          "id": 10,
+          "position": "a0",
+          "objectType": "folder",
+          "title": "Разработка",
+          "color": "#4f46e5",
+          "collapsed": false,
+          "items": [
+            {
+              "id": 100,
+              "position": "a0",
+              "type": "group",
+              "objectType": "group",
+              "title": "Инструменты",
+              "collapsed": false,
+              "groupItems": [
+                {
+                  "id": 101,
+                  "position": "a0",
+                  "type": "bookmark",
+                  "objectType": "bookmark",
+                  "title": "Документация",
+                  "url": "https://example.com/docs",
+                  "favIconUrl": "https://example.com/favicon.ico"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

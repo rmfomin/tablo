@@ -60,7 +60,8 @@ test("first drag movement renders preview at current cursor position", () => {
       onDragStarted: jest.fn(() => true),
       onDrop: jest.fn(),
     },
-    [({ dataset: {}, parentElement: null } as unknown) as HTMLElement]
+    [({ dataset: {}, parentElement: null } as unknown) as HTMLElement],
+    { selectedItemIds: [], clearSelectedItemIds: jest.fn() }
   );
 
   onMouseMove!({ clientX: 100, clientY: 100 } as MouseEvent, true);

@@ -9,62 +9,56 @@ import { bindDADItemEffect } from "@/newtab/feature/dragging";
 import { Folder } from "@/newtab/components/common/Folder/Folder";
 import { NewFolderPlaceholder } from "@/newtab/components/common/Folder/NewFolderPlaceholder";
 import { handleBookmarksKeyDown } from "@/newtab/helpers/handleBookmarksKeyDown";
-import { useDashboardStore } from "@/newtab/state/dashboard/dashboardStore";
-import { useUiStore } from "@/newtab/state/ui/uiStore";
-import { useChromeRuntimeStore } from "@/newtab/state/chrome-runtime/chromeRuntimeStore";
 import { findBookmarkItem } from "@/newtab/state/dashboard/itemUtils";
 import { TopBar } from "@/newtab/components/common/TopBar/TopBar";
-import { getBookmarksViewState } from "./getBookmarksViewState";
 import { DOM_ROLE } from "@/newtab/helpers/domRoles";
 import { useAreaSelection } from "./useAreaSelection";
+import { useBookmarksScreen } from "@/newtab/feature/bookmarks/useBookmarksScreen";
 
 let __prevCurrentSpaceId: number | undefined = undefined;
 let __prevSearch: string | undefined = undefined;
 
 export function Bookmarks() {
-  const spaces = useDashboardStore((state) => state.spaces);
-  const currentSpaceId = useDashboardStore((state) => state.currentSpaceId);
-  const createFolder = useDashboardStore((state) => state.createFolder);
-  const moveFolderItems = useDashboardStore((state) => state.moveFolderItems);
-  const moveFolder = useDashboardStore((state) => state.moveFolder);
-  const setCurrentSpace = useDashboardStore((state) => state.selectSpace);
-  const updateSpace = useDashboardStore((state) => state.updateSpace);
-  const setItemInEdit = useUiStore((state) => state.setItemInEdit);
-  const setPage = useUiStore((state) => state.setPage);
-  const setSelectedItemIds = useUiStore((state) => state.setSelectedItemIds);
-  const clearSelectedItemIds = useUiStore(
-    (state) => state.clearSelectedItemIds,
-  );
-  const showNotification = useUiStore((state) => state.showNotification);
-  const search = useUiStore((state) => state.search);
-  const searchFilters = useUiStore((state) => state.searchFilters);
-  const searchFilterMode = useUiStore((state) => state.searchFilterMode);
-  const showArchived = useUiStore((state) => state.showArchived);
-  const showNotUsed = useUiStore((state) => state.showNotUsed);
-  const itemInEdit = useUiStore((state) => state.itemInEdit);
-  const sidebarCollapsed = useUiStore((state) => state.sidebarCollapsed);
-  const openBookmarksInNewTab = useUiStore((state) => state.openBookmarksInNewTab);
-  const hiddenFeatureIsEnabled = useUiStore((state) => state.hiddenFeatureIsEnabled);
-  const tabs = useChromeRuntimeStore((state) => state.tabs);
-  const recentItems = useChromeRuntimeStore((state) => state.recentItems);
+  const {
+    screen,
+    spaces,
+    currentSpaceId,
+    createFolder,
+    moveFolderItems,
+    moveFolder,
+    setCurrentSpace,
+    updateSpace,
+    setItemInEdit,
+    setPage,
+    setSelectedItemIds,
+    selectedItemIds,
+    clearSelectedItemIds,
+    showNotification,
+    search,
+    searchFilters,
+    searchFilterMode,
+    showArchived,
+    showNotUsed,
+    openBookmarksInNewTab,
+    tabs,
+  } = useBookmarksScreen();
   const [mouseDownEvent, setMouseDownEvent] = useState<
     React.MouseEvent | undefined
   >(undefined);
   const [isScrolled, setIsScrolled] = useState(false);
 
   const bookmarksRef = useRef<HTMLDivElement>(null);
-  const { onMouseDown: onAreaSelectionMouseDown, selectionRect } =
-    useAreaSelection({
-      containerRef: bookmarksRef,
-      setSelectedItemIds,
-      clearSelectedItemIds,
-    });
+  const {
+    onMouseDown: onAreaSelectionMouseDown,
+    selectionRect,
+  } = useAreaSelection({
+    containerRef: bookmarksRef,
+    setSelectedItemIds,
+    clearSelectedItemIds,
+  });
 
   useEffect(() => {
-    if (
-      __prevCurrentSpaceId !== currentSpaceId ||
-      __prevSearch !== search
-    ) {
+    if (__prevCurrentSpaceId !== currentSpaceId || __prevSearch !== search) {
       __prevCurrentSpaceId = currentSpaceId;
       __prevSearch = search;
     }
@@ -113,7 +107,12 @@ export function Bookmarks() {
           folderId = Date.now() + Math.round(Math.random() * 10_000_000);
           createFolder({ id: folderId });
         }
-        moveFolderItems({ itemIds: targetsIds, targetFolderId: folderId, targetGroupId, insertBeforeItemId });
+        moveFolderItems({
+          itemIds: targetsIds,
+          targetFolderId: folderId,
+          targetGroupId,
+          insertBeforeItemId,
+        });
 
         setMouseDownEvent(undefined);
       };
@@ -122,7 +121,11 @@ export function Bookmarks() {
         targetSpaceId: number | undefined,
         insertBeforeFolderId: number | undefined
       ) => {
-        moveFolder({ folderId, targetSpaceId: targetSpaceId ?? currentSpaceId, insertBeforeFolderId });
+        moveFolder({
+          folderId,
+          targetSpaceId: targetSpaceId ?? currentSpaceId,
+          insertBeforeFolderId,
+        });
 
         setMouseDownEvent(undefined);
       };
@@ -160,6 +163,10 @@ export function Bookmarks() {
           onDragStarted: canDrag,
         },
         {
+          selectedItemIds,
+          clearSelectedItemIds,
+        },
+        {
           onDrop: onDropFolder,
           onCancel,
           onChangeSpace,
@@ -171,7 +178,7 @@ export function Bookmarks() {
         }
       );
     }
-  }, [mouseDownEvent]);
+  }, [mouseDownEvent, selectedItemIds, clearSelectedItemIds]);
 
   function onMouseDown(e: React.MouseEvent) {
     blurSearch(e);
@@ -181,12 +188,6 @@ export function Bookmarks() {
     if (isTargetSupportsDragAndDrop(e)) {
       setMouseDownEvent(e);
     }
-  }
-
-  function onCreateFolder() {
-    const folderId = Date.now() + Math.round(Math.random() * 10_000_000);
-    createFolder({ id: folderId });
-    setItemInEdit(folderId);
   }
 
   function openFolderItem(itemId: number, inNewTab: boolean) {
@@ -223,19 +224,13 @@ export function Bookmarks() {
     });
   }
 
-  const { folders } = getBookmarksViewState({
-    spaces,
-    currentSpaceId,
-    search,
-    searchFilters,
-    searchFilterMode,
-    showArchived,
-  });
+  const { folders, folderProps } = screen;
+  const { onCreateFolder } = screen.commands;
 
   return (
     <div
       className={cn(styles.bookmarksBox, {
-        [styles.withCollapsedSidebar]: sidebarCollapsed,
+        [styles.withCollapsedSidebar]: screen.sidebarCollapsed,
       })}
       onMouseDown={onMouseDown}
     >
@@ -244,22 +239,15 @@ export function Bookmarks() {
         className={styles.bookmarks}
         data-role={DOM_ROLE.bookmarks}
         ref={bookmarksRef}
-        onKeyDown={(event) => handleBookmarksKeyDown(event, { spaces }, openFolderItem)}
+        onKeyDown={(event) =>
+          handleBookmarksKeyDown(event, { spaces }, openFolderItem)
+        }
       >
         {folders.map((folder) => (
           <Folder
             key={folder.id}
-            spaces={spaces}
             folder={folder}
-            tabs={tabs}
-            recentItems={recentItems}
-            showNotUsed={showNotUsed}
-            showArchived={showArchived}
-            search={search}
-            searchFilters={searchFilters}
-            searchFilterMode={searchFilterMode}
-            itemInEdit={itemInEdit}
-            hiddenFeatureIsEnabled={hiddenFeatureIsEnabled}
+            {...folderProps}
           />
         ))}
 
@@ -276,10 +264,9 @@ export function Bookmarks() {
           />
         ) : null}
 
-        {search === "" &&
-        !searchFilters.some((filter) => filter.enabled) ? (
+        {screen.showNewFolderPlaceholder ? (
           <NewFolderPlaceholder onCreate={onCreateFolder} />
-        ) : folders.length === 0 ? (
+        ) : screen.showNoBookmarksFound ? (
           <div className={styles.noBookmarksFound}>No bookmarks found</div>
         ) : null}
       </div>

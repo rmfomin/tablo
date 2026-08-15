@@ -68,14 +68,14 @@ export interface ItemBaseV3 {
   position: string;
   title: string;
   type: ItemTypeV3;
-  objectType?: "bookmark" | "group";
+  objectType: "bookmark" | "group";
   archived?: boolean;
   inEdit?: boolean;
 }
 
 export interface BookmarkItemV3 extends ItemBaseV3 {
   type: "bookmark";
-  objectType?: "bookmark";
+  objectType: "bookmark";
   url: string;
   favIconUrl: string;
   isSection?: boolean;
@@ -83,9 +83,34 @@ export interface BookmarkItemV3 extends ItemBaseV3 {
 
 export interface GroupV3 extends ItemBaseV3 {
   type: "group";
-  objectType?: "group";
+  objectType: "group";
   collapsed?: boolean;
   groupItems: BookmarkItemV3[];
 }
 
 export type ItemV3 = BookmarkItemV3 | GroupV3;
+
+/** Допустимый на входе v3-формат: старые бэкапы могли не содержать objectType. */
+export type BookmarkItemV3Input = Omit<BookmarkItemV3, "objectType"> & {
+  objectType?: "bookmark";
+};
+
+export type GroupV3Input = Omit<GroupV3, "objectType" | "groupItems"> & {
+  objectType?: "group";
+  groupItems: BookmarkItemV3Input[];
+};
+
+export type ItemV3Input = BookmarkItemV3Input | GroupV3Input;
+
+export type FolderV3Input = Omit<FolderV3, "items"> & {
+  items: ItemV3Input[];
+};
+
+export type SpaceV3Input = Omit<SpaceV3, "folders"> & {
+  folders: FolderV3Input[];
+};
+
+export type DataBackupV3Input = BackupBrandMarker & {
+  version: 3;
+  spaces: SpaceV3Input[];
+};

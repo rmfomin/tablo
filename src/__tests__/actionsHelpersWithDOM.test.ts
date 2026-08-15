@@ -68,6 +68,7 @@ test("custom import bookmark changes only the UI page", () => {
           items: [{
             id: 10,
             type: "bookmark",
+            objectType: "bookmark",
             title: "Import",
             url: "tablo://import-bookmarks",
             favIconUrl: "",

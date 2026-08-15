@@ -1,8 +1,53 @@
 import {
-  isDataBackupV3,
+  isDataBackupV3Input,
   normalizeBackupV3,
 } from "@/newtab/helpers/dataFormatAdapters";
-import { DataBackupV3 } from "@/newtab/helpers/types";
+import { DataBackupV3Input } from "@/newtab/helpers/types";
+
+test("legacy v3 item becomes a runtime item with a canonical objectType", () => {
+  const legacyBackup: unknown = {
+    isTablo: true,
+    version: 3,
+    spaces: [
+      {
+        id: 1,
+        position: "a0",
+        objectType: "space",
+        title: "Main",
+        folders: [
+          {
+            id: 10,
+            position: "a0",
+            objectType: "folder",
+            title: "Pinned",
+            items: [
+              {
+                id: 100,
+                position: "a0",
+                type: "bookmark",
+                title: "Bookmark",
+                url: "https://example.com",
+                favIconUrl: "",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+
+  expect(isDataBackupV3Input(legacyBackup)).toBe(true);
+  if (!isDataBackupV3Input(legacyBackup)) {
+    throw new Error("legacy backup must pass the input adapter");
+  }
+
+  const item = normalizeBackupV3(legacyBackup).spaces[0].folders[0].items[0];
+  const requiresCanonicalDiscriminator = (value: {
+    objectType: "bookmark" | "group";
+  }) => value.objectType;
+
+  expect(requiresCanonicalDiscriminator(item)).toBe("bookmark");
+});
 
 test("normalizeBackupV3 retains only local v3 fields at every entity level", () => {
   const backup = {
@@ -88,7 +133,7 @@ test("normalizeBackupV3 retains only local v3 fields at every entity level", () 
     ],
   };
 
-  const result = normalizeBackupV3(backup as DataBackupV3);
+  const result = normalizeBackupV3(backup as DataBackupV3Input);
 
   expect(result).toEqual({
     isTablo: true,
@@ -166,9 +211,9 @@ test("normalizeBackupV3 retains only local v3 fields at every entity level", () 
   });
 });
 
-test("isDataBackupV3 distinguishes an invalid backup from a valid empty backup", () => {
+test("isDataBackupV3Input distinguishes an invalid backup from a valid empty backup", () => {
   expect(
-    isDataBackupV3({
+    isDataBackupV3Input({
       isTablo: true,
       version: 3,
       spaces: [],
@@ -176,7 +221,7 @@ test("isDataBackupV3 distinguishes an invalid backup from a valid empty backup",
   ).toBe(true);
 
   expect(
-    isDataBackupV3({
+    isDataBackupV3Input({
       isTablo: true,
       version: 3,
       spaces: [

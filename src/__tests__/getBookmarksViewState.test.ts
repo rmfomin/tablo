@@ -1,5 +1,5 @@
-import { getBookmarksViewState } from "@/newtab/components/common/Bookmarks/getBookmarksViewState";
-import type { BookmarksViewStateInput } from "@/newtab/components/common/Bookmarks/getBookmarksViewState";
+import { getBookmarksViewState } from "@/newtab/feature/bookmarks/getBookmarksViewState";
+import type { BookmarksViewStateInput } from "@/newtab/feature/bookmarks/getBookmarksViewState";
 
 function createViewState(): BookmarksViewStateInput {
   return {
@@ -44,12 +44,14 @@ function createViewState(): BookmarksViewStateInput {
                 id: 200,
                 position: "a0",
                 type: "group",
+                objectType: "group",
                 title: "Ops",
                 groupItems: [
                   {
                     id: 201,
                     position: "a0",
                     type: "bookmark",
+                    objectType: "bookmark",
                     title: "Grafana",
                     url: "https://grafana.example",
                     favIconUrl: "https://grafana.example/favicon.ico",
@@ -98,12 +100,14 @@ test("getBookmarksViewState searches through v3 folders across spaces", () => {
             id: 200,
             position: "a0",
             type: "group",
+            objectType: "group",
             title: "Ops",
             groupItems: [
               {
                 id: 201,
                 position: "a0",
                 type: "bookmark",
+                objectType: "bookmark",
                 title: "Grafana",
                 url: "https://grafana.example",
                 favIconUrl: "https://grafana.example/favicon.ico",

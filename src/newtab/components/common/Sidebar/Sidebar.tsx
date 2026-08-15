@@ -39,13 +39,20 @@ export function Sidebar() {
   const setSidebarHovered = useUiStore((state) => state.setSidebarHovered);
   const setSidebarCollapsed = useUiStore((state) => state.setSidebarCollapsed);
   const setItemInEdit = useUiStore((state) => state.setItemInEdit);
+  const selectedItemIds = useUiStore((state) => state.selectedItemIds);
+  const clearSelectedItemIds = useUiStore(
+    (state) => state.clearSelectedItemIds
+  );
   const tabs = useChromeRuntimeStore((state) => state.tabs);
   const recentItems = useChromeRuntimeStore((state) => state.recentItems);
-  const lastActiveTabIds = useChromeRuntimeStore((state) => state.lastActiveTabIds);
-  const currentWindowId = useChromeRuntimeStore((state) => state.currentWindowId);
+  const lastActiveTabIds = useChromeRuntimeStore(
+    (state) => state.lastActiveTabIds
+  );
+  const currentWindowId = useChromeRuntimeStore(
+    (state) => state.currentWindowId
+  );
   const showRecent = useUiStore((state) => state.showRecent);
-  const keepSidebarOpened =
-    !sidebarCollapsedValue || sidebarHovered;
+  const keepSidebarOpened = !sidebarCollapsedValue || sidebarHovered;
   const sidebarCollapsed = !keepSidebarOpened;
   const sidebarRef = useRef<HTMLDivElement | null>(null);
   const openTabsHeaderRef = useRef<HTMLDivElement | null>(null);
@@ -64,15 +71,12 @@ export function Sidebar() {
         targetGroupId?: number
       ) => {
         const targetTabId = targetTabsOrRecentIds[0]; // we support D&D only single element from sidebar
-        let tabOrRecentItem:
-          | Tab
-          | RecentItem
-          | undefined = tabs.find((t) => t.id === targetTabId);
+        let tabOrRecentItem: Tab | RecentItem | undefined = tabs.find(
+          (t) => t.id === targetTabId
+        );
 
         if (!tabOrRecentItem) {
-          tabOrRecentItem = recentItems.find(
-            (hi) => hi.id === targetTabId
-          );
+          tabOrRecentItem = recentItems.find((hi) => hi.id === targetTabId);
         }
 
         if (folderId === -1) {
@@ -84,7 +88,12 @@ export function Sidebar() {
         if (tabOrRecentItem && tabOrRecentItem.id) {
           // Add existing Tab
           const item = convertTabOrRecentToItem(tabOrRecentItem);
-          createFolderItem({ folderId, targetGroupId, insertBeforeItemId, item });
+          createFolderItem({
+            folderId,
+            targetGroupId,
+            insertBeforeItemId,
+            item,
+          });
           setItemInEdit(item.id);
         } else {
           console.error("ERROR: tab not found");
@@ -100,9 +109,7 @@ export function Sidebar() {
           chrome.tabs.update(tabOrRecentId, { active: true });
           chrome.windows.update(tab.windowId, { focused: true });
         } else {
-          const recent = recentItems.find(
-            (ri) => ri.id === tabOrRecentId
-          );
+          const recent = recentItems.find((ri) => ri.id === tabOrRecentId);
           if (recent && recent.url) {
             chrome.tabs.create({ url: recent.url, active: true });
           }
@@ -112,15 +119,31 @@ export function Sidebar() {
         return true;
       };
 
-      return bindDADItemEffect(mouseDownEvent, {
-        isFolderItem: false,
-        onDrop,
-        onCancel,
-        onClick,
-        onDragStarted,
-      });
+      return bindDADItemEffect(
+        mouseDownEvent,
+        {
+          isFolderItem: false,
+          onDrop,
+          onCancel,
+          onClick,
+          onDragStarted,
+        },
+        {
+          selectedItemIds,
+          clearSelectedItemIds,
+        }
+      );
     }
-  }, [mouseDownEvent, tabs, recentItems, createFolder, createFolderItem, setItemInEdit]);
+  }, [
+    mouseDownEvent,
+    tabs,
+    recentItems,
+    createFolder,
+    createFolderItem,
+    setItemInEdit,
+    selectedItemIds,
+    clearSelectedItemIds,
+  ]);
 
   function onMouseDown(e: React.MouseEvent) {
     if (isTargetSupportsDragAndDrop(e)) {
@@ -179,9 +202,7 @@ export function Sidebar() {
           id="toggle-sidebar-btn"
           className="btn__icon"
           onClick={onToggleSidebar}
-          style={
-            sidebarCollapsedValue ? { transform: "rotate(180deg)" } : {}
-          }
+          style={sidebarCollapsedValue ? { transform: "rotate(180deg)" } : {}}
           title={sidebarCollapsedValue ? "Pin" : "Collapse"}
         >
           <IconPin />

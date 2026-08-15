@@ -18,14 +18,15 @@ import {
   removeDropPreview,
   setDragSourceHidden,
   DropArea,
+  PConfigItemDependencies,
 } from "@/newtab/feature/dragging/dragAndDrop";
 import { DOM_ROLE, roleSelector } from "@/newtab/helpers/domRoles";
-import { uiStore } from "@/newtab/state/ui/uiStore";
 
 export function processItemDragAndDrop(
   mouseDownEvent: React.MouseEvent,
   config: PConfigItem,
-  targetRoots: HTMLElement[]
+  targetRoots: HTMLElement[],
+  dependencies: PConfigItemDependencies
 ) {
   let originalFolderId: number;
   let originalIndex: number;
@@ -185,7 +186,7 @@ export function processItemDragAndDrop(
       config.onClick(getIdsFromElements(targetRoots)[0]);
     }
 
-    uiStore.getState().clearSelectedItemIds();
+    dependencies.clearSelectedItemIds();
   };
 
   const unsubscribeEvents = subscribeMouseEvents(

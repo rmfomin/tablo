@@ -47,7 +47,7 @@ const {
   onExportJson,
 } = require("../newtab/helpers/importExportHelpers");
 const { normalizeBackupV3 } = require("../newtab/helpers/dataFormatAdapters");
-const v3ExportFixture = require("../../docs/tech-debt/02apr.json");
+const v3ExportFixture = require("../../docs/fixtures/v3-dashboard-backup.json");
 
 function mockFileReaderWithContents(fileContents: string) {
   Object.defineProperty(global, "FileReader", {
@@ -105,6 +105,7 @@ test("createExportBackupV3 preserves grouped and collapsed v3 structure", () => 
               id: 100,
               position: "a0",
               type: "group",
+              objectType: "group",
               title: "Group",
               collapsed: true,
               groupItems: [
@@ -112,6 +113,7 @@ test("createExportBackupV3 preserves grouped and collapsed v3 structure", () => 
                   id: 101,
                   position: "a0",
                   type: "bookmark",
+                  objectType: "bookmark",
                   title: "Grafana",
                   url: "https://grafana.example",
                   favIconUrl: "https://grafana.example/favicon.ico",
@@ -192,12 +194,14 @@ test("createExportSpaceBackupV3 exports one normalized v3 space", () => {
             id: 100,
             position: "a0",
             type: "group",
+            objectType: "group",
             title: "Group",
             groupItems: [
               {
                 id: 101,
                 position: "a0",
                 type: "bookmark",
+                objectType: "bookmark",
                 title: "Grafana",
                 url: "https://grafana.example",
                 favIconUrl: "https://grafana.example/favicon.ico",

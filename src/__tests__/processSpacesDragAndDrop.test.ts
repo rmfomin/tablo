@@ -1,6 +1,4 @@
-let onMouseMove:
-  | ((event: MouseEvent, mouseMoved: boolean) => void)
-  | undefined;
+let onMouseMove: ((event: MouseEvent, mouseMoved: boolean) => void) | undefined;
 let onMouseUp: (() => void) | undefined;
 
 jest.mock("@/newtab/feature/dragging/dragAndDropUtils", () => ({
@@ -21,8 +19,9 @@ import {
 } from "@/newtab/feature/dragging/processSpacesDragAndDrop";
 
 test("space source keeps its place while hidden until the drag ends", () => {
+  const clearSelectedItemIds = jest.fn();
   const source = createSpaceElement("1", "a", { left: 100, right: 150 });
-  const spacesList = {
+  const spacesList = ({
     getBoundingClientRect: () =>
       ({
         left: 100,
@@ -31,10 +30,10 @@ test("space source keeps its place while hidden until the drag ends", () => {
         bottom: 40,
         width: 200,
         height: 40,
-      }) as DOMRect,
+      } as DOMRect),
     querySelectorAll: () => [source],
     cloneNode: () => createSpacesListClone(),
-  } as unknown as HTMLElement;
+  } as unknown) as HTMLElement;
   const body = {
     appendChild: jest.fn(),
     classList: { add: jest.fn(), remove: jest.fn() },
@@ -45,12 +44,13 @@ test("space source keeps its place while hidden until the drag ends", () => {
   };
 
   processSpacesDragAndDrop(
-    {
+    ({
       clientX: 110,
       clientY: 20,
       target: { closest: () => source },
-    } as unknown as React.MouseEvent,
-    { canSortSpaces: jest.fn(() => true), onChangeSpacePosition: jest.fn() }
+    } as unknown) as React.MouseEvent,
+    { canSortSpaces: jest.fn(() => true), onChangeSpacePosition: jest.fn() },
+    { selectedItemIds: [], clearSelectedItemIds }
   );
 
   onMouseMove!({ clientX: 160, clientY: 20 } as MouseEvent, true);
@@ -60,11 +60,12 @@ test("space source keeps its place while hidden until the drag ends", () => {
   onMouseUp!();
 
   expect(source.style).toMatchObject({ display: "", visibility: "" });
+  expect(clearSelectedItemIds).toHaveBeenCalledTimes(1);
 });
 
 test("dragged space returns to its initial position below the spaces list", () => {
   const source = createSpaceElement("1", "a", { left: 100, right: 150 });
-  const spacesList = {
+  const spacesList = ({
     getBoundingClientRect: () =>
       ({
         left: 100,
@@ -73,10 +74,10 @@ test("dragged space returns to its initial position below the spaces list", () =
         bottom: 40,
         width: 200,
         height: 40,
-      }) as DOMRect,
+      } as DOMRect),
     querySelectorAll: () => [source],
     cloneNode: () => createSpacesListClone(),
-  } as unknown as HTMLElement;
+  } as unknown) as HTMLElement;
   const body = {
     appendChild: jest.fn(),
     classList: { add: jest.fn(), remove: jest.fn() },
@@ -87,12 +88,13 @@ test("dragged space returns to its initial position below the spaces list", () =
   };
 
   processSpacesDragAndDrop(
-    {
+    ({
       clientX: 110,
       clientY: 20,
       target: { closest: () => source },
-    } as unknown as React.MouseEvent,
-    { canSortSpaces: jest.fn(() => true), onChangeSpacePosition: jest.fn() }
+    } as unknown) as React.MouseEvent,
+    { canSortSpaces: jest.fn(() => true), onChangeSpacePosition: jest.fn() },
+    { selectedItemIds: [], clearSelectedItemIds: jest.fn() }
   );
 
   onMouseMove!({ clientX: 160, clientY: 20 } as MouseEvent, true);
@@ -137,22 +139,22 @@ function createSpaceElement(
   position: string,
   rect: { left: number; right: number }
 ) {
-  const element = {
+  const element = ({
     dataset: { spaceId, position },
     style: { display: "", visibility: "" },
     classList: { add: jest.fn() },
     getBoundingClientRect: () =>
-      ({ ...rect, width: rect.right - rect.left }) as DOMRect,
-  } as unknown as HTMLElement;
+      ({ ...rect, width: rect.right - rect.left } as DOMRect),
+  } as unknown) as HTMLElement;
   element.cloneNode = () => createSpaceElement(spaceId, position, rect);
   return element;
 }
 
 function createSpacesListClone() {
-  return {
+  return ({
     style: {},
     classList: { add: jest.fn() },
     append: jest.fn(),
     remove: jest.fn(),
-  } as unknown as HTMLElement;
+  } as unknown) as HTMLElement;
 }

@@ -1,11 +1,17 @@
 import {
   BackupBrandMarker,
   BookmarkItemV3,
+  BookmarkItemV3Input,
   DataBackupV3,
+  DataBackupV3Input,
   FolderV3,
+  FolderV3Input,
   GroupV3,
+  GroupV3Input,
   ItemV3,
+  ItemV3Input,
   SpaceV3,
+  SpaceV3Input,
 } from "@/newtab/helpers/types";
 
 type UnknownRecord = Record<string, unknown>;
@@ -44,7 +50,7 @@ function hasLocalBase(value: UnknownRecord): boolean {
   );
 }
 
-function isBookmarkItemV3(value: unknown): value is BookmarkItemV3 {
+function isBookmarkItemV3Input(value: unknown): value is BookmarkItemV3Input {
   if (!isRecord(value) || !hasLocalBase(value)) {
     return false;
   }
@@ -58,7 +64,7 @@ function isBookmarkItemV3(value: unknown): value is BookmarkItemV3 {
   );
 }
 
-function isGroupV3(value: unknown): value is GroupV3 {
+function isGroupV3Input(value: unknown): value is GroupV3Input {
   if (!isRecord(value) || !hasLocalBase(value)) {
     return false;
   }
@@ -68,15 +74,15 @@ function isGroupV3(value: unknown): value is GroupV3 {
     (value.objectType === undefined || value.objectType === "group") &&
     isOptionalBoolean(value, "collapsed") &&
     Array.isArray(value.groupItems) &&
-    value.groupItems.every(isBookmarkItemV3)
+    value.groupItems.every(isBookmarkItemV3Input)
   );
 }
 
-export function isItemV3(value: unknown): value is ItemV3 {
-  return isBookmarkItemV3(value) || isGroupV3(value);
+export function isItemV3Input(value: unknown): value is ItemV3Input {
+  return isBookmarkItemV3Input(value) || isGroupV3Input(value);
 }
 
-export function isFolderV3(value: unknown): value is FolderV3 {
+function isFolderV3Input(value: unknown): value is FolderV3Input {
   if (!isRecord(value) || !hasLocalBase(value)) {
     return false;
   }
@@ -84,25 +90,25 @@ export function isFolderV3(value: unknown): value is FolderV3 {
   return (
     value.objectType === "folder" &&
     Array.isArray(value.items) &&
-    value.items.every(isItemV3) &&
+    value.items.every(isItemV3Input) &&
     isOptionalString(value, "color") &&
     isOptionalBoolean(value, "collapsed") &&
     isOptionalBoolean(value, "twoColumn")
   );
 }
 
-export function isSpaceV3(value: unknown): value is SpaceV3 {
+export function isSpaceV3Input(value: unknown): value is SpaceV3Input {
   return (
     isRecord(value) &&
     hasLocalBase(value) &&
     value.objectType === "space" &&
     Array.isArray(value.folders) &&
-    value.folders.every(isFolderV3)
+    value.folders.every(isFolderV3Input)
   );
 }
 
-export function areSpacesV3(value: unknown): value is SpaceV3[] {
-  return Array.isArray(value) && value.every(isSpaceV3);
+export function areSpacesV3Input(value: unknown): value is SpaceV3Input[] {
+  return Array.isArray(value) && value.every(isSpaceV3Input);
 }
 
 function isBackupBrandMarker(value: UnknownRecord): boolean {
@@ -113,16 +119,16 @@ function isBackupBrandMarker(value: UnknownRecord): boolean {
   );
 }
 
-export function isDataBackupV3(value: unknown): value is DataBackupV3 {
+export function isDataBackupV3Input(value: unknown): value is DataBackupV3Input {
   return (
     isRecord(value) &&
     value.version === 3 &&
     isBackupBrandMarker(value) &&
-    areSpacesV3(value.spaces)
+    areSpacesV3Input(value.spaces)
   );
 }
 
-function normalizeBookmarkItemV3(item: BookmarkItemV3): BookmarkItemV3 {
+function normalizeBookmarkItemV3(item: BookmarkItemV3Input): BookmarkItemV3 {
   const source = item as unknown as UnknownRecord;
   const normalized: BookmarkItemV3 = {
     id: item.id,
@@ -145,7 +151,7 @@ function normalizeBookmarkItemV3(item: BookmarkItemV3): BookmarkItemV3 {
   return normalized;
 }
 
-function normalizeGroupV3(item: GroupV3): GroupV3 {
+function normalizeGroupV3(item: GroupV3Input): GroupV3 {
   const source = item as unknown as UnknownRecord;
   const normalized: GroupV3 = {
     id: item.id,
@@ -167,13 +173,13 @@ function normalizeGroupV3(item: GroupV3): GroupV3 {
   return normalized;
 }
 
-function normalizeItemV3(item: ItemV3): ItemV3 {
+function normalizeItemV3(item: ItemV3Input): ItemV3 {
   return item.type === "group"
     ? normalizeGroupV3(item)
     : normalizeBookmarkItemV3(item);
 }
 
-function normalizeFolderV3(folder: FolderV3): FolderV3 {
+function normalizeFolderV3(folder: FolderV3Input): FolderV3 {
   const source = folder as unknown as UnknownRecord;
   const normalized: FolderV3 = {
     id: folder.id,
@@ -197,7 +203,7 @@ function normalizeFolderV3(folder: FolderV3): FolderV3 {
   return normalized;
 }
 
-function normalizeSpaceV3(space: SpaceV3): SpaceV3 {
+function normalizeSpaceV3(space: SpaceV3Input): SpaceV3 {
   return {
     id: space.id,
     position: space.position,
@@ -207,7 +213,7 @@ function normalizeSpaceV3(space: SpaceV3): SpaceV3 {
   };
 }
 
-function normalizeBackupBrandMarker(data: DataBackupV3): BackupBrandMarker {
+function normalizeBackupBrandMarker(data: DataBackupV3Input): BackupBrandMarker {
   if (data.isTablo) {
     return { isTablo: true };
   }
@@ -217,7 +223,7 @@ function normalizeBackupBrandMarker(data: DataBackupV3): BackupBrandMarker {
   return { isAppVersion1: true };
 }
 
-export function normalizeBackupV3(data: DataBackupV3): DataBackupV3 {
+export function normalizeBackupV3(data: DataBackupV3Input): DataBackupV3 {
   const spaces = sortByPosition(data.spaces.map(normalizeSpaceV3));
   const marker = normalizeBackupBrandMarker(data);
 

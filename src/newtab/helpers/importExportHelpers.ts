@@ -1,8 +1,10 @@
 import {
   DataBackupV3,
+  BackupBrandMarker,
   FolderItemToCreate,
   SpaceBackupV3,
   SpaceV3,
+  SpaceV3Input,
 } from "@/newtab/helpers/types";
 import {
   createNewFolderItem,
@@ -12,8 +14,8 @@ import {
 import { getTopVisitedFromHistory } from "@/newtab/helpers/utils";
 import { RecentItem } from "@/newtab/helpers/recentHistoryUtils";
 import {
-  isDataBackupV3,
-  isSpaceV3,
+  isDataBackupV3Input,
+  isSpaceV3Input,
   normalizeBackupV3,
 } from "@/newtab/helpers/dataFormatAdapters";
 import { insertBetween } from "@/newtab/helpers/fractionalIndexes";
@@ -23,7 +25,13 @@ function hasSupportedBackupMarker(data: Record<string, unknown>) {
   return markers.filter((marker) => marker === true).length === 1;
 }
 
-function isSpaceBackupJsonV3(data: unknown): data is SpaceBackupV3 {
+type SpaceBackupV3Input = {
+  version: 3;
+  objectType: "space-backup";
+  space: SpaceV3Input;
+} & BackupBrandMarker;
+
+function isSpaceBackupJsonV3(data: unknown): data is SpaceBackupV3Input {
   if (!data || typeof data !== "object" || Array.isArray(data)) {
     return false;
   }
@@ -32,17 +40,19 @@ function isSpaceBackupJsonV3(data: unknown): data is SpaceBackupV3 {
     hasSupportedBackupMarker(backup) &&
     backup.version === 3 &&
     backup.objectType === "space-backup" &&
-    isSpaceV3(backup.space)
+    isSpaceV3Input(backup.space)
   );
 }
 
 function getImportableSpaceV3(data: unknown): SpaceV3 | undefined {
   if (isSpaceBackupJsonV3(data)) {
-    return data.space;
+    return normalizeBackupV3({ ...data, spaces: [data.space] }).spaces[0];
   }
 
-  if (isDataBackupV3(data)) {
-    return data.spaces.length === 1 ? data.spaces[0] : undefined;
+  if (isDataBackupV3Input(data)) {
+    return data.spaces.length === 1
+      ? normalizeBackupV3(data).spaces[0]
+      : undefined;
   }
 
   return undefined;
@@ -61,7 +71,7 @@ export type DashboardImportResult =
 export function parseDashboardImportJson(text: string): DashboardImportResult {
   try {
     const parsed = JSON.parse(text);
-    if (isDataBackupV3(parsed)) {
+    if (isDataBackupV3Input(parsed)) {
       return { ok: true, spaces: normalizeBackupV3(parsed).spaces };
     }
 

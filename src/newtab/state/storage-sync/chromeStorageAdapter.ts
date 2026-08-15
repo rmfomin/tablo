@@ -1,4 +1,4 @@
-import { areSpacesV3, normalizeBackupV3 } from "@/newtab/helpers/dataFormatAdapters";
+import { areSpacesV3Input, normalizeBackupV3 } from "@/newtab/helpers/dataFormatAdapters";
 import type { ColorTheme, SpaceV3 } from "@/newtab/helpers/types";
 import type { PersistedNewtabState, StorageSyncAdapter } from "@/newtab/state/storage-sync/types";
 
@@ -64,7 +64,7 @@ export function createBrowserStorageAdapter(): StorageSyncAdapter {
 }
 
 export function normalizePersistedState(value: StorageRecord): PersistedNewtabState {
-  const spaces = value.version === 3 && areSpacesV3(value.spaces)
+  const spaces = value.version === 3 && areSpacesV3Input(value.spaces)
     ? normalizeBackupV3({ isTablo: true, version: 3, spaces: value.spaces }).spaces
     : [];
 
@@ -89,7 +89,7 @@ export function normalizePersistedState(value: StorageRecord): PersistedNewtabSt
 }
 
 function toCanonicalState(state: PersistedNewtabState): PersistedNewtabState {
-  const spaces: SpaceV3[] = areSpacesV3(state.spaces)
+  const spaces: SpaceV3[] = areSpacesV3Input(state.spaces)
     ? normalizeBackupV3({ isTablo: true, version: 3, spaces: state.spaces }).spaces
     : [];
   return { ...state, version: 3, spaces };
