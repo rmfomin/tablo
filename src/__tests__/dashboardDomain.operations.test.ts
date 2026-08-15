@@ -5,8 +5,8 @@ import {
   deleteFolderGroup,
   deleteFolderItems,
   moveFolderItems,
-} from "@/newtab/state/dashboard/domain";
-import type { DashboardState } from "@/newtab/state/dashboard/types";
+} from "@/newtab/01-app/model/dashboard/domain";
+import type { DashboardState } from "@/newtab/01-app/model/dashboard/types";
 
 const state: DashboardState = { spaces: [], currentSpaceId: -1 };
 const stateWithBookmarkAndGroup: DashboardState = {

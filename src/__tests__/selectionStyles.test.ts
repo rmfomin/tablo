@@ -6,10 +6,10 @@ const readStyle = (relativePath: string) =>
 
 test("bookmark selection uses the same subtle highlight as group selection", () => {
   const bookmarkStyles = readStyle(
-    "../newtab/components/common/FolderItem/FolderItem.module.scss",
+    "../newtab/03-widgets/dashboard/FolderItem/FolderItem.module.scss",
   );
   const groupStyles = readStyle(
-    "../newtab/components/common/FolderGroup/FolderGroup.module.scss",
+    "../newtab/03-widgets/dashboard/FolderGroup/FolderGroup.module.scss",
   );
 
   expect(bookmarkStyles).toContain(

@@ -1,8 +1,8 @@
 import {
   collectBookmarksV3,
   hasArchivedItemsV3,
-} from "@/newtab/helpers/v3Traversal";
-import { SpaceV3 } from "@/newtab/helpers/types";
+} from "@/newtab/05-entities/dashboard/model/traversal";
+import { SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
 
 function createSpacesFixture(): SpaceV3[] {
   return [

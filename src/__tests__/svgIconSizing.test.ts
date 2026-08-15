@@ -29,7 +29,7 @@ function expectRuleWithSize(
 describe("svg icon sizing", () => {
   test("search icon receives the fixed-size class on the svg element", () => {
     const component = read(
-      "../newtab/components/common/SearchInput/SearchInput.tsx"
+      "../newtab/04-features/bookmark-search/ui/SearchInput.tsx"
     );
 
     expect(component).toContain('<IconSearch className={styles.searchIcon} />');
@@ -38,7 +38,7 @@ describe("svg icon sizing", () => {
 
   test("space context menu delete action is rendered as a text danger action", () => {
     const component = read(
-      "../newtab/components/common/SpacesList/SpacesList.tsx"
+      "../newtab/03-widgets/spaces-list/SpacesList/SpacesList.tsx"
     );
 
     expect(component).toContain("<span>Delete space</span>");
@@ -54,58 +54,58 @@ describe("svg icon sizing", () => {
   test("component svg icons keep their current rendered size in css", () => {
     const componentRules = [
       {
-        file: "../newtab/components/common/SpacesList/SpacesList.module.scss",
+        file: "../newtab/03-widgets/spaces-list/SpacesList/SpacesList.module.scss",
         selector: ".deleteButton svg",
         size: "24px",
       },
       {
-        file: "../newtab/components/common/SpacesList/SpacesList.module.scss",
+        file: "../newtab/03-widgets/spaces-list/SpacesList/SpacesList.module.scss",
         selector: ".menuButton svg",
         size: "24px",
       },
       {
-        file: "../newtab/components/common/Folder/Folder.module.scss",
+        file: "../newtab/03-widgets/dashboard/Folder/Folder.module.scss",
         selector: ".menuButton svg",
         size: "20px",
       },
       {
-        file: "../newtab/components/common/Folder/Folder.module.scss",
+        file: "../newtab/03-widgets/dashboard/Folder/Folder.module.scss",
         selector: ".collapseToggle svg",
         size: "16px",
       },
       {
-        file: "../newtab/components/common/FolderGroup/FolderGroup.module.scss",
+        file: "../newtab/03-widgets/dashboard/FolderGroup/FolderGroup.module.scss",
         selector: ".toggle svg",
         size: "16px",
       },
       {
-        file: "../newtab/components/common/FolderItem/FolderItem.module.scss",
+        file: "../newtab/03-widgets/dashboard/FolderItem/FolderItem.module.scss",
         selector: ".closeButton svg",
         size: "10px",
       },
       {
-        file: "../newtab/components/common/SidebarItem/SidebarItem.module.scss",
+        file: "../newtab/03-widgets/sidebar/SidebarItem/SidebarItem.module.scss",
         selector: ".savedTabIcon",
         width: "10px",
         height: "9px",
       },
       {
-        file: "../newtab/components/common/SearchInput/SearchInput.module.scss",
+        file: "../newtab/04-features/bookmark-search/ui/SearchInput.module.scss",
         selector: ".searchIcon",
         size: "16px",
       },
       {
-        file: "../newtab/components/common/SearchInput/SearchInput.module.scss",
+        file: "../newtab/04-features/bookmark-search/ui/SearchInput.module.scss",
         selector: ".filterToggleButton svg",
         size: "14px",
       },
       {
-        file: "../newtab/components/common/SearchInput/SearchInput.module.scss",
+        file: "../newtab/04-features/bookmark-search/ui/SearchInput.module.scss",
         selector: ".filterButton svg",
         size: "16px",
       },
       {
-        file: "../newtab/components/common/Notification/Notification.module.scss",
+        file: "../newtab/03-widgets/ui/Notification/Notification.module.scss",
         selector: ".notification svg",
         size: "24px",
       },

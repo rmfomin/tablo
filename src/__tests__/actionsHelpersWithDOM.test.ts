@@ -4,7 +4,7 @@ import {
   showMessageWithUndo,
   type DashboardFolderCommands,
   type UiFeedbackCommands,
-} from "@/newtab/helpers/actionsHelpersWithDOM";
+} from "@/newtab/04-features/bookmarks/model/actionsHelpersWithDOM";
 
 function createUiCommands(): jest.Mocked<UiFeedbackCommands> {
   return {

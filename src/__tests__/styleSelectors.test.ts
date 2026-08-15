@@ -29,7 +29,7 @@ describe("compiled style selectors", () => {
   test("bookmarks module keeps component-owned selectors local", () => {
     const modulePath = path.join(
       __dirname,
-      "../newtab/components/common/Bookmarks/Bookmarks.module.scss"
+      "../newtab/03-widgets/dashboard/Bookmarks/Bookmarks.module.scss"
     );
     const moduleScss = fs.readFileSync(modulePath, "utf8");
 
@@ -40,15 +40,15 @@ describe("compiled style selectors", () => {
 
   test("component modules avoid global and BEM selectors after migration", () => {
     const migratedModules = [
-      "../newtab/components/common/Bookmarks/Bookmarks.module.scss",
-      "../newtab/components/common/Folder/Folder.module.scss",
-      "../newtab/components/common/FolderItem/FolderItem.module.scss",
-      "../newtab/components/common/FolderGroup/FolderGroup.module.scss",
-      "../newtab/components/common/SidebarItem/SidebarItem.module.scss",
-      "../newtab/components/common/Sidebar/Sidebar.module.scss",
-      "../newtab/components/common/SidebarOpenTabs/SidebarOpenTabs.module.scss",
-      "../newtab/components/common/SidebarRecent/SidebarRecent.module.scss",
-      "../newtab/components/common/TopBar/TopBar.module.scss",
+      "../newtab/03-widgets/dashboard/Bookmarks/Bookmarks.module.scss",
+      "../newtab/03-widgets/dashboard/Folder/Folder.module.scss",
+      "../newtab/03-widgets/dashboard/FolderItem/FolderItem.module.scss",
+      "../newtab/03-widgets/dashboard/FolderGroup/FolderGroup.module.scss",
+      "../newtab/03-widgets/sidebar/SidebarItem/SidebarItem.module.scss",
+      "../newtab/03-widgets/sidebar/Sidebar/Sidebar.module.scss",
+      "../newtab/03-widgets/sidebar/SidebarOpenTabs/SidebarOpenTabs.module.scss",
+      "../newtab/03-widgets/sidebar/SidebarRecent/SidebarRecent.module.scss",
+      "../newtab/03-widgets/top-bar/TopBar/TopBar.module.scss",
     ];
 
     migratedModules.forEach((relativePath) => {
@@ -62,28 +62,36 @@ describe("compiled style selectors", () => {
   });
 
   test("component-local files use relative imports", () => {
-    const componentsRoot = path.join(
-      __dirname,
-      "../newtab/components/common"
-    );
-    const filesToCheck: Array<{ componentName: string; filePath: string }> = fs
+    const componentsRoot = path.join(__dirname, "../newtab/03-widgets");
+    const filesToCheck: Array<{
+      componentName: string;
+      layerName: string;
+      filePath: string;
+    }> = fs
       .readdirSync(componentsRoot, { withFileTypes: true })
-      .filter((entry: { isDirectory: () => boolean }) => entry.isDirectory())
-      .flatMap((entry: { name: string }) => {
-        const componentDir = path.join(componentsRoot, entry.name);
+      .filter((layer: { isDirectory: () => boolean }) => layer.isDirectory())
+      .flatMap((layer: { name: string }) => {
+        const layerDir = path.join(componentsRoot, layer.name);
         return fs
-          .readdirSync(componentDir)
-          .filter((fileName: string) => /\.(ts|tsx)$/.test(fileName))
-          .map((fileName: string) => ({
-            componentName: entry.name,
-            filePath: path.join(componentDir, fileName),
-          }));
+          .readdirSync(layerDir, { withFileTypes: true })
+          .filter((entry: { isDirectory: () => boolean }) => entry.isDirectory())
+          .flatMap((entry: { name: string }) => {
+            const componentDir = path.join(layerDir, entry.name);
+            return fs
+              .readdirSync(componentDir)
+              .filter((fileName: string) => /\.(ts|tsx)$/.test(fileName))
+              .map((fileName: string) => ({
+                componentName: entry.name,
+                layerName: layer.name,
+                filePath: path.join(componentDir, fileName),
+              }));
+          });
       });
 
-    filesToCheck.forEach(({ componentName, filePath }) => {
+    filesToCheck.forEach(({ componentName, layerName, filePath }) => {
       const source = fs.readFileSync(filePath, "utf8");
       const ownAbsoluteImport = new RegExp(
-        `from "@/newtab/components/common/${componentName}/`,
+        `from "@/newtab/03-widgets/${layerName}/${componentName}/`,
         "g"
       );
 
@@ -94,11 +102,11 @@ describe("compiled style selectors", () => {
   test("folder item does not render a menu button", () => {
     const componentPath = path.join(
       __dirname,
-      "../newtab/components/common/FolderItem/FolderItem.tsx"
+      "../newtab/03-widgets/dashboard/FolderItem/FolderItem.tsx"
     );
     const modulePath = path.join(
       __dirname,
-      "../newtab/components/common/FolderItem/FolderItem.module.scss"
+      "../newtab/03-widgets/dashboard/FolderItem/FolderItem.module.scss"
     );
     const componentSource = fs.readFileSync(componentPath, "utf8");
     const moduleScss = fs.readFileSync(modulePath, "utf8");
@@ -111,7 +119,7 @@ describe("compiled style selectors", () => {
   test("folder item keeps the old menu gutter without rendering a button", () => {
     const modulePath = path.join(
       __dirname,
-      "../newtab/components/common/FolderItem/FolderItem.module.scss"
+      "../newtab/03-widgets/dashboard/FolderItem/FolderItem.module.scss"
     );
     const moduleScss = fs.readFileSync(modulePath, "utf8");
 

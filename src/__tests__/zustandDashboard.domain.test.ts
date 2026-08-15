@@ -2,8 +2,8 @@ import {
   moveFolder,
   selectSpace,
   updateFolder,
-} from "@/newtab/state/dashboard/domain";
-import type { DashboardState } from "@/newtab/state/dashboard/types";
+} from "@/newtab/01-app/model/dashboard/domain";
+import type { DashboardState } from "@/newtab/01-app/model/dashboard/types";
 
 function createDashboardState(): DashboardState {
   return {

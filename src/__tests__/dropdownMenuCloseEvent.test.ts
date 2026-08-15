@@ -7,7 +7,7 @@ test("dropdown menu closes on outside click instead of mousedown", () => {
   const source = fs.readFileSync(
     path.join(
       __dirname,
-      "../newtab/components/common/DropdownMenu/DropdownMenu.tsx"
+      "../newtab/06-shared/ui/DropdownMenu/DropdownMenu.tsx"
     ),
     "utf8"
   );
@@ -26,7 +26,7 @@ test("opening a dropdown menu broadcasts a close signal to other dropdown menus"
   const source = fs.readFileSync(
     path.join(
       __dirname,
-      "../newtab/components/common/DropdownMenu/DropdownMenu.tsx"
+      "../newtab/06-shared/ui/DropdownMenu/DropdownMenu.tsx"
     ),
     "utf8"
   );

@@ -2,7 +2,7 @@ import {
   isRectIntersecting,
   resolveAreaSelection,
   type SelectionCandidate,
-} from "@/newtab/feature/selection/areaSelection";
+} from "@/newtab/04-features/area-selection/model/areaSelection";
 
 const rect = (left: number, top: number, width: number, height: number) => ({
   left,

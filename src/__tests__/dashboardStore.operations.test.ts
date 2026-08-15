@@ -1,5 +1,5 @@
-import { createDashboardStore } from "@/newtab/state/dashboard/dashboardStore";
-import type { DashboardState } from "@/newtab/state/dashboard/types";
+import { createDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
+import type { DashboardState } from "@/newtab/01-app/model/dashboard/types";
 
 const stateWithGroup: DashboardState = {
   currentSpaceId: 1,

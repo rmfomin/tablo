@@ -1,6 +1,6 @@
 import React from "react";
-import { NewFolderPlaceholder } from "@/newtab/components/common/Folder/NewFolderPlaceholder";
-import { DOM_ROLE } from "@/newtab/helpers/domRoles";
+import { NewFolderPlaceholder } from "@/newtab/03-widgets/dashboard/Folder/NewFolderPlaceholder";
+import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
 
 test("new folder placeholder создаёт папку по клику и сохраняет drag-and-drop contract", () => {
   const onCreate = jest.fn();

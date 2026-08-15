@@ -1,20 +1,20 @@
 import fs from "fs";
 import path from "path";
 
-jest.mock("@/newtab/helpers/selectionUtils", () => ({
+jest.mock("@/newtab/01-app/model/selection", () => ({
   getSelectedItemsElements: jest.fn(() => []),
   unselectAllItems: jest.fn(),
 }));
 
-jest.mock("@/newtab/feature/dragging/processFolderDragAndDrop", () => ({
+jest.mock("@/newtab/04-features/dragging/model/processFolderDragAndDrop", () => ({
   processFolderDragAndDrop: jest.fn(),
 }));
 
-jest.mock("@/newtab/feature/dragging/processItemDragAndDrop", () => ({
+jest.mock("@/newtab/04-features/dragging/model/processItemDragAndDrop", () => ({
   processItemDragAndDrop: jest.fn(),
 }));
 
-jest.mock("@/newtab/feature/dragging/processSpacesDragAndDrop", () => ({
+jest.mock("@/newtab/04-features/dragging/model/processSpacesDragAndDrop", () => ({
   processSpacesDragAndDrop: jest.fn(),
 }));
 
@@ -30,8 +30,8 @@ import {
   placeDropPreview,
   removeDropPreview,
   setDragSourceHidden,
-} from "@/newtab/feature/dragging/dragAndDrop";
-import { DOM_ROLE, roleSelector } from "@/newtab/helpers/domRoles";
+} from "@/newtab/04-features/dragging/model/dragAndDrop";
+import { DOM_ROLE, roleSelector } from "@/newtab/06-shared/lib/dom/roles";
 
 test("getItemIdByIndex returns group id for top-level group drop target", () => {
   const groupEl = {
@@ -219,7 +219,7 @@ test("empty group items keep a stable drop zone before dragging starts", () => {
   const source = fs.readFileSync(
     path.join(
       __dirname,
-      "../newtab/components/common/FolderGroup/FolderGroup.module.scss"
+      "../newtab/03-widgets/dashboard/FolderGroup/FolderGroup.module.scss"
     ),
     "utf8"
   );
@@ -275,7 +275,7 @@ test("group drop target style outlines the whole group", () => {
   const source = fs.readFileSync(
     path.join(
       __dirname,
-      "../newtab/components/common/FolderGroup/FolderGroup.module.scss"
+      "../newtab/03-widgets/dashboard/FolderGroup/FolderGroup.module.scss"
     ),
     "utf8"
   );
@@ -286,7 +286,7 @@ test("group drop target style outlines the whole group", () => {
 
 test("drag preview has no selected-item background", () => {
   const source = fs.readFileSync(
-    path.join(__dirname, "../newtab/feature/dragging/dragAndDrop.scss"),
+    path.join(__dirname, "../newtab/04-features/dragging/dragAndDrop.scss"),
     "utf8"
   );
 

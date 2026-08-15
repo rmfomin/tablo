@@ -3,7 +3,7 @@ Object.defineProperty(global, "__OVERRIDE_NEWTAB", {
   configurable: true,
 });
 
-import { normalizePersistedState } from "@/newtab/state/storage-sync/chromeStorageAdapter";
+import { normalizePersistedState } from "@/newtab/01-app/model/storage-sync/chromeStorageAdapter";
 
 test("normalizePersistedState сохраняет default openBookmarksInNewTab для пустого storage", () => {
   const state = normalizePersistedState({});

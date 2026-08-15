@@ -1,4 +1,4 @@
-import { SpaceV3 } from "@/newtab/helpers/types";
+import { SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
 
 const localStorageMock = {
   getItem: jest.fn(() => null),
@@ -39,14 +39,18 @@ Object.defineProperty(global, "window", {
 const {
   createExportBackupV3,
   createExportSpaceBackupV3,
+  onExportJson,
+} = require("../newtab/04-features/bookmarks-export/model/dashboardExport");
+const {
   parseDashboardImportJson,
   parseSpaceImportJson,
   importFromJsonWithCallbacks,
   importSpaceFromJsonWithCallback,
+} = require("../newtab/04-features/bookmarks-import/model/dashboardImportExport");
+const {
   createBrowserBookmarksFolderInputs,
-  onExportJson,
-} = require("../newtab/helpers/importExportHelpers");
-const { normalizeBackupV3 } = require("../newtab/helpers/dataFormatAdapters");
+} = require("../newtab/06-shared/api/chrome/bookmarks");
+const { normalizeBackupV3 } = require("../newtab/04-features/bookmarks-import/model/adapters");
 const v3ExportFixture = require("../../docs/fixtures/v3-dashboard-backup.json");
 
 function mockFileReaderWithContents(fileContents: string) {

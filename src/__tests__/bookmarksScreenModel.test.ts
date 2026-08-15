@@ -1,7 +1,7 @@
 import {
   buildBookmarksScreenModel,
   type BookmarksScreenSnapshot,
-} from "@/newtab/feature/bookmarks/bookmarksScreenModel";
+} from "@/newtab/04-features/bookmarks/model/bookmarksScreenModel";
 
 function createSnapshot(): BookmarksScreenSnapshot {
   return {

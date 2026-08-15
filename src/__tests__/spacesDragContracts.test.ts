@@ -7,7 +7,7 @@ test("spaces list keeps data-role drag-and-drop hooks", () => {
   const source = fs.readFileSync(
     path.join(
       __dirname,
-      "../newtab/components/common/SpacesList/SpacesList.tsx"
+      "../newtab/03-widgets/spaces-list/SpacesList/SpacesList.tsx"
     ),
     "utf8"
   );
@@ -21,7 +21,7 @@ test("spaces list exposes single-space import and export controls", () => {
   const source = fs.readFileSync(
     path.join(
       __dirname,
-      "../newtab/components/common/SpacesList/SpacesList.tsx"
+      "../newtab/03-widgets/spaces-list/SpacesList/SpacesList.tsx"
     ),
     "utf8"
   );

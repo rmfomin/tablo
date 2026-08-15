@@ -1,5 +1,5 @@
-import { collectAreaSelectionCandidates } from "@/newtab/components/common/Bookmarks/useAreaSelection";
-import { DOM_ROLE } from "@/newtab/helpers/domRoles";
+import { collectAreaSelectionCandidates } from "@/newtab/04-features/area-selection/ui/useAreaSelection";
+import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
 
 function element(
   id: number,

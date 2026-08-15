@@ -2,8 +2,8 @@ import {
   currentFoldersSelector,
   currentSpaceSelector,
   folderByIdSelector,
-} from "@/newtab/state/dashboard/selectors";
-import { createDashboardStore } from "@/newtab/state/dashboard/dashboardStore";
+} from "@/newtab/01-app/model/dashboard/selectors";
+import { createDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
 
 test("dashboard selectors возвращают минимальный срез текущего space", () => {
   const state = createDashboardStore({

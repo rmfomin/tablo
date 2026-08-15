@@ -11,7 +11,7 @@ const dropArea = {
   rect: { left: 0, width: 200 },
 };
 
-jest.mock("@/newtab/feature/dragging/dragAndDropUtils", () => ({
+jest.mock("@/newtab/04-features/dragging/model/dragAndDropUtils", () => ({
   setScrollByDummyClientY: jest.fn(),
   subscribeMouseEvents: jest.fn(
     (_event, onMove: (event: MouseEvent, mouseMoved: boolean) => void) => {
@@ -21,11 +21,11 @@ jest.mock("@/newtab/feature/dragging/dragAndDropUtils", () => ({
   ),
 }));
 
-jest.mock("@/newtab/helpers/selectionUtils", () => ({
+jest.mock("@/newtab/01-app/model/selection", () => ({
   unselectAllItems: jest.fn(),
 }));
 
-jest.mock("@/newtab/feature/dragging/dragAndDrop", () => ({
+jest.mock("@/newtab/04-features/dragging/model/dragAndDrop", () => ({
   calculateFoldersDropAreas: jest.fn(() => [dropArea]),
   calculateSpacesDropAreas: jest.fn(() => []),
   calculateTargetInsertBeforeFolderId: jest.fn(),
@@ -47,8 +47,8 @@ import {
   createFolderDropIndicator,
   createDropPreview,
   placeFolderDropIndicator,
-} from "@/newtab/feature/dragging/dragAndDrop";
-import { processFolderDragAndDrop } from "@/newtab/feature/dragging/processFolderDragAndDrop";
+} from "@/newtab/04-features/dragging/model/dragAndDrop";
+import { processFolderDragAndDrop } from "@/newtab/04-features/dragging/model/processFolderDragAndDrop";
 
 test("folder drag does not insert a preview into the folder layout", () => {
   const body = {

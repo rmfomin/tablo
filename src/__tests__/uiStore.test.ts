@@ -1,9 +1,9 @@
-import { createUiStore } from "@/newtab/state/ui/uiStore";
+import { createUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import {
   persistedPreferencesSelector,
   searchControllerSelector,
   searchStateSelector,
-} from "@/newtab/state/ui/selectors";
+} from "@/newtab/01-app/model/ui/selectors";
 
 test("ui store меняет transient state и сохраняемые preferences через именованные actions", () => {
   const store = createUiStore();

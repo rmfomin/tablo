@@ -2,7 +2,7 @@ import {
   findBookmarkItem,
   getTemporaryFaviconUrl,
   toUrl,
-} from "@/newtab/state/dashboard/itemUtils";
+} from "@/newtab/05-entities/dashboard/model/itemUtils";
 
 test("findBookmarkItem finds bookmarks nested in a group", () => {
   const item = findBookmarkItem({

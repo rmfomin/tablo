@@ -1,4 +1,4 @@
-import { createChromeRuntimeStore } from "@/newtab/state/chrome-runtime/chromeRuntimeStore";
+import { createChromeRuntimeStore } from "@/newtab/01-app/model/chrome-runtime/chromeRuntimeStore";
 
 function createTab(id: number, title: string): chrome.tabs.Tab {
   return {

@@ -1,9 +1,9 @@
-import { createDashboardStore } from "@/newtab/state/dashboard/dashboardStore";
-import type { DashboardState } from "@/newtab/state/dashboard/types";
+import { createDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
+import type { DashboardState } from "@/newtab/01-app/model/dashboard/types";
 import {
   createDashboardPersistence,
   type DashboardPersistenceAdapter,
-} from "@/newtab/state/storage-sync/dashboardPersistence";
+} from "@/newtab/01-app/model/storage-sync/dashboardPersistence";
 
 function createDashboardState(): DashboardState {
   return {

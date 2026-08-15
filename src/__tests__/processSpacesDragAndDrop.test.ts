@@ -1,7 +1,7 @@
 let onMouseMove: ((event: MouseEvent, mouseMoved: boolean) => void) | undefined;
 let onMouseUp: (() => void) | undefined;
 
-jest.mock("@/newtab/feature/dragging/dragAndDropUtils", () => ({
+jest.mock("@/newtab/04-features/dragging/model/dragAndDropUtils", () => ({
   subscribeMouseEvents: jest.fn((_event, onMove, onUp) => {
     onMouseMove = onMove;
     onMouseUp = onUp;
@@ -9,14 +9,14 @@ jest.mock("@/newtab/feature/dragging/dragAndDropUtils", () => ({
   }),
 }));
 
-jest.mock("@/newtab/helpers/selectionUtils", () => ({
+jest.mock("@/newtab/01-app/model/selection", () => ({
   unselectAllItems: jest.fn(),
 }));
 
 import {
   processSpacesDragAndDrop,
   shouldUpdateSpaceInsertPreview,
-} from "@/newtab/feature/dragging/processSpacesDragAndDrop";
+} from "@/newtab/04-features/dragging/model/processSpacesDragAndDrop";
 
 test("space source keeps its place while hidden until the drag ends", () => {
   const clearSelectedItemIds = jest.fn();

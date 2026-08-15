@@ -5,8 +5,8 @@ import {
   isContainsSearch,
   SearchFilter,
   updateSearchFilter,
-} from "@/newtab/helpers/utils";
-import { RecentItem } from "@/newtab/helpers/recentHistoryUtils";
+} from "@/newtab/04-features/bookmark-search/model/filters";
+import { RecentItem } from "@/newtab/06-shared/api/chrome/history";
 import Tab = chrome.tabs.Tab;
 
 function createFilter(pattern: string): SearchFilter {

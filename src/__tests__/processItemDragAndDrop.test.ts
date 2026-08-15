@@ -8,7 +8,7 @@ const dropArea = {
   itemRects: [],
 };
 
-jest.mock("@/newtab/feature/dragging/dragAndDropUtils", () => ({
+jest.mock("@/newtab/04-features/dragging/model/dragAndDropUtils", () => ({
   setScrollByDummyClientY: jest.fn(),
   subscribeMouseEvents: jest.fn(
     (_event, onMove: (event: MouseEvent, mouseMoved: boolean) => void) => {
@@ -18,11 +18,11 @@ jest.mock("@/newtab/feature/dragging/dragAndDropUtils", () => ({
   ),
 }));
 
-jest.mock("@/newtab/helpers/selectionUtils", () => ({
+jest.mock("@/newtab/01-app/model/selection", () => ({
   unselectAllItems: jest.fn(),
 }));
 
-jest.mock("@/newtab/feature/dragging/dragAndDrop", () => ({
+jest.mock("@/newtab/04-features/dragging/model/dragAndDrop", () => ({
   calculateFoldersDropAreas: jest.fn(() => [dropArea]),
   createDropPreview: jest.fn(() => [{}]),
   createTabDummy: jest.fn(() => ({ style: {} })),
@@ -38,8 +38,8 @@ jest.mock("@/newtab/feature/dragging/dragAndDrop", () => ({
   setDragSourceHidden: jest.fn(() => jest.fn()),
 }));
 
-import { placeDropPreview } from "@/newtab/feature/dragging/dragAndDrop";
-import { processItemDragAndDrop } from "@/newtab/feature/dragging/processItemDragAndDrop";
+import { placeDropPreview } from "@/newtab/04-features/dragging/model/dragAndDrop";
+import { processItemDragAndDrop } from "@/newtab/04-features/dragging/model/processItemDragAndDrop";
 
 test("first drag movement renders preview at current cursor position", () => {
   const body = {

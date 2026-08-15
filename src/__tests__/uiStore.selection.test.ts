@@ -1,6 +1,6 @@
-import { createUiStore } from "@/newtab/state/ui/uiStore";
-import { getSelectedItemsIds, unselectAllItems } from "@/newtab/helpers/selectionUtils";
-import { uiStore } from "@/newtab/state/ui/uiStore";
+import { createUiStore } from "@/newtab/01-app/model/ui/uiStore";
+import { getSelectedItemsIds, unselectAllItems } from "@/newtab/01-app/model/selection";
+import { uiStore } from "@/newtab/01-app/model/ui/uiStore";
 
 test("keeps area selection transient and clears it on demand", () => {
   const store = createUiStore();

@@ -1,8 +1,8 @@
 import {
   getFolderDisplayItems,
   getVisibleFolderDisplayItems,
-} from "@/newtab/components/common/Folder/getFolderDisplayItems";
-import { FolderV3 } from "@/newtab/helpers/types";
+} from "@/newtab/03-widgets/dashboard/Folder/getFolderDisplayItems";
+import { FolderV3 } from "@/newtab/05-entities/dashboard/model/types";
 
 function createFolder(overrides: Partial<FolderV3> = {}): FolderV3 {
   return {

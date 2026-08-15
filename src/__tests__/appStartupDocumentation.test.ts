@@ -10,17 +10,18 @@ test("startup documentation describes the current application modules", () => {
   );
 
   [
-    "newtab/index.tsx",
-    "state/storage-sync/controller.ts",
-    "state/dashboard/dashboardStore.ts",
-    "state/chrome-runtime/controller.ts",
+    "newtab/01-app/index.tsx",
+    "01-app/model/storage-sync/controller.ts",
+    "01-app/model/dashboard/dashboardStore.ts",
+    "01-app/model/chrome-runtime/controller.ts",
+    "02-pages/newtab/ui/NewtabPage.tsx",
   ].forEach((modulePath) => expect(document).toContain(modulePath));
 
   expect(document).toContain("## Последовательность запуска");
   expect(document).toContain("## Владение состоянием");
 
   const startupSteps = [
-    "newtab/index.tsx",
+    "newtab/01-app/index.tsx",
     "await storageSync.hydrate()",
     "storageSync.start()",
     "mountApp()",

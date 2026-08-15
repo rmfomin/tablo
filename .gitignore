@@ -1,6 +1,5 @@
 .idea
 .vscode
-AGENTS.MD
 .superpowers/
 .tscache
 *.iml

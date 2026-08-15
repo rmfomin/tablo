@@ -1,4 +1,4 @@
-import { createThemeController } from "@/newtab/state/ui/themeController";
+import { createThemeController } from "@/newtab/01-app/model/ui/themeController";
 
 type MediaListener = (event: { matches: boolean }) => void;
 

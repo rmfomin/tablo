@@ -1,4 +1,4 @@
-import { isEmptyDashboard } from "@/newtab/components/common/Bookmarks/isEmptyDashboard";
+import { isEmptyDashboard } from "@/newtab/03-widgets/dashboard/Bookmarks/isEmptyDashboard";
 
 test("returns true when there is no current space", () => {
   expect(

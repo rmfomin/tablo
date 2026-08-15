@@ -1,20 +1,20 @@
-jest.mock("@/newtab/feature/dragging/processFolderDragAndDrop", () => ({
+jest.mock("@/newtab/04-features/dragging/model/processFolderDragAndDrop", () => ({
   processFolderDragAndDrop: jest.fn(),
 }));
 
-jest.mock("@/newtab/feature/dragging/processItemDragAndDrop", () => ({
+jest.mock("@/newtab/04-features/dragging/model/processItemDragAndDrop", () => ({
   processItemDragAndDrop: jest.fn(),
 }));
 
-jest.mock("@/newtab/feature/dragging/processSpacesDragAndDrop", () => ({
+jest.mock("@/newtab/04-features/dragging/model/processSpacesDragAndDrop", () => ({
   processSpacesDragAndDrop: jest.fn(),
 }));
 
 import {
   getItemDropAreaElements,
   getSelectedTargetRoots,
-} from "@/newtab/feature/dragging/dragAndDrop";
-import { DOM_ROLE } from "@/newtab/helpers/domRoles";
+} from "@/newtab/04-features/dragging/model/dragAndDrop";
+import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
 
 test("uses every selected root in store order when dragging a selected bookmark", () => {
   const bookmark = {

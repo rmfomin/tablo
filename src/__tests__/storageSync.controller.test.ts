@@ -1,10 +1,10 @@
-import { createDashboardStore } from "@/newtab/state/dashboard/dashboardStore";
+import { createDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
 import {
   createStorageSyncController,
   preparePersistedState,
-} from "@/newtab/state/storage-sync/controller";
-import type { StorageSyncAdapter } from "@/newtab/state/storage-sync/types";
-import { createUiStore } from "@/newtab/state/ui/uiStore";
+} from "@/newtab/01-app/model/storage-sync/controller";
+import type { StorageSyncAdapter } from "@/newtab/01-app/model/storage-sync/types";
+import { createUiStore } from "@/newtab/01-app/model/ui/uiStore";
 
 function createAdapter(): jest.Mocked<StorageSyncAdapter> {
   return {

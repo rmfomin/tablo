@@ -1,8 +1,9 @@
-import { createChromeRuntimeStore } from "@/newtab/state/chrome-runtime/chromeRuntimeStore";
+import { createChromeRuntimeStore } from "@/newtab/01-app/model/chrome-runtime/chromeRuntimeStore";
 import {
   createChromeRuntimeController,
   type ChromeRuntimeAdapter,
-} from "@/newtab/state/chrome-runtime/controller";
+} from "@/newtab/01-app/model/chrome-runtime/controller";
+import type { RecentItem } from "@/newtab/06-shared/api/chrome/history";
 
 function createTab(id: number): chrome.tabs.Tab {
   return {
@@ -29,7 +30,7 @@ function createAdapter(): {
   return {
     adapter: {
       getTabs: jest.fn().mockResolvedValue([createTab(1)]),
-      getHistory: jest.fn().mockResolvedValue([]),
+      getHistory: jest.fn<Promise<RecentItem[]>, []>().mockResolvedValue([]),
       getLastActiveTabIds: jest.fn().mockResolvedValue([1]),
       getCurrentWindowId: jest.fn().mockResolvedValue(1),
       closeTabs: jest.fn(),

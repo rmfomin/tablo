@@ -1,5 +1,5 @@
-import { getBookmarksViewState } from "@/newtab/feature/bookmarks/getBookmarksViewState";
-import type { BookmarksViewStateInput } from "@/newtab/feature/bookmarks/getBookmarksViewState";
+import { getBookmarksViewState } from "@/newtab/04-features/bookmarks/model/getBookmarksViewState";
+import type { BookmarksViewStateInput } from "@/newtab/04-features/bookmarks/model/getBookmarksViewState";
 
 function createViewState(): BookmarksViewStateInput {
   return {

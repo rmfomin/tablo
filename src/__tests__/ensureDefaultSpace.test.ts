@@ -1,4 +1,4 @@
-import { ensureDefaultSpace } from "@/newtab/helpers/ensureDefaultSpace";
+import { ensureDefaultSpace } from "@/newtab/05-entities/dashboard/model/ensureDefaultSpace";
 
 test("creates default bookmarks space when spaces are empty", () => {
   const state: any = {

@@ -75,7 +75,7 @@ describe("style build configuration", () => {
   test("notification uses the folder-based component structure", () => {
     const folderComponentPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/Notification/Notification.tsx"
+      "../../src/newtab/03-widgets/ui/Notification/Notification.tsx"
     );
     const flatComponentPath = path.join(
       __dirname,
@@ -89,7 +89,7 @@ describe("style build configuration", () => {
   test("spaces list uses the folder-based component structure", () => {
     const folderComponentPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/SpacesList/SpacesList.tsx"
+      "../../src/newtab/03-widgets/spaces-list/SpacesList/SpacesList.tsx"
     );
     const flatComponentPath = path.join(
       __dirname,
@@ -103,7 +103,7 @@ describe("style build configuration", () => {
   test("top bar uses the folder-based component structure", () => {
     const folderComponentPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/TopBar/TopBar.tsx"
+      "../../src/newtab/03-widgets/top-bar/TopBar/TopBar.tsx"
     );
     const flatComponentPath = path.join(
       __dirname,
@@ -117,7 +117,7 @@ describe("style build configuration", () => {
   test("sidebar item uses the folder-based component structure", () => {
     const folderComponentPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/SidebarItem/SidebarItem.tsx"
+      "../../src/newtab/03-widgets/sidebar/SidebarItem/SidebarItem.tsx"
     );
     const flatComponentPath = path.join(
       __dirname,
@@ -131,7 +131,7 @@ describe("style build configuration", () => {
   test("sidebar open tabs uses the folder-based component structure", () => {
     const folderComponentPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/SidebarOpenTabs/SidebarOpenTabs.tsx"
+      "../../src/newtab/03-widgets/sidebar/SidebarOpenTabs/SidebarOpenTabs.tsx"
     );
     const flatComponentPath = path.join(
       __dirname,
@@ -145,7 +145,7 @@ describe("style build configuration", () => {
   test("sidebar recent uses the folder-based component structure", () => {
     const folderComponentPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/SidebarRecent/SidebarRecent.tsx"
+      "../../src/newtab/03-widgets/sidebar/SidebarRecent/SidebarRecent.tsx"
     );
     const flatComponentPath = path.join(
       __dirname,
@@ -159,7 +159,7 @@ describe("style build configuration", () => {
   test("folder item uses the folder-based component structure", () => {
     const folderComponentPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/FolderItem/FolderItem.tsx"
+      "../../src/newtab/03-widgets/dashboard/FolderItem/FolderItem.tsx"
     );
     const flatComponentPath = path.join(
       __dirname,
@@ -173,7 +173,7 @@ describe("style build configuration", () => {
   test("folder group uses the folder-based component structure", () => {
     const folderComponentPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/FolderGroup/FolderGroup.tsx"
+      "../../src/newtab/03-widgets/dashboard/FolderGroup/FolderGroup.tsx"
     );
     const flatComponentPath = path.join(
       __dirname,
@@ -187,7 +187,7 @@ describe("style build configuration", () => {
   test("folder uses the folder-based component structure", () => {
     const folderComponentPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/Folder/Folder.tsx"
+      "../../src/newtab/03-widgets/dashboard/Folder/Folder.tsx"
     );
     const flatComponentPath = path.join(
       __dirname,
@@ -201,7 +201,7 @@ describe("style build configuration", () => {
   test("sidebar uses the folder-based component structure", () => {
     const folderComponentPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/Sidebar/Sidebar.tsx"
+      "../../src/newtab/03-widgets/sidebar/Sidebar/Sidebar.tsx"
     );
     const flatComponentPath = path.join(
       __dirname,
@@ -215,7 +215,7 @@ describe("style build configuration", () => {
   test("bookmarks uses the folder-based component structure", () => {
     const folderComponentPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/Bookmarks/Bookmarks.tsx"
+      "../../src/newtab/03-widgets/dashboard/Bookmarks/Bookmarks.tsx"
     );
     const flatComponentPath = path.join(
       __dirname,
@@ -229,7 +229,7 @@ describe("style build configuration", () => {
   test("editable title uses the folder-based component structure", () => {
     const folderComponentPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/EditableTitle/EditableTitle.tsx"
+      "../../src/newtab/03-widgets/ui/EditableTitle/EditableTitle.tsx"
     );
     const flatComponentPath = path.join(
       __dirname,
@@ -240,41 +240,41 @@ describe("style build configuration", () => {
     expect(fs.existsSync(flatComponentPath)).toBe(false);
   });
 
-  test("bookmarks importer uses the folder-based component structure", () => {
-    const folderComponentPath = path.join(
+  test("bookmarks importer belongs to the import feature", () => {
+    const featureComponentPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/BookmarksImporter/BookmarksImporter.tsx"
+      "../../src/newtab/04-features/bookmarks-import/ui/BookmarksImporter.tsx"
     );
     const flatComponentPath = path.join(
       __dirname,
       "../../src/newtab/components/BookmarksImporter.tsx"
     );
 
-    expect(fs.existsSync(folderComponentPath)).toBe(true);
+    expect(fs.existsSync(featureComponentPath)).toBe(true);
     expect(fs.existsSync(flatComponentPath)).toBe(false);
   });
 
-  test("import bookmarks from settings uses the folder-based component structure", () => {
-    const folderComponentPath = path.join(
+  test("import bookmarks from settings belongs to the import feature", () => {
+    const featureComponentPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/ImportBookmarksFromSettings/ImportBookmarksFromSettings.tsx"
+      "../../src/newtab/04-features/bookmarks-import/ui/ImportBookmarksFromSettings.tsx"
     );
     const flatComponentPath = path.join(
       __dirname,
       "../../src/newtab/components/ImportBookmarksFromSettings.tsx"
     );
 
-    expect(fs.existsSync(folderComponentPath)).toBe(true);
+    expect(fs.existsSync(featureComponentPath)).toBe(true);
     expect(fs.existsSync(flatComponentPath)).toBe(false);
   });
 
-  test("keyboard and mouse manager stays shared in the flat structure", () => {
-    const sharedComponentPath = path.join(
+  test("keyboard and mouse manager belongs to the app layer", () => {
+    const appComponentPath = path.join(
       __dirname,
-      "../../src/newtab/components/root/useKeyboardAndMouseManager.tsx"
+      "../../src/newtab/01-app/ui/KeyboardAndMouseManager.tsx"
     );
 
-    expect(fs.existsSync(sharedComponentPath)).toBe(true);
+    expect(fs.existsSync(appComponentPath)).toBe(true);
   });
 
   test("canvas widget runtime was removed", () => {
@@ -291,10 +291,10 @@ describe("style build configuration", () => {
     expect(fs.existsSync(canvasDirPath)).toBe(false);
   });
 
-  test("settings options stays shared in the flat structure", () => {
+  test("settings options are colocated with the top bar", () => {
     const sharedComponentPath = path.join(
       __dirname,
-      "../../src/newtab/helpers/settingsOptions.tsx"
+      "../../src/newtab/03-widgets/top-bar/TopBar/settingsOptions.tsx"
     );
 
     expect(fs.existsSync(sharedComponentPath)).toBe(true);
@@ -303,7 +303,7 @@ describe("style build configuration", () => {
   test("dropdown menu uses the folder-based component structure", () => {
     const folderComponentPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/DropdownMenu/DropdownMenu.tsx"
+      "../../src/newtab/06-shared/ui/DropdownMenu/DropdownMenu.tsx"
     );
     const legacyDirPath = path.join(
       __dirname,
@@ -317,7 +317,7 @@ describe("style build configuration", () => {
   test("folder item menu uses the folder-based component structure", () => {
     const folderComponentPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/FolderItemMenu/FolderItemMenu.tsx"
+      "../../src/newtab/03-widgets/dashboard/FolderItemMenu/FolderItemMenu.tsx"
     );
 
     expect(fs.existsSync(folderComponentPath)).toBe(true);
@@ -326,15 +326,15 @@ describe("style build configuration", () => {
   test("modal components use the folder-based component structure", () => {
     const modalPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/Modal/Modal.tsx"
+      "../../src/newtab/06-shared/ui/Modal/Modal.tsx"
     );
     const importConfirmationPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/ImportConfirmationModal/ImportConfirmationModal.tsx"
+      "../../src/newtab/04-features/bookmarks-import/ui/ImportConfirmationModal.tsx"
     );
     const shortcutsPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/ShortcutsModal/ShortcutsModal.tsx"
+      "../../src/newtab/03-widgets/ui/ShortcutsModal/ShortcutsModal.tsx"
     );
     const legacyDirPath = path.join(
       __dirname,
@@ -347,17 +347,17 @@ describe("style build configuration", () => {
     expect(fs.existsSync(legacyDirPath)).toBe(false);
   });
 
-  test("move helpers stay shared with camelCase naming", () => {
-    const sharedHelperPath = path.join(
+  test("move helpers belong to the move-to-folder feature", () => {
+    const featureHelperPath = path.join(
       __dirname,
-      "../../src/newtab/helpers/moveToHelpers.tsx"
+      "../../src/newtab/04-features/move-to-folder/ui/moveToHelpers.tsx"
     );
     const legacyHelperPath = path.join(
       __dirname,
       "../../src/newtab/components/dropdown/moveToHelpers.tsx"
     );
 
-    expect(fs.existsSync(sharedHelperPath)).toBe(true);
+    expect(fs.existsSync(featureHelperPath)).toBe(true);
     expect(fs.existsSync(legacyHelperPath)).toBe(false);
   });
 
@@ -378,7 +378,7 @@ describe("style build configuration", () => {
   test("bookmarks local helpers are colocated with bookmarks", () => {
     const colocatedViewStatePath = path.join(
       __dirname,
-      "../../src/newtab/components/common/Bookmarks/getBookmarksViewState.ts"
+      "../../src/newtab/03-widgets/dashboard/Bookmarks/getBookmarksViewState.ts"
     );
     const legacyViewStatePath = path.join(
       __dirname,
@@ -386,7 +386,7 @@ describe("style build configuration", () => {
     );
     const colocatedEmptyStatePath = path.join(
       __dirname,
-      "../../src/newtab/components/common/Bookmarks/isEmptyDashboard.ts"
+      "../../src/newtab/03-widgets/dashboard/Bookmarks/isEmptyDashboard.ts"
     );
     const legacyEmptyStatePath = path.join(
       __dirname,
@@ -402,7 +402,7 @@ describe("style build configuration", () => {
   test("folder local helpers are colocated with folder", () => {
     const colocatedHelperPath = path.join(
       __dirname,
-      "../../src/newtab/components/common/Folder/getFolderDisplayItems.ts"
+      "../../src/newtab/03-widgets/dashboard/Folder/getFolderDisplayItems.ts"
     );
     const legacyHelperPath = path.join(
       __dirname,

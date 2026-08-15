@@ -7,7 +7,7 @@ test("space rename starts on double click, while single click only selects", () 
   const source = fs.readFileSync(
     path.join(
       __dirname,
-      "../newtab/components/common/SpacesList/SpacesList.tsx"
+      "../newtab/03-widgets/spaces-list/SpacesList/SpacesList.tsx"
     ),
     "utf8"
   );

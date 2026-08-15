@@ -9,18 +9,18 @@ function readSource(relativePath: string): string {
 
 describe("folder and group header contracts", () => {
   test("folder and group use independent chevrons with their own color rules", () => {
-    const folderSource = readSource("newtab/components/common/Folder/Folder.tsx");
+    const folderSource = readSource("newtab/03-widgets/dashboard/Folder/Folder.tsx");
     const groupSource = readSource(
-      "newtab/components/common/FolderGroup/FolderGroup.tsx"
+      "newtab/03-widgets/dashboard/FolderGroup/FolderGroup.tsx"
     );
     const groupStyles = readSource(
-      "newtab/components/common/FolderGroup/FolderGroup.module.scss"
+      "newtab/03-widgets/dashboard/FolderGroup/FolderGroup.module.scss"
     );
     const folderChevron = readSource(
-      "newtab/components/common/Folder/icons/folder-chevron.svg"
+      "newtab/03-widgets/dashboard/Folder/icons/folder-chevron.svg"
     );
     const groupChevron = readSource(
-      "newtab/components/common/FolderGroup/icons/group-chevron.svg"
+      "newtab/03-widgets/dashboard/FolderGroup/icons/group-chevron.svg"
     );
 
     expect(folderSource).toContain(
@@ -38,7 +38,7 @@ describe("folder and group header contracts", () => {
 
   test("group header styles keep the title row aligned with inner items", () => {
     const source = readSource(
-      "newtab/components/common/FolderGroup/FolderGroup.module.scss"
+      "newtab/03-widgets/dashboard/FolderGroup/FolderGroup.module.scss"
     );
 
     expect(source).toContain("padding-left: 22px;");
@@ -46,7 +46,7 @@ describe("folder and group header contracts", () => {
 
   test("group hover background is drawn with an inset pseudo element", () => {
     const source = readSource(
-      "newtab/components/common/FolderGroup/FolderGroup.module.scss"
+      "newtab/03-widgets/dashboard/FolderGroup/FolderGroup.module.scss"
     );
 
     expect(source).toContain("&::before");
@@ -57,14 +57,14 @@ describe("folder and group header contracts", () => {
   });
 
   test("folder title enters edit mode via double click instead of single click", () => {
-    const source = readSource("newtab/components/common/Folder/Folder.tsx");
+    const source = readSource("newtab/03-widgets/dashboard/Folder/Folder.tsx");
 
     expect(source).toContain("onDoubleClick={() => setEditing(true)}");
     expect(source).not.toContain("onClick={() => setEditing(true)}");
   });
 
   test("folder header hides its menu button and closes the menu while renaming", () => {
-    const source = readSource("newtab/components/common/Folder/Folder.tsx");
+    const source = readSource("newtab/03-widgets/dashboard/Folder/Folder.tsx");
 
     expect(source).toMatch(
       /p\.folder\.id !== p\.itemInEdit \? \([\s\S]*className=\{cn\(styles\.menuButton/,
@@ -76,7 +76,7 @@ describe("folder and group header contracts", () => {
 
   test("group header supports a context menu with rename and open-all actions", () => {
     const source = readSource(
-      "newtab/components/common/FolderGroup/FolderGroup.tsx"
+      "newtab/03-widgets/dashboard/FolderGroup/FolderGroup.tsx"
     );
 
     expect(source).toContain("onDoubleClick={() => setEditing(true)}");
@@ -91,13 +91,13 @@ describe("folder and group header contracts", () => {
 
   test("group rename uses a compact single-line input", () => {
     const groupSource = readSource(
-      "newtab/components/common/FolderGroup/FolderGroup.tsx"
+      "newtab/03-widgets/dashboard/FolderGroup/FolderGroup.tsx"
     );
     const editableTitleSource = readSource(
-      "newtab/components/common/EditableTitle/EditableTitle.tsx"
+      "newtab/03-widgets/ui/EditableTitle/EditableTitle.tsx"
     );
     const groupStyles = readSource(
-      "newtab/components/common/FolderGroup/FolderGroup.module.scss"
+      "newtab/03-widgets/dashboard/FolderGroup/FolderGroup.module.scss"
     );
 
     expect(groupSource).toMatch(/<EditableTitle[\s\S]*singleLine/);
@@ -112,7 +112,7 @@ describe("folder and group header contracts", () => {
 
   test("group open-all action opens non-archived group bookmarks in background tabs", () => {
     const source = readSource(
-      "newtab/components/common/FolderGroup/FolderGroup.tsx"
+      "newtab/03-widgets/dashboard/FolderGroup/FolderGroup.tsx"
     );
 
     const openAllFunction = source.match(
@@ -122,14 +122,14 @@ describe("folder and group header contracts", () => {
     expect(openAllFunction).toContain("p.items.forEach");
     expect(openAllFunction).toContain("!item.archived");
     expect(openAllFunction).toContain(
-      "chrome.tabs.create({ url: item.url, active: false })"
+      "createTab({ url: item.url, active: false })"
     );
     expect(openAllFunction).toContain("setShowMenu(false)");
   });
 
   test("group header menu confirms before deleting the group", () => {
     const source = readSource(
-      "newtab/components/common/FolderGroup/FolderGroup.tsx"
+      "newtab/03-widgets/dashboard/FolderGroup/FolderGroup.tsx"
     );
 
     const deleteFunction = source.match(

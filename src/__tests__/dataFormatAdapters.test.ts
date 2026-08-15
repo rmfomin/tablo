@@ -1,8 +1,8 @@
 import {
   isDataBackupV3Input,
   normalizeBackupV3,
-} from "@/newtab/helpers/dataFormatAdapters";
-import { DataBackupV3Input } from "@/newtab/helpers/types";
+} from "@/newtab/04-features/bookmarks-import/model/adapters";
+import { DataBackupV3Input } from "@/newtab/05-entities/dashboard/model/types";
 
 test("legacy v3 item becomes a runtime item with a canonical objectType", () => {
   const legacyBackup: unknown = {

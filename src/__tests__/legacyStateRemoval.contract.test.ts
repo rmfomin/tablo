@@ -24,7 +24,7 @@ function getSourceFiles(directory: string): string[] {
 
 function getLegacyImports(): string[] {
   const legacyImportPattern = new RegExp(
-    `(?:from\\s*["']|import\\s*["'])@/newtab/state/(${legacyModuleNames.join(
+    `(?:from\\s*["']|import\\s*["'])@/newtab/01-app/model/(${legacyModuleNames.join(
       "|"
     )})["']`
   );
