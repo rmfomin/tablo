@@ -24,6 +24,9 @@ export default defineConfig(({ mode }) => {
   const buildType = mode === "overrideless" ? "overrideless" : "normal";
 
   return {
+    define: {
+      __OVERRIDE_NEWTAB: JSON.stringify(buildType !== "overrideless"),
+    },
     plugins: [
       svgr({
         include: "**/*.svg",

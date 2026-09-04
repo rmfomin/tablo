@@ -1,31 +1,150 @@
 .root {
   position: relative;
   display: flex;
-  justify-content: space-between;
-  height: 68px;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 16px;
+  height: 84px;
   box-sizing: border-box;
-  padding: 12px 0 16px 72px;
+  padding: 0 28px;
+  z-index: 5;
 }
 
-.scrolled {
-  border-bottom: 1px solid var(--border-color);
+.logoSlot {
+  display: flex;
+  justify-content: center;
+  width: 76px;
+  flex-shrink: 0;
 }
 
-.searchResultsHeader {
-  line-height: 40px;
-  margin-right: 12px;
+.logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--active-control-color);
+}
+
+.logoMark {
+  display: block;
+  color: var(--active-control-color);
+  fill: currentColor;
+}
+
+.logoMarkMuted {
+  opacity: 0.35;
+}
+
+.logoText {
+  color: var(--main-text-color);
+  font-family: var(--title-font-family);
   font-size: 18px;
   font-weight: 600;
-  padding: 0 6px;
-  opacity: 0.7;
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
 
-.stretchingSpace {
-  flex-grow: 1;
+.searchSlot {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.searchSlot > * {
+  width: 100%;
+  max-width: 560px;
 }
 
 .menuButtons {
+  position: relative;
   display: flex;
-  height: 40px;
-  margin-right: 8px;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  width: 240px;
+  flex-shrink: 0;
+}
+
+.themeSwitcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background-color: var(--input-background-color);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.themeButton,
+.controlButton {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  color: var(--icon-color);
+  cursor: pointer;
+}
+
+.themeButton {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: transparent;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    color: currentColor;
+  }
+
+  &:hover:not(.activeTheme) {
+    background-color: var(--button-hover-background-color);
+  }
+}
+
+.activeTheme {
+  color: var(--active-control-text);
+  background-color: var(--active-control-color);
+}
+
+.menuButtonWrap {
+  position: relative;
+}
+
+.controlButton {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--input-background-color);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+
+  svg {
+    width: 18px;
+    height: 18px;
+    color: currentColor;
+  }
+
+  &:hover,
+  &.activeControl {
+    color: var(--main-text-color);
+    background-color: var(--button-hover-background-color);
+  }
+}
+
+@media (max-width: 960px) {
+  .root {
+    padding: 0 16px;
+  }
+
+  .logoSlot {
+    width: 64px;
+  }
+
+  .menuButtons {
+    width: auto;
+    gap: 8px;
+  }
 }

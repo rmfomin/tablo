@@ -1,36 +1,59 @@
 .searchBlock {
+  position: relative;
   width: 100%;
 }
 
 .searchWrapper {
   width: 100%;
   display: flex;
+  align-items: center;
   position: relative;
+  border-radius: 999px;
+  background-color: var(--input-background-color);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+
+  &:focus-within {
+    box-shadow: 0 0 0 2px var(--input-border-color-active),
+      0 8px 24px rgba(0, 0, 0, 0.06);
+  }
+
+  :global(input.search) {
+    height: 56px;
+    padding: 0 104px 0 42px;
+    border: none;
+    border-radius: 999px;
+    background-color: transparent;
+    box-sizing: border-box;
+    font-size: 14px;
+    outline: none;
+  }
 }
 
 .searchIcon {
   position: absolute;
-  margin-top: 13px;
-  margin-left: 8px;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
   opacity: 0.5;
   width: 16px;
   height: 16px;
   flex-shrink: 0;
+  pointer-events: none;
 }
 
 .filterToggleButton {
   position: absolute;
-  right: 8px;
-  top: 9px;
+  right: 12px;
+  top: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   padding: 0;
   border: 1px solid transparent;
-  border-radius: 8px;
-  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  background-color: var(--button-background-color);
   cursor: pointer;
 
   svg {
@@ -38,8 +61,47 @@
   }
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: var(--button-hover-background-color);
   }
+}
+
+.clearSearchButton {
+  position: absolute;
+  right: 52px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--icon-color);
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  opacity: 0.6;
+
+  &:hover {
+    background-color: var(--button-hover-background-color);
+    opacity: 1;
+  }
+}
+
+.shortcutHint {
+  position: absolute;
+  right: 52px;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background-color: var(--button-background-color);
+  color: var(--second-text-color);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 18px;
+  pointer-events: none;
 }
 
 .filterToggleButton.accentActive,
@@ -59,11 +121,19 @@
 }
 
 .filterPanel {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  z-index: 20;
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
   width: 100%;
-  margin-top: 8px;
+  padding: 12px;
+  border-radius: 20px;
+  background-color: var(--popup-background-color);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
   align-items: flex-start;
 }
 

@@ -59,7 +59,7 @@ function loadSearchFilters(callback: (filters: SearchFilter[]) => void) {
       const storedFilters = res[SEARCH_FILTERS_STORAGE_KEY];
       const legacyFilters = res[LEGACY_HISTORY_FILTERS_STORAGE_KEY];
       callback(normalizeStoredFilters(storedFilters ?? legacyFilters));
-    },
+    }
   );
 }
 
@@ -106,14 +106,14 @@ export function SearchInput() {
   const [newFilterError, setNewFilterError] = useState("");
   const [filterModalOpened, setFilterModalOpened] = useState(false);
   const [editingFilterId, setEditingFilterId] = useState<string | undefined>(
-    undefined,
+    undefined
   );
   const [menuFilterId, setMenuFilterId] = useState<string | undefined>(
-    undefined,
+    undefined
   );
   const enabledFiltersCount = searchFilters.reduce(
     (prevVal, filter) => prevVal + (filter.enabled ? 1 : 0),
-    0,
+    0
   );
 
   useEffect(() => {
@@ -152,7 +152,7 @@ export function SearchInput() {
           ...f,
           enabled: false,
         };
-      }),
+      })
     );
   }
 
@@ -161,7 +161,7 @@ export function SearchInput() {
       searchFilters.map((filter) => ({
         ...filter,
         enabled: false,
-      })),
+      }))
     );
   }
 
@@ -222,7 +222,7 @@ export function SearchInput() {
         updateSearchFilter(searchFilters, editingFilterId, {
           title,
           pattern,
-        }),
+        })
       );
       clearFilterForm();
       return;
@@ -249,7 +249,7 @@ export function SearchInput() {
 
   function onFilterContextMenu(
     event: React.MouseEvent<HTMLButtonElement>,
-    filter: SearchFilter,
+    filter: SearchFilter
   ) {
     event.preventDefault();
     event.stopPropagation();
@@ -270,6 +270,19 @@ export function SearchInput() {
           onChange={onSearchChange}
           onKeyDown={(e) => handleSearchKeyDown(e, onClearSearch)}
         />
+        {search ? (
+          <button
+            type="button"
+            className={styles.clearSearchButton}
+            title="Clear search"
+            aria-label="Clear search"
+            onClick={onClearSearch}
+          >
+            ×
+          </button>
+        ) : (
+          <span className={styles.shortcutHint}>⌘F</span>
+        )}
         <button
           tabIndex={1}
           className={cn(styles.filterToggleButton, {

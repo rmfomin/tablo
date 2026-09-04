@@ -1,4 +1,13 @@
-import { createTab, updateTab, removeTabs, getCurrentTab, queryTabs, getCurrentWindow, focusWindow, type BrowserTab } from "@/newtab/06-shared/api/chrome/tabs";
+import {
+  createTab,
+  updateTab,
+  removeTabs,
+  getCurrentTab,
+  queryTabs,
+  getCurrentWindow,
+  focusWindow,
+  type BrowserTab,
+} from "@/newtab/06-shared/api/chrome/tabs";
 import React, { useRef, useState } from "react";
 import { hasItemsToHighlight } from "@/newtab/04-features/bookmarks/model/bookmarkUsage";
 import { useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
@@ -10,11 +19,7 @@ import { onExportJson } from "@/newtab/04-features/bookmarks-export/model/dashbo
 import { ImportConfirmationModal } from "@/newtab/04-features/bookmarks-import/ui/ImportConfirmationModal";
 import { loadFaviconUrl } from "@/newtab/06-shared/api/chrome/favicons";
 import { ShortcutsModal } from "@/newtab/03-widgets/ui/ShortcutsModal/ShortcutsModal";
-import {
-  getThemeOptionButtonStyle,
-  ThemeOptionIcon,
-} from "@/newtab/03-widgets/ui/ThemeOptionIcon/ThemeOptionIcon";
-import { BookmarkItemV3, ColorTheme } from "@/newtab/05-entities/dashboard/model/types";
+import { BookmarkItemV3 } from "@/newtab/05-entities/dashboard/model/types";
 import cn from "clsx";
 import { collectBookmarksV3 } from "@/newtab/05-entities/dashboard/model/traversal";
 
@@ -88,9 +93,7 @@ export const HelpOptions = () => {
 
   function invalidateBrokenIcons() {
     const promises: Promise<unknown>[] = [minTimeoutPromise()];
-    const currentSpace = spaces.find(
-      (space) => space.id === currentSpaceId
-    );
+    const currentSpace = spaces.find((space) => space.id === currentSpaceId);
     if (currentSpace) {
       promises.push(
         ...collectBookmarksV3([currentSpace]).map(invalidateFavicon)
@@ -163,11 +166,15 @@ export const SettingsOptions = () => {
   const setShowArchived = useUiStore((state) => state.setShowArchived);
   const showRecent = useUiStore((state) => state.showRecent);
   const setShowRecent = useUiStore((state) => state.setShowRecent);
-  const openBookmarksInNewTab = useUiStore((state) => state.openBookmarksInNewTab);
-  const setOpenBookmarksInNewTab = useUiStore((state) => state.setOpenBookmarksInNewTab);
-  const colorTheme = useUiStore((state) => state.colorTheme);
-  const setColorTheme = useUiStore((state) => state.setColorTheme);
-  const hiddenFeatureIsEnabled = useUiStore((state) => state.hiddenFeatureIsEnabled);
+  const openBookmarksInNewTab = useUiStore(
+    (state) => state.openBookmarksInNewTab
+  );
+  const setOpenBookmarksInNewTab = useUiStore(
+    (state) => state.setOpenBookmarksInNewTab
+  );
+  const hiddenFeatureIsEnabled = useUiStore(
+    (state) => state.hiddenFeatureIsEnabled
+  );
   const setPage = useUiStore((state) => state.setPage);
   const showNotification = useUiStore((state) => state.showNotification);
   const recentItems = useChromeRuntimeStore((state) => state.recentItems);
@@ -179,9 +186,14 @@ export const SettingsOptions = () => {
     } else {
       if (hasItemsToHighlight(spaces, recentItems)) {
         setShowNotUsed(true);
-        showNotification({ message: "Unused items for the past 60 days are highlighted" });
+        showNotification({
+          message: "Unused items for the past 60 days are highlighted",
+        });
       } else {
-        showNotification({ message: "There are no unused items to highlight", isError: true });
+        showNotification({
+          message: "There are no unused items to highlight",
+          isError: true,
+        });
       }
     }
   }
@@ -202,10 +214,6 @@ export const SettingsOptions = () => {
     setShowRecent(!showRecent);
   }
 
-  function onSelectColorTheme(colorTheme: ColorTheme) {
-    setColorTheme(colorTheme);
-  }
-
   function onToggleOpenInTheNewTab() {
     setOpenBookmarksInNewTab(!openBookmarksInNewTab);
   }
@@ -218,53 +226,26 @@ export const SettingsOptions = () => {
   function onImportTypeConfirmed(opt: string) {
     setImportConfirmationOpen(false);
     if (opt === "import" && fileEvent.current) {
-      importFromJsonWithCallbacks(fileEvent.current, (importedSpaces) => {
-        hydrate({ spaces: importedSpaces, currentSpaceId: importedSpaces[0]?.id ?? -1 });
-      }, (message, isError) => showNotification({ message, isError }));
+      importFromJsonWithCallbacks(
+        fileEvent.current,
+        (importedSpaces) => {
+          hydrate({
+            spaces: importedSpaces,
+            currentSpaceId: importedSpaces[0]?.id ?? -1,
+          });
+        },
+        (message, isError) => showNotification({ message, isError })
+      );
     }
   }
 
   const settingsOptions: OptionsConfig = [
     {
-      onSelect: onSelectColorTheme,
-      value: colorTheme,
-      title: "Choose light theme, system theme, or dark theme",
-      text: "Theme",
-      items: [
-        {
-          value: "light",
-          text: "Light",
-          title: "Always use light theme",
-          icon: <ThemeOptionIcon theme="light" />,
-          buttonStyle: getThemeOptionButtonStyle,
-        },
-        {
-          value: "system",
-          text: "Auto",
-          title: "Use system theme",
-          icon: <ThemeOptionIcon theme="system" />,
-          buttonStyle: getThemeOptionButtonStyle,
-        },
-        {
-          value: "dark",
-          text: "Dark",
-          title: "Always use dark theme",
-          icon: <ThemeOptionIcon theme="dark" />,
-          buttonStyle: getThemeOptionButtonStyle,
-        },
-      ],
-    },
-    {
-      separator: true,
-    },
-    {
       onToggle: onToggleNotUsed,
       value: showNotUsed,
       title:
         "Highlight not used in past 60 days to archive them. It helps to keep workspace clean.",
-      text: showNotUsed
-        ? "Unhighlight not used"
-        : "Highlight not used",
+      text: showNotUsed ? "Unhighlight not used" : "Highlight not used",
     },
     {
       onToggle: onToggleHidden,

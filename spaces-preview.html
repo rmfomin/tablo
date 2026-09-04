@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tablo spaces preview</title>
+    <link rel="stylesheet" href="/fonts.css" />
+    <script src="/js/color.js"></script>
+    <script>
+      const listeners = { addListener() {}, removeListener() {} };
+      const previewState = {
+        version: 3,
+        currentSpaceId: 2,
+        sidebarCollapsed: false,
+        colorTheme: "light",
+        spaces: [
+          {
+            id: 1,
+            position: "a0",
+            objectType: "space",
+            title: "Personal",
+            folders: [],
+          },
+          {
+            id: 2,
+            position: "a1",
+            objectType: "space",
+            title: "Work",
+            folders: [],
+          },
+          {
+            id: 3,
+            position: "a2",
+            objectType: "space",
+            title: "Reading list",
+            folders: [],
+          },
+        ],
+      };
+      const tabs = [
+        {
+          id: 11,
+          windowId: 1,
+          title: "Project board",
+          url: "https://example.com/board",
+          favIconUrl: "",
+          pinned: false,
+        },
+        {
+          id: 12,
+          windowId: 1,
+          title: "Product documentation",
+          url: "https://example.com/docs",
+          favIconUrl: "",
+          pinned: false,
+        },
+        {
+          id: 13,
+          windowId: 1,
+          title: "Weekly notes",
+          url: "https://example.com/notes",
+          favIconUrl: "",
+          pinned: false,
+        },
+      ];
+
+      window.chrome = {
+        storage: {
+          local: {
+            get(_keys, callback) {
+              callback(previewState);
+            },
+            set(items, callback) {
+              Object.assign(previewState, items);
+              callback?.();
+            },
+          },
+        },
+        tabs: {
+          query(_query, callback) {
+            callback([...tabs]);
+          },
+          getCurrent(callback) {
+            callback(tabs[0]);
+          },
+          create() {},
+          update() {},
+          remove() {},
+          onCreated: listeners,
+          onRemoved: listeners,
+          onUpdated: listeners,
+        },
+        history: {
+          search(_query, callback) {
+            callback([]);
+          },
+        },
+        runtime: {
+          sendMessage(_message, callback) {
+            callback?.({ tabs: [13] });
+          },
+          getURL(path) {
+            return path;
+          },
+        },
+        windows: {
+          WINDOW_ID_NONE: -1,
+          getCurrent(callback) {
+            callback({ id: 1 });
+          },
+          update() {},
+          onFocusChanged: listeners,
+        },
+      };
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/newtab/01-app/index.tsx"></script>
+  </body>
+</html>

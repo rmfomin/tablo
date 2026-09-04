@@ -1,22 +1,24 @@
 .inboxBox {
-  margin-left: -8px;
-  width: 338px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
 }
 
 .collapsed {
-  margin-right: -8px;
+  width: 100%;
 }
 
 .windowName {
-  margin-top: 12px;
-  margin-bottom: 8px;
-  margin-left: 8px;
+  margin: 12px 8px 6px;
   white-space: nowrap;
   transition: width 50ms;
   transition-delay: 100ms;
-  color: var(--section-text-color);
-  font-size: 14px;
-  font-weight: normal;
+  color: var(--second-text-color);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   text-overflow: clip;
   overflow: hidden;
   width: 120px;

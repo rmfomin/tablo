@@ -1,11 +1,23 @@
-import { createTab, updateTab, removeTabs, getCurrentTab, queryTabs, getCurrentWindow, focusWindow, type BrowserTab } from "@/newtab/06-shared/api/chrome/tabs";
-import React, { useEffect, useRef, useState } from "react";
+import {
+  createTab,
+  updateTab,
+  removeTabs,
+  getCurrentTab,
+  queryTabs,
+  getCurrentWindow,
+  focusWindow,
+  type BrowserTab,
+} from "@/newtab/06-shared/api/chrome/tabs";
+import React, { useEffect, useState } from "react";
 import cn from "clsx";
 import styles from "./Sidebar.module.scss";
 import { SidebarOpenTabs } from "@/newtab/03-widgets/sidebar/SidebarOpenTabs/SidebarOpenTabs";
 import { isTabloTab } from "@/newtab/06-shared/api/chrome/tabs";
 import { getCurrentData } from "@/newtab/06-shared/lib/date";
-import { blurSearch, isTargetSupportsDragAndDrop } from "@/newtab/06-shared/lib/dom/html";
+import {
+  blurSearch,
+  isTargetSupportsDragAndDrop,
+} from "@/newtab/06-shared/lib/dom/html";
 import { scrollElementIntoView } from "@/newtab/06-shared/lib/dom/scroll";
 import { DropdownMenu } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
 import { useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
@@ -13,7 +25,10 @@ import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { useChromeRuntimeStore } from "@/newtab/01-app/model/chrome-runtime/chromeRuntimeStore";
 import IconDelDuplicates from "./icons/delete-duplicates.svg";
 import IconSave from "./icons/save.svg";
-import IconPin from "./icons/pin.svg";
+import IconChevron from "./icons/chevron.svg";
+import IconTabs from "./icons/tabs.svg";
+import IconSpaces from "./icons/spaces.svg";
+import { SpacesList } from "@/newtab/03-widgets/spaces-list/SpacesList/SpacesList";
 
 import {
   convertTabOrRecentToItem,
@@ -22,7 +37,6 @@ import {
 import { SidebarRecent } from "@/newtab/03-widgets/sidebar/SidebarRecent/SidebarRecent";
 import { bindDADItemEffect } from "@/newtab/04-features/dragging";
 import { RecentItem } from "@/newtab/06-shared/api/chrome/history";
-import { SearchInput } from "@/newtab/04-features/bookmark-search/ui/SearchInput";
 import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
 
 export function Sidebar() {
@@ -33,8 +47,6 @@ export function Sidebar() {
   const searchFilters = useUiStore((state) => state.searchFilters);
   const searchFilterMode = useUiStore((state) => state.searchFilterMode);
   const sidebarCollapsedValue = useUiStore((state) => state.sidebarCollapsed);
-  const sidebarHovered = useUiStore((state) => state.sidebarHovered);
-  const setSidebarHovered = useUiStore((state) => state.setSidebarHovered);
   const setSidebarCollapsed = useUiStore((state) => state.setSidebarCollapsed);
   const setItemInEdit = useUiStore((state) => state.setItemInEdit);
   const selectedItemIds = useUiStore((state) => state.selectedItemIds);
@@ -50,10 +62,7 @@ export function Sidebar() {
     (state) => state.currentWindowId
   );
   const showRecent = useUiStore((state) => state.showRecent);
-  const keepSidebarOpened = !sidebarCollapsedValue || sidebarHovered;
-  const sidebarCollapsed = !keepSidebarOpened;
-  const sidebarRef = useRef<HTMLDivElement | null>(null);
-  const openTabsHeaderRef = useRef<HTMLDivElement | null>(null);
+  const sidebarCollapsed = sidebarCollapsedValue;
 
   const [mouseDownEvent, setMouseDownEvent] = useState<
     React.MouseEvent | undefined
@@ -150,84 +159,97 @@ export function Sidebar() {
     }
   }
 
-  const onSidebarMouseEnter = () => {
-    if (!sidebarCollapsedValue) {
-      return;
-    }
-
-    setSidebarHovered(true);
-  };
-
-  const onSidebarMouseLeave = (e: any) => {
-    if (!sidebarCollapsedValue) {
-      return;
-    }
-
-    if (e.relatedTarget.id !== "toggle-sidebar-btn") {
-      setSidebarHovered(false);
-    }
-  };
-
   function onToggleSidebar() {
     setSidebarCollapsed(!sidebarCollapsedValue);
-    setSidebarHovered(false);
   }
+
+  const openTabsCount = tabs.filter(
+    (tab) => !tab.pinned && !isTabloTab(tab)
+  ).length;
 
   return (
     <div
       className={cn(styles.root, {
-        [styles.floating]: sidebarCollapsedValue,
         [styles.collapsed]: sidebarCollapsed,
       })}
       data-role={DOM_ROLE.sidebar}
-      ref={sidebarRef}
-      onMouseEnter={onSidebarMouseEnter}
-      onMouseLeave={onSidebarMouseLeave}
       onMouseDown={onMouseDown}
     >
-      <div className={styles.search}>
-        <SearchInput />
-      </div>
+      {!sidebarCollapsed ? <SpacesList /> : null}
 
-      <div
-        className={cn(styles.header, styles.openTabsHeader)}
-        ref={openTabsHeaderRef}
-      >
-        <span className={styles.headerText}>Open tabs</span>
-        <CleanupButton tabs={tabs} />
-        <StashButton tabs={tabs} />
+      <div className={styles.header}>
+        {!sidebarCollapsed ? (
+          <>
+            <span className={styles.headerText}>Open tabs</span>
+            <span className={styles.tabsCount}>{openTabsCount}</span>
+            <div className={styles.headerActions}>
+              <CleanupButton tabs={tabs} />
+              <StashButton tabs={tabs} />
+            </div>
+          </>
+        ) : null}
         <button
           id="toggle-sidebar-btn"
-          className="btn__icon"
+          className={cn(styles.collapseButton, {
+            [styles.expandedCollapseButton]: !sidebarCollapsed,
+          })}
           onClick={onToggleSidebar}
-          style={sidebarCollapsedValue ? { transform: "rotate(180deg)" } : {}}
-          title={sidebarCollapsedValue ? "Pin" : "Collapse"}
+          title={sidebarCollapsed ? "Expand panel" : "Collapse panel"}
+          aria-label={sidebarCollapsed ? "Expand panel" : "Collapse panel"}
         >
-          <IconPin />
+          <IconChevron />
         </button>
       </div>
 
-      <SidebarOpenTabs
-        tabs={tabs}
-        spaces={spaces}
-        search={search}
-        searchFilters={searchFilters}
-        searchFilterMode={searchFilterMode}
-        lastActiveTabIds={lastActiveTabIds}
-        currentWindowId={currentWindowId}
-        sidebarCollapsed={sidebarCollapsed}
-      />
-      {(showRecent ||
-        search ||
-        searchFilters.some((filter) => filter.enabled)) && (
-        <SidebarRecent
-          search={search}
-          searchFilters={searchFilters}
-          searchFilterMode={searchFilterMode}
-          recentItems={recentItems}
-          spaces={spaces}
-          sidebarCollapsed={sidebarCollapsed}
-        ></SidebarRecent>
+      {sidebarCollapsed ? (
+        <div className={styles.collapsedNavigation}>
+          <button
+            type="button"
+            className={styles.collapsedSpacesButton}
+            title="Spaces"
+            aria-label="Spaces"
+            onClick={onToggleSidebar}
+          >
+            <IconSpaces />
+          </button>
+          <button
+            type="button"
+            className={styles.collapsedTabsButton}
+            title="Open tabs"
+            aria-label={`${openTabsCount} open tabs`}
+            onClick={onToggleSidebar}
+          >
+            <IconTabs />
+            {openTabsCount > 0 ? (
+              <span className={styles.collapsedTabsCount}>{openTabsCount}</span>
+            ) : null}
+          </button>
+        </div>
+      ) : (
+        <div className={styles.content}>
+          <SidebarOpenTabs
+            tabs={tabs}
+            spaces={spaces}
+            search={search}
+            searchFilters={searchFilters}
+            searchFilterMode={searchFilterMode}
+            lastActiveTabIds={lastActiveTabIds}
+            currentWindowId={currentWindowId}
+            sidebarCollapsed={false}
+          />
+          {(showRecent ||
+            search ||
+            searchFilters.some((filter) => filter.enabled)) && (
+            <SidebarRecent
+              search={search}
+              searchFilters={searchFilters}
+              searchFilterMode={searchFilterMode}
+              recentItems={recentItems}
+              spaces={spaces}
+              sidebarCollapsed={false}
+            />
+          )}
+        </div>
       )}
     </div>
   );
@@ -275,9 +297,11 @@ const StashButton = React.memo((props: { tabs: BrowserTab[] }) => {
   const filteredTabs = props.tabs.filter((t) => !t.pinned && !isTabloTab(t));
 
   return (
-    <div style={{ display: "inline-block", position: "relative" }}>
+    <div className={styles.actionWrap}>
       <button
-        className={cn("btn__icon", { active: confirmationOpened })}
+        className={cn("btn__icon", styles.actionButton, {
+          active: confirmationOpened,
+        })}
         disabled={filteredTabs.length < 1}
         title="Stash open Tabs in the new Folder"
         onClick={onStashClick}
@@ -352,7 +376,7 @@ const CleanupButton = React.memo((props: { tabs: BrowserTab[] }) => {
   }, [props.tabs]);
   return (
     <button
-      className="btn__icon"
+      className={cn("btn__icon", styles.actionButton)}
       style={{ position: "relative" }}
       title="Close duplicate tabs"
       disabled={duplicateTabsCount === 0}

@@ -5,6 +5,8 @@ import { Sidebar } from "@/newtab/03-widgets/sidebar/Sidebar/Sidebar";
 import { Notification } from "@/newtab/03-widgets/ui/Notification/Notification";
 import { ImportBookmarksFromSettings } from "@/newtab/04-features/bookmarks-import/ui/ImportBookmarksFromSettings";
 import { KeyboardAndMouseManager } from "@/newtab/01-app/ui/KeyboardAndMouseManager";
+import { TopBar } from "@/newtab/03-widgets/top-bar/TopBar/TopBar";
+import styles from "./NewtabPage.module.scss";
 
 type NewtabPageProps = {
   page: "default" | "import";
@@ -24,8 +26,11 @@ export function NewtabPage({
       {page === "import" ? <ImportBookmarksFromSettings /> : null}
       {page === "default" ? (
         <>
-          <Sidebar />
-          <Bookmarks />
+          <TopBar />
+          <div className={styles.workspace}>
+            <Sidebar />
+            <Bookmarks />
+          </div>
           <KeyboardAndMouseManager search={search} />
         </>
       ) : null}

@@ -1,14 +1,26 @@
-import { createTab, updateTab, removeTabs, getCurrentTab, queryTabs, getCurrentWindow, focusWindow, type BrowserTab } from "@/newtab/06-shared/api/chrome/tabs";
+import {
+  createTab,
+  updateTab,
+  removeTabs,
+  getCurrentTab,
+  queryTabs,
+  getCurrentWindow,
+  focusWindow,
+  type BrowserTab,
+} from "@/newtab/06-shared/api/chrome/tabs";
 import React, { useEffect, useRef, useState } from "react";
 import cn from "clsx";
 import styles from "./Bookmarks.module.scss";
-import { blurSearch, isTargetSupportsDragAndDrop } from "@/newtab/06-shared/lib/dom/html";
+import {
+  blurSearch,
+  isTargetSupportsDragAndDrop,
+} from "@/newtab/06-shared/lib/dom/html";
 import { bindDADItemEffect } from "@/newtab/04-features/dragging";
 import { Folder } from "@/newtab/03-widgets/dashboard/Folder/Folder";
 import { NewFolderPlaceholder } from "@/newtab/03-widgets/dashboard/Folder/NewFolderPlaceholder";
 import { handleBookmarksKeyDown } from "@/newtab/04-features/bookmarks/model/handleBookmarksKeyDown";
 import { findBookmarkItem } from "@/newtab/05-entities/dashboard/model/itemUtils";
-import { TopBar } from "@/newtab/03-widgets/top-bar/TopBar/TopBar";
+import { hasSearch } from "@/newtab/04-features/bookmark-search/model/filters";
 import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
 import { useAreaSelection } from "@/newtab/04-features/area-selection/ui/useAreaSelection";
 import { useBookmarksScreen } from "@/newtab/04-features/bookmarks/model/useBookmarksScreen";
@@ -46,14 +58,12 @@ export function Bookmarks() {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const bookmarksRef = useRef<HTMLDivElement>(null);
-  const {
-    onMouseDown: onAreaSelectionMouseDown,
-    selectionRect,
-  } = useAreaSelection({
-    containerRef: bookmarksRef,
-    setSelectedItemIds,
-    clearSelectedItemIds,
-  });
+  const { onMouseDown: onAreaSelectionMouseDown, selectionRect } =
+    useAreaSelection({
+      containerRef: bookmarksRef,
+      setSelectedItemIds,
+      clearSelectedItemIds,
+    });
 
   useEffect(() => {
     if (__prevCurrentSpaceId !== currentSpaceId || __prevSearch !== search) {
@@ -224,6 +234,7 @@ export function Bookmarks() {
 
   const { folders, folderProps } = screen;
   const { onCreateFolder } = screen.commands;
+  const searchActive = hasSearch(search, searchFilters);
 
   return (
     <div
@@ -232,7 +243,15 @@ export function Bookmarks() {
       })}
       onMouseDown={onMouseDown}
     >
-      <TopBar isScrolled={isScrolled} />
+      {searchActive ? (
+        <div
+          className={cn(styles.workspaceHeader, {
+            [styles.scrolled]: isScrolled,
+          })}
+        >
+          <div className={styles.searchResultsHeader}>Search results:</div>
+        </div>
+      ) : null}
       <div
         className={styles.bookmarks}
         data-role={DOM_ROLE.bookmarks}
@@ -242,11 +261,7 @@ export function Bookmarks() {
         }
       >
         {folders.map((folder) => (
-          <Folder
-            key={folder.id}
-            folder={folder}
-            {...folderProps}
-          />
+          <Folder key={folder.id} folder={folder} {...folderProps} />
         ))}
 
         {selectionRect ? (
