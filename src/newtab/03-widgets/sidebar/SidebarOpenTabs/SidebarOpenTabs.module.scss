@@ -9,21 +9,63 @@
   width: 100%;
 }
 
-.windowName {
-  margin: 12px 8px 6px;
-  white-space: nowrap;
-  transition: width 50ms;
-  transition-delay: 100ms;
+.windowGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.windowHeader {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 32px;
+  margin: 8px 0 2px;
+  padding: 0 8px;
+  border: none;
+  border-radius: 9px;
+  background-color: transparent;
   color: var(--second-text-color);
+  cursor: pointer;
+  font-family: inherit;
+
+  &:hover {
+    background-color: var(--colors-gray-200);
+    color: var(--main-text-color);
+  }
+}
+
+.windowChevron {
+  width: 6px;
+  height: 6px;
+  margin-right: 8px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translateY(-1px);
+  transition: transform 0.18s ease;
+}
+
+.windowChevronCollapsed {
+  transform: rotate(-45deg);
+}
+
+.windowName {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  text-overflow: clip;
+  text-align: left;
+  text-overflow: ellipsis;
   overflow: hidden;
-  width: 120px;
 }
 
-.collapsedText {
-  width: 22px;
+.windowTabsCount {
+  flex-shrink: 0;
+  margin-left: 8px;
+  font-size: 10px;
+  font-weight: 600;
 }

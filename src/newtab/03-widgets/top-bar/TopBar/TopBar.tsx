@@ -16,40 +16,6 @@ const themes: Array<{ value: ColorTheme; title: string }> = [
   { value: "dark", title: "Dark theme" },
 ];
 
-function TabloLogo() {
-  return (
-    <div className={styles.logo} aria-label="Tablo">
-      <svg
-        className={styles.logoMark}
-        width="22"
-        height="22"
-        viewBox="0 0 22 22"
-        aria-hidden="true"
-      >
-        <rect x="0" y="0" width="12" height="10" rx="2.5" />
-        <rect
-          className={styles.logoMarkMuted}
-          x="14"
-          y="0"
-          width="8"
-          height="10"
-          rx="2.5"
-        />
-        <rect
-          className={styles.logoMarkMuted}
-          x="0"
-          y="12"
-          width="8"
-          height="10"
-          rx="2.5"
-        />
-        <rect x="10" y="12" width="12" height="10" rx="2.5" />
-      </svg>
-      <span className={styles.logoText}>tablo</span>
-    </div>
-  );
-}
-
 export function TopBar() {
   const [settingsMenuVisibility, setSettingsMenuVisibility] = useState(false);
   const [helpMenuVisibility, setHelpMenuVisibility] = useState(false);
@@ -66,10 +32,6 @@ export function TopBar() {
 
   return (
     <header className={styles.root}>
-      <div className={styles.logoSlot}>
-        <TabloLogo />
-      </div>
-
       <div className={styles.searchSlot}>
         <SearchInput />
       </div>

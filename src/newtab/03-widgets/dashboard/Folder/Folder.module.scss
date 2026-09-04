@@ -1,10 +1,12 @@
 .root {
   display: flex;
   flex-direction: column;
+  gap: var(--container-gap);
   min-width: 0;
-  border-radius: 24px;
+  padding: var(--container-padding);
+  border-radius: var(--container-border-radius);
   background-color: var(--popup-background-color);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+  box-sizing: border-box;
   overflow: hidden;
   user-select: none;
 }
@@ -14,9 +16,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  min-height: 72px;
+  min-height: 48px;
   margin: 0;
-  padding: 12px 14px;
+  padding: 0;
   box-sizing: border-box;
   color: var(--main-text-color);
   font-size: 14px;
@@ -140,7 +142,7 @@
   position: relative;
   flex-grow: 1;
   min-height: 0;
-  padding: 0 0 18px;
+  padding: 0;
 }
 
 .twoColumn {
@@ -172,9 +174,13 @@
   align-items: center;
   justify-content: center;
   gap: 7px;
-  padding: 22px 20px 28px;
+  padding: 0;
   color: var(--second-text-color);
   text-align: center;
+}
+
+.emptyTip + .items:empty {
+  display: none;
 }
 
 .emptyIcon {
@@ -227,10 +233,11 @@
 .newFolder {
   position: relative;
   display: block;
+  gap: 0;
   min-width: 0;
+  padding: 0;
   border-radius: 10px;
   background-color: transparent;
-  box-shadow: none;
   overflow: visible;
 }
 

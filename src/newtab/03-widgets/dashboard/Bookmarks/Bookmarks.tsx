@@ -24,7 +24,6 @@ import { hasSearch } from "@/newtab/04-features/bookmark-search/model/filters";
 import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
 import { useAreaSelection } from "@/newtab/04-features/area-selection/ui/useAreaSelection";
 import { useBookmarksScreen } from "@/newtab/04-features/bookmarks/model/useBookmarksScreen";
-import FolderIcon from "@/newtab/03-widgets/dashboard/Folder/icons/folder-open.svg";
 
 let __prevCurrentSpaceId: number | undefined = undefined;
 let __prevSearch: string | undefined = undefined;
@@ -257,20 +256,13 @@ export function Bookmarks() {
           handleBookmarksKeyDown(event, { spaces }, openFolderItem)
         }
       >
-        {screen.showNewFolderPlaceholder ? (
-          <div className={styles.foldersToolbar}>
-            <div className={styles.foldersLabel}>
-              <FolderIcon />
-              <span>Folders</span>
-            </div>
-            <NewFolderPlaceholder onCreate={onCreateFolder} />
-          </div>
-        ) : null}
-
         <div className={styles.folderGrid}>
           {folders.map((folder) => (
             <Folder key={folder.id} folder={folder} {...folderProps} />
           ))}
+          {screen.showNewFolderPlaceholder ? (
+            <NewFolderPlaceholder onCreate={onCreateFolder} />
+          ) : null}
         </div>
 
         {selectionRect ? (

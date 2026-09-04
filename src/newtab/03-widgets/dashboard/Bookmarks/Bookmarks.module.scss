@@ -3,6 +3,7 @@
   flex-direction: column;
   flex-grow: 1;
   min-width: 0;
+  min-height: 0;
 }
 
 .withCollapsedSidebar {
@@ -23,31 +24,6 @@
   &::-webkit-scrollbar {
     width: 0;
     height: 0;
-  }
-}
-
-.foldersToolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-shrink: 0;
-  margin-bottom: 12px;
-}
-
-.foldersLabel {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--second-text-color);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-
-  svg {
-    width: 13px;
-    height: 13px;
-    color: currentColor;
   }
 }
 

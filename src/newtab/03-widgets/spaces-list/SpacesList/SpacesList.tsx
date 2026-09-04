@@ -68,8 +68,6 @@ export function SpacesList() {
 
   return (
     <section className={styles.root} aria-label="Spaces">
-      <div className={styles.sectionHeader}>Spaces</div>
-
       <div className={styles.actions}>
         <input
           ref={importSpaceInputRef}

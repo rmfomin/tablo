@@ -7,7 +7,6 @@ import {
   readLocalStorage,
   writeLocalStorage,
 } from "@/newtab/06-shared/api/chrome/storage";
-import IconSearch from "./icons/search.svg";
 import IconFilter from "./icons/filter.svg";
 import IconClearFilter from "./icons/filter-clear.svg";
 import { Modal } from "@/newtab/06-shared/ui/Modal/Modal";
@@ -259,8 +258,6 @@ export function SearchInput() {
   return (
     <div className={styles.searchBlock}>
       <div className={styles.searchWrapper}>
-        <IconSearch className={styles.searchIcon} />
-
         <input
           tabIndex={1}
           className="search"
@@ -297,63 +294,71 @@ export function SearchInput() {
       </div>
       {filtersPanelOpened ? (
         <div className={styles.filterPanel}>
-          <button
-            className={cn(styles.filterButton, {
-              [styles.active]: enabledFiltersCount === 0,
-            })}
-            title="Disable search filters"
-            onClick={onClearFilters}
-          >
-            <IconClearFilter />
-          </button>
-          <button
-            className={cn(styles.filterModeButton, {
-              [styles.active]: searchFilterMode === "and",
-            })}
-            title="Toggle search/filter mode"
-            onClick={onToggleFilterMode}
-          >
-            {searchFilterMode.toUpperCase()}
-          </button>
-          {searchFilters.map((filter) => {
-            return (
-              <div className={styles.filterButtonWrap} key={filter.id}>
-                <button
-                  className={cn(styles.filterButton, {
-                    [styles.accentActive]: filter.enabled,
-                    [styles.editingFilter]: editingFilterId === filter.id,
-                  })}
-                  title={`${filter.title}: /${filter.pattern}/i`}
-                  onClick={() => onFilterClick(filter)}
-                  onContextMenu={(event) => onFilterContextMenu(event, filter)}
-                >
-                  <span className={styles.filterLabel}>
-                    {getFilterLabel(filter)}
-                  </span>
-                </button>
-                {menuFilterId === filter.id ? (
-                  <DropdownMenu
-                    onClose={() => setMenuFilterId(undefined)}
-                    className="dropdown-menu--folder"
-                    offset={{ top: 2, left: -16 }}
-                  >
+          {searchFilters.length === 0 ? (
+            <span className={styles.emptyFilters}>No filters yet</span>
+          ) : (
+            <>
+              <button
+                className={cn(styles.filterButton, {
+                  [styles.active]: enabledFiltersCount === 0,
+                })}
+                title="Disable search filters"
+                onClick={onClearFilters}
+              >
+                <IconClearFilter />
+              </button>
+              <button
+                className={cn(styles.filterModeButton, {
+                  [styles.active]: searchFilterMode === "and",
+                })}
+                title="Toggle search/filter mode"
+                onClick={onToggleFilterMode}
+              >
+                {searchFilterMode.toUpperCase()}
+              </button>
+              {searchFilters.map((filter) => {
+                return (
+                  <div className={styles.filterButtonWrap} key={filter.id}>
                     <button
-                      className="dropdown-menu__button focusable"
-                      onClick={() => onEditFilter(filter)}
+                      className={cn(styles.filterButton, {
+                        [styles.accentActive]: filter.enabled,
+                        [styles.editingFilter]: editingFilterId === filter.id,
+                      })}
+                      title={`${filter.title}: /${filter.pattern}/i`}
+                      onClick={() => onFilterClick(filter)}
+                      onContextMenu={(event) =>
+                        onFilterContextMenu(event, filter)
+                      }
                     >
-                      Edit filter
+                      <span className={styles.filterLabel}>
+                        {getFilterLabel(filter)}
+                      </span>
                     </button>
-                    <button
-                      className="dropdown-menu__button dropdown-menu__button--dander focusable"
-                      onClick={() => onDeleteFilter(filter)}
-                    >
-                      Delete filter
-                    </button>
-                  </DropdownMenu>
-                ) : null}
-              </div>
-            );
-          })}
+                    {menuFilterId === filter.id ? (
+                      <DropdownMenu
+                        onClose={() => setMenuFilterId(undefined)}
+                        className="dropdown-menu--folder"
+                        offset={{ top: 2, left: -16 }}
+                      >
+                        <button
+                          className="dropdown-menu__button focusable"
+                          onClick={() => onEditFilter(filter)}
+                        >
+                          Edit filter
+                        </button>
+                        <button
+                          className="dropdown-menu__button dropdown-menu__button--dander focusable"
+                          onClick={() => onDeleteFilter(filter)}
+                        >
+                          Delete filter
+                        </button>
+                      </DropdownMenu>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </>
+          )}
           <button
             className={styles.filterButton}
             title="Add search filter"

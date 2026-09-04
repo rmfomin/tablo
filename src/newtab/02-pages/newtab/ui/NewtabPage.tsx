@@ -26,10 +26,12 @@ export function NewtabPage({
       {page === "import" ? <ImportBookmarksFromSettings /> : null}
       {page === "default" ? (
         <>
-          <TopBar />
           <div className={styles.workspace}>
             <Sidebar />
-            <Bookmarks />
+            <div className={styles.mainColumn}>
+              <TopBar />
+              <Bookmarks />
+            </div>
           </div>
           <KeyboardAndMouseManager search={search} />
         </>

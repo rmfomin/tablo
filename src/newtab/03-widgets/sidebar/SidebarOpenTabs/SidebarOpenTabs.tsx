@@ -1,5 +1,5 @@
 import { createTab, updateTab, removeTabs, getCurrentTab, queryTabs, getCurrentWindow, focusWindow, type BrowserTab } from "@/newtab/06-shared/api/chrome/tabs";
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import cn from "clsx";
 import {
   filterTabsBySearch,
@@ -75,25 +75,15 @@ export const SidebarOpenTabs = memo(
             ))
           : sortedWindowsWithTabs.map((window, index) => {
               return (
-                <div key={window.windowId}>
-                  <div
-                    className={cn(styles.windowName, {
-                      [styles.collapsedText]: p.sidebarCollapsed,
-                    })}
-                  >
-                    {index === 0 ? "current window" : "window"}
-                  </div>
-                  {window.tabs.map((t) => (
-                    <TabOrRecentItem
-                      key={t.id}
-                      data={t}
-                      lastActiveTabId={p.lastActiveTabIds[1]}
-                      spaces={p.spaces}
-                      search={p.search}
-                      onCloseTab={onCloseTab}
-                    />
-                  ))}
-                </div>
+                <WindowTabsGroup
+                  key={window.windowId}
+                  title={index === 0 ? "Current window" : `Window ${index + 1}`}
+                  tabs={window.tabs}
+                  lastActiveTabId={p.lastActiveTabIds[1]}
+                  spaces={p.spaces}
+                  search={p.search}
+                  onCloseTab={onCloseTab}
+                />
               );
             })}
         {tabsCount === 0 && !hasSearch(p.search, p.searchFilters) ? (
@@ -106,6 +96,49 @@ export const SidebarOpenTabs = memo(
     );
   },
 );
+
+function WindowTabsGroup(p: {
+  title: string;
+  tabs: BrowserTab[];
+  lastActiveTabId: number;
+  spaces: SpaceV3[];
+  search: string;
+  onCloseTab: (tabId: number) => void;
+}) {
+  const [collapsed, setCollapsed] = useState(false);
+
+  return (
+    <section className={styles.windowGroup}>
+      <button
+        type="button"
+        className={cn(styles.windowHeader, "stop-dad-propagation")}
+        aria-expanded={!collapsed}
+        onMouseDown={(event) => event.stopPropagation()}
+        onClick={() => setCollapsed((value) => !value)}
+      >
+        <span
+          className={cn(styles.windowChevron, {
+            [styles.windowChevronCollapsed]: collapsed,
+          })}
+        />
+        <span className={styles.windowName}>{p.title}</span>
+        <span className={styles.windowTabsCount}>{p.tabs.length}</span>
+      </button>
+      {!collapsed
+        ? p.tabs.map((tab) => (
+            <TabOrRecentItem
+              key={tab.id}
+              data={tab}
+              lastActiveTabId={p.lastActiveTabId}
+              spaces={p.spaces}
+              search={p.search}
+              onCloseTab={p.onCloseTab}
+            />
+          ))
+        : null}
+    </section>
+  );
+}
 
 function getSortedWindowsWithTabs(
   map: Map<number, BrowserTab[]>,

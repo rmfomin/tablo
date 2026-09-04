@@ -24,6 +24,10 @@
   --icon-color: #000;
   --icon-color-group-chevron: #242424;
   --title-font-family: "AnkaCoder", "OpenSans", sans-serif;
+  --container-border-radius: 27px;
+  --container-padding: 28px;
+  --container-gap: 18px;
+  --workspace-card-width: calc((100vw - 116px) / 4);
 
   --colors-gray-100: #fafafa;
   --colors-gray-200: #f2f2f2;
@@ -66,6 +70,18 @@
   --colors-green-900: #153000;
 
   --scrollbar-width: 12px;
+}
+
+@media (max-width: 1100px) {
+  :root {
+    --workspace-card-width: calc((100vw - 98px) / 3);
+  }
+}
+
+@media (min-width: 1680px) {
+  :root {
+    --workspace-card-width: calc((100vw - 134px) / 5);
+  }
 }
 
 .dark-theme {

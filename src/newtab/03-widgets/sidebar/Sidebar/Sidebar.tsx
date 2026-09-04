@@ -161,81 +161,102 @@ export function Sidebar() {
       data-role={DOM_ROLE.sidebar}
       onMouseDown={onMouseDown}
     >
-      {!sidebarCollapsed ? <SpacesList /> : null}
-
-      <div className={styles.header}>
-        {!sidebarCollapsed ? (
-          <>
-            <span className={styles.headerText}>Open tabs</span>
-            <span className={styles.tabsCount}>{openTabsCount}</span>
-            <div className={styles.headerActions}>
-              <CleanupButton tabs={tabs} />
-              <StashButton tabs={tabs} />
-            </div>
-          </>
-        ) : null}
-        <button
-          id="toggle-sidebar-btn"
-          className={cn(styles.collapseButton, {
-            [styles.expandedCollapseButton]: !sidebarCollapsed,
-          })}
-          onClick={onToggleSidebar}
-          title={sidebarCollapsed ? "Expand panel" : "Collapse panel"}
-          aria-label={sidebarCollapsed ? "Expand panel" : "Collapse panel"}
-        >
-          <IconChevron />
-        </button>
-      </div>
-
       {sidebarCollapsed ? (
-        <div className={styles.collapsedNavigation}>
-          <button
-            type="button"
-            className={styles.collapsedSpacesButton}
-            title="Spaces"
-            aria-label="Spaces"
-            onClick={onToggleSidebar}
-          >
-            <IconSpaces />
-          </button>
-          <button
-            type="button"
-            className={styles.collapsedTabsButton}
-            title="Open tabs"
-            aria-label={`${openTabsCount} open tabs`}
-            onClick={onToggleSidebar}
-          >
-            <IconTabs />
-            {openTabsCount > 0 ? (
-              <span className={styles.collapsedTabsCount}>{openTabsCount}</span>
-            ) : null}
-          </button>
-        </div>
+        <>
+          <div className={styles.collapsedHeader}>
+            <button
+              id="toggle-sidebar-btn"
+              className={styles.collapseButton}
+              onClick={onToggleSidebar}
+              title="Expand panel"
+              aria-label="Expand panel"
+            >
+              <IconChevron />
+            </button>
+          </div>
+          <div className={styles.collapsedNavigation}>
+            <button
+              type="button"
+              className={styles.collapsedSpacesButton}
+              title="Spaces"
+              aria-label="Spaces"
+              onClick={onToggleSidebar}
+            >
+              <IconSpaces />
+            </button>
+            <button
+              type="button"
+              className={styles.collapsedTabsButton}
+              title="Open tabs"
+              aria-label={`${openTabsCount} open tabs`}
+              onClick={onToggleSidebar}
+            >
+              <IconTabs />
+              {openTabsCount > 0 ? (
+                <span className={styles.collapsedTabsCount}>
+                  {openTabsCount}
+                </span>
+              ) : null}
+            </button>
+          </div>
+        </>
       ) : (
-        <div className={styles.content}>
-          <SidebarOpenTabs
-            tabs={tabs}
-            spaces={spaces}
-            search={search}
-            searchFilters={searchFilters}
-            searchFilterMode={searchFilterMode}
-            lastActiveTabIds={lastActiveTabIds}
-            currentWindowId={currentWindowId}
-            sidebarCollapsed={false}
-          />
-          {(showRecent ||
-            search ||
-            searchFilters.some((filter) => filter.enabled)) && (
-            <SidebarRecent
-              search={search}
-              searchFilters={searchFilters}
-              searchFilterMode={searchFilterMode}
-              recentItems={recentItems}
-              spaces={spaces}
-              sidebarCollapsed={false}
-            />
-          )}
-        </div>
+        <>
+          <section className={styles.spacesSection}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.headerText}>Spaces</span>
+              <button
+                id="toggle-sidebar-btn"
+                className={cn(
+                  styles.collapseButton,
+                  styles.expandedCollapseButton,
+                )}
+                onClick={onToggleSidebar}
+                title="Collapse panel"
+                aria-label="Collapse panel"
+              >
+                <IconChevron />
+              </button>
+            </div>
+            <SpacesList />
+          </section>
+
+          <section className={styles.tabsSection}>
+            <div className={styles.header}>
+              <span className={styles.headerText}>Open tabs</span>
+              <span className={styles.tabsCount}>{openTabsCount}</span>
+              <div className={styles.headerActions}>
+                <CleanupButton tabs={tabs} />
+                <StashButton tabs={tabs} />
+              </div>
+            </div>
+
+            <div className={styles.content}>
+              <SidebarOpenTabs
+                tabs={tabs}
+                spaces={spaces}
+                search={search}
+                searchFilters={searchFilters}
+                searchFilterMode={searchFilterMode}
+                lastActiveTabIds={lastActiveTabIds}
+                currentWindowId={currentWindowId}
+                sidebarCollapsed={false}
+              />
+              {(showRecent ||
+                search ||
+                searchFilters.some((filter) => filter.enabled)) && (
+                <SidebarRecent
+                  search={search}
+                  searchFilters={searchFilters}
+                  searchFilterMode={searchFilterMode}
+                  recentItems={recentItems}
+                  spaces={spaces}
+                  sidebarCollapsed={false}
+                />
+              )}
+            </div>
+          </section>
+        </>
       )}
     </div>
   );

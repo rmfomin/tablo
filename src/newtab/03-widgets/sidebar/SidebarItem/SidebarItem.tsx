@@ -121,7 +121,7 @@ export const TabOrRecentItem = (p: {
       <div className={styles.text}>
         <div
           className={styles.title}
-          title={p.data.title}
+          title={[p.data.title, p.data.url].filter(Boolean).join("\n")}
           dangerouslySetInnerHTML={hlSearch(shortenedTitle, p.search)}
         />
         <div
