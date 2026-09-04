@@ -24,6 +24,7 @@ import { hasSearch } from "@/newtab/04-features/bookmark-search/model/filters";
 import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
 import { useAreaSelection } from "@/newtab/04-features/area-selection/ui/useAreaSelection";
 import { useBookmarksScreen } from "@/newtab/04-features/bookmarks/model/useBookmarksScreen";
+import FolderIcon from "@/newtab/03-widgets/dashboard/Folder/icons/folder-open.svg";
 
 let __prevCurrentSpaceId: number | undefined = undefined;
 let __prevSearch: string | undefined = undefined;
@@ -52,10 +53,8 @@ export function Bookmarks() {
     openBookmarksInNewTab,
     tabs,
   } = useBookmarksScreen();
-  const [mouseDownEvent, setMouseDownEvent] = useState<
-    React.MouseEvent | undefined
-  >(undefined);
   const [isScrolled, setIsScrolled] = useState(false);
+  const dragCleanupRef = useRef<() => void>();
 
   const bookmarksRef = useRef<HTMLDivElement>(null);
   const { onMouseDown: onAreaSelectionMouseDown, selectionRect } =
@@ -85,6 +84,89 @@ export function Bookmarks() {
   ]);
 
   useEffect(() => {
+    return () => dragCleanupRef.current?.();
+  }, []);
+
+  function startDragAndDrop(mouseDownEvent: React.MouseEvent) {
+    dragCleanupRef.current?.();
+
+    const onDropItems = (
+      folderId: number,
+      insertBeforeItemId: number | undefined,
+      targetsIds: number[],
+      targetGroupId?: number
+    ) => {
+      if (folderId === -1) {
+        folderId = Date.now() + Math.round(Math.random() * 10_000_000);
+        createFolder({ id: folderId });
+      }
+      moveFolderItems({
+        itemIds: targetsIds,
+        targetFolderId: folderId,
+        targetGroupId,
+        insertBeforeItemId,
+      });
+    };
+    const onDropFolder = (
+      folderId: number,
+      targetSpaceId: number | undefined,
+      insertBeforeFolderId: number | undefined
+    ) => {
+      moveFolder({
+        folderId,
+        targetSpaceId: targetSpaceId ?? currentSpaceId,
+        insertBeforeFolderId,
+      });
+    };
+    const onClick = (targetId: number) => {
+      const meta =
+        mouseDownEvent.metaKey ||
+        mouseDownEvent.ctrlKey ||
+        mouseDownEvent.button === 1;
+      openFolderItem(targetId, meta);
+    };
+
+    const onChangeSpace = (spaceId: number) => {
+      setCurrentSpace(spaceId);
+    };
+
+    const onChangeSpacePosition = (spaceId: number, newPosition: string) => {
+      updateSpace(spaceId, { position: newPosition });
+    };
+
+    const canDrag = () => {
+      if (!search) return true;
+      showNotification({ message: "Sorting is unavailable in search" });
+      return false;
+    };
+
+    dragCleanupRef.current = bindDADItemEffect(
+      mouseDownEvent,
+      {
+        isFolderItem: true,
+        onDrop: onDropItems,
+        onCancel: () => {},
+        onClick,
+        onDragStarted: canDrag,
+      },
+      {
+        selectedItemIds,
+        clearSelectedItemIds,
+      },
+      {
+        onDrop: onDropFolder,
+        onCancel: () => {},
+        onChangeSpace,
+        onDragStarted: canDrag,
+      },
+      {
+        onChangeSpacePosition,
+        canSortSpaces: () => spaces.length > 1,
+      }
+    );
+  }
+
+  useEffect(() => {
     const handleScroll = () => {
       if (bookmarksRef.current) {
         setIsScrolled(bookmarksRef.current.scrollTop > 0);
@@ -103,98 +185,13 @@ export function Bookmarks() {
     };
   }, []);
 
-  useEffect(() => {
-    if (mouseDownEvent) {
-      const onDropItems = (
-        folderId: number,
-        insertBeforeItemId: number | undefined,
-        targetsIds: number[],
-        targetGroupId?: number
-      ) => {
-        if (folderId === -1) {
-          folderId = Date.now() + Math.round(Math.random() * 10_000_000);
-          createFolder({ id: folderId });
-        }
-        moveFolderItems({
-          itemIds: targetsIds,
-          targetFolderId: folderId,
-          targetGroupId,
-          insertBeforeItemId,
-        });
-
-        setMouseDownEvent(undefined);
-      };
-      const onDropFolder = (
-        folderId: number,
-        targetSpaceId: number | undefined,
-        insertBeforeFolderId: number | undefined
-      ) => {
-        moveFolder({
-          folderId,
-          targetSpaceId: targetSpaceId ?? currentSpaceId,
-          insertBeforeFolderId,
-        });
-
-        setMouseDownEvent(undefined);
-      };
-      const onCancel = () => {
-        setMouseDownEvent(undefined);
-      };
-      const onClick = (targetId: number) => {
-        const meta =
-          mouseDownEvent.metaKey ||
-          mouseDownEvent.ctrlKey ||
-          mouseDownEvent.button === 1;
-        openFolderItem(targetId, meta);
-      };
-
-      const onChangeSpace = (spaceId: number) => {
-        setCurrentSpace(spaceId);
-      };
-
-      const onChangeSpacePosition = (spaceId: number, newPosition: string) => {
-        updateSpace(spaceId, { position: newPosition });
-      };
-
-      const canDrag = () => {
-        if (!search) return true;
-        showNotification({ message: "Sorting is unavailable in search" });
-        return false;
-      };
-      return bindDADItemEffect(
-        mouseDownEvent,
-        {
-          isFolderItem: true,
-          onDrop: onDropItems,
-          onCancel,
-          onClick,
-          onDragStarted: canDrag,
-        },
-        {
-          selectedItemIds,
-          clearSelectedItemIds,
-        },
-        {
-          onDrop: onDropFolder,
-          onCancel,
-          onChangeSpace,
-          onDragStarted: canDrag,
-        },
-        {
-          onChangeSpacePosition,
-          canSortSpaces: () => spaces.length > 1,
-        }
-      );
-    }
-  }, [mouseDownEvent, selectedItemIds, clearSelectedItemIds]);
-
   function onMouseDown(e: React.MouseEvent) {
     blurSearch(e);
     if (onAreaSelectionMouseDown(e)) {
       return;
     }
     if (isTargetSupportsDragAndDrop(e)) {
-      setMouseDownEvent(e);
+      startDragAndDrop(e);
     }
   }
 
@@ -260,9 +257,21 @@ export function Bookmarks() {
           handleBookmarksKeyDown(event, { spaces }, openFolderItem)
         }
       >
-        {folders.map((folder) => (
-          <Folder key={folder.id} folder={folder} {...folderProps} />
-        ))}
+        {screen.showNewFolderPlaceholder ? (
+          <div className={styles.foldersToolbar}>
+            <div className={styles.foldersLabel}>
+              <FolderIcon />
+              <span>Folders</span>
+            </div>
+            <NewFolderPlaceholder onCreate={onCreateFolder} />
+          </div>
+        ) : null}
+
+        <div className={styles.folderGrid}>
+          {folders.map((folder) => (
+            <Folder key={folder.id} folder={folder} {...folderProps} />
+          ))}
+        </div>
 
         {selectionRect ? (
           <div
@@ -277,9 +286,7 @@ export function Bookmarks() {
           />
         ) : null}
 
-        {screen.showNewFolderPlaceholder ? (
-          <NewFolderPlaceholder onCreate={onCreateFolder} />
-        ) : screen.showNoBookmarksFound ? (
+        {screen.showNoBookmarksFound ? (
           <div className={styles.noBookmarksFound}>No bookmarks found</div>
         ) : null}
       </div>

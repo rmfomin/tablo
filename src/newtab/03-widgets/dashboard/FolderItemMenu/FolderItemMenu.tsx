@@ -114,7 +114,7 @@ export const FolderItemMenu = React.memo(
           <DropdownMenu
             onClose={p.onClose}
             className={"dropdown-menu--folder-item"}
-            offset={{ top: 29, bottom: 32 }}
+            offset={{ top: 46, bottom: 52 }}
           >
             <button
               className="dropdown-menu__button focusable"
@@ -168,7 +168,7 @@ export const FolderItemMenu = React.memo(
                 className={
                   "dropdown-menu--folder-item dropdown-menu--folder-section"
                 }
-                offset={{ top: 35, bottom: 32 }}
+                offset={{ top: 32, bottom: 38 }}
               >
                 <label className="input-label">
                   <span>Title</span>
@@ -208,7 +208,7 @@ export const FolderItemMenu = React.memo(
               <DropdownMenu
                 onClose={onSaveAndClose}
                 className={"dropdown-menu--folder-item"}
-                offset={{ top: 29, bottom: 32 }}
+                offset={{ top: 46, bottom: 52 }}
                 width={334}
               >
                 <label className="input-label">

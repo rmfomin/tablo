@@ -8,7 +8,7 @@ import {
   focusWindow,
   type BrowserTab,
 } from "@/newtab/06-shared/api/chrome/tabs";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import cn from "clsx";
 import styles from "./Sidebar.module.scss";
 import { SidebarOpenTabs } from "@/newtab/03-widgets/sidebar/SidebarOpenTabs/SidebarOpenTabs";
@@ -64,98 +64,84 @@ export function Sidebar() {
   const showRecent = useUiStore((state) => state.showRecent);
   const sidebarCollapsed = sidebarCollapsedValue;
 
-  const [mouseDownEvent, setMouseDownEvent] = useState<
-    React.MouseEvent | undefined
-  >(undefined);
+  const dragCleanupRef = useRef<() => void>();
 
   useEffect(() => {
-    if (mouseDownEvent) {
-      // todo technically TabsIds and RecentIds can have collisions
-      const onDrop = (
-        folderId: number,
-        insertBeforeItemId: number | undefined,
-        targetTabsOrRecentIds: number[],
-        targetGroupId?: number
-      ) => {
-        const targetTabId = targetTabsOrRecentIds[0]; // we support D&D only single element from sidebar
-        let tabOrRecentItem: BrowserTab | RecentItem | undefined = tabs.find(
-          (t) => t.id === targetTabId
-        );
+    return () => dragCleanupRef.current?.();
+  }, []);
 
-        if (!tabOrRecentItem) {
-          tabOrRecentItem = recentItems.find((hi) => hi.id === targetTabId);
-        }
+  function startDragAndDrop(mouseDownEvent: React.MouseEvent) {
+    dragCleanupRef.current?.();
 
-        if (folderId === -1) {
-          // we need to create new folder first
-          folderId = Date.now() + Math.round(Math.random() * 10_000_000);
-          createFolder({ id: folderId });
-        }
-
-        if (tabOrRecentItem && tabOrRecentItem.id) {
-          // Add existing BrowserTab
-          const item = convertTabOrRecentToItem(tabOrRecentItem);
-          createFolderItem({
-            folderId,
-            targetGroupId,
-            insertBeforeItemId,
-            item,
-          });
-          setItemInEdit(item.id);
-        } else {
-          console.error("ERROR: tab not found");
-        }
-        setMouseDownEvent(undefined);
-      };
-      const onCancel = () => {
-        setMouseDownEvent(undefined);
-      };
-      const onClick = (tabOrRecentId: number) => {
-        const tab = tabs.find((t) => t.id === tabOrRecentId);
-        if (tab) {
-          updateTab(tabOrRecentId, { active: true });
-          focusWindow(tab.windowId);
-        } else {
-          const recent = recentItems.find((ri) => ri.id === tabOrRecentId);
-          if (recent && recent.url) {
-            createTab({ url: recent.url, active: true });
-          }
-        }
-      };
-      const onDragStarted = () => {
-        return true;
-      };
-
-      return bindDADItemEffect(
-        mouseDownEvent,
-        {
-          isFolderItem: false,
-          onDrop,
-          onCancel,
-          onClick,
-          onDragStarted,
-        },
-        {
-          selectedItemIds,
-          clearSelectedItemIds,
-        }
+    // todo technically TabsIds and RecentIds can have collisions
+    const onDrop = (
+      folderId: number,
+      insertBeforeItemId: number | undefined,
+      targetTabsOrRecentIds: number[],
+      targetGroupId?: number
+    ) => {
+      const targetTabId = targetTabsOrRecentIds[0]; // we support D&D only single element from sidebar
+      let tabOrRecentItem: BrowserTab | RecentItem | undefined = tabs.find(
+        (t) => t.id === targetTabId
       );
-    }
-  }, [
-    mouseDownEvent,
-    tabs,
-    recentItems,
-    createFolder,
-    createFolderItem,
-    setItemInEdit,
-    selectedItemIds,
-    clearSelectedItemIds,
-  ]);
+
+      if (!tabOrRecentItem) {
+        tabOrRecentItem = recentItems.find((hi) => hi.id === targetTabId);
+      }
+
+      if (folderId === -1) {
+        // we need to create new folder first
+        folderId = Date.now() + Math.round(Math.random() * 10_000_000);
+        createFolder({ id: folderId });
+      }
+
+      if (tabOrRecentItem && tabOrRecentItem.id) {
+        // Add existing BrowserTab
+        const item = convertTabOrRecentToItem(tabOrRecentItem);
+        createFolderItem({
+          folderId,
+          targetGroupId,
+          insertBeforeItemId,
+          item,
+        });
+        setItemInEdit(item.id);
+      } else {
+        console.error("ERROR: tab not found");
+      }
+    };
+    const onClick = (tabOrRecentId: number) => {
+      const tab = tabs.find((t) => t.id === tabOrRecentId);
+      if (tab) {
+        updateTab(tabOrRecentId, { active: true });
+        focusWindow(tab.windowId);
+      } else {
+        const recent = recentItems.find((ri) => ri.id === tabOrRecentId);
+        if (recent && recent.url) {
+          createTab({ url: recent.url, active: true });
+        }
+      }
+    };
+
+    dragCleanupRef.current = bindDADItemEffect(
+      mouseDownEvent,
+      {
+        isFolderItem: false,
+        onDrop,
+        onCancel: () => {},
+        onClick,
+        onDragStarted: () => true,
+      },
+      {
+        selectedItemIds,
+        clearSelectedItemIds,
+      }
+    );
+  }
 
   function onMouseDown(e: React.MouseEvent) {
     if (isTargetSupportsDragAndDrop(e)) {
       blurSearch(e);
-      setMouseDownEvent(e);
+      startDragAndDrop(e);
     }
   }
 

@@ -1,34 +1,31 @@
 .root {
-  display: flex;
-  align-items: flex-start;
   position: relative;
-  margin-bottom: 2px;
-  padding-left: 24px;
+  min-width: 0;
+  margin: 2px 8px;
 
   textarea {
-    flex-grow: 1;
-    height: 0;
+    display: block;
+    width: 100%;
+    min-height: 18px;
     box-sizing: border-box;
     resize: none;
     border: 1px solid var(--colors-blue-300);
-    font-size: 14px;
-    padding: 2px;
-    margin: -2px;
-    margin-bottom: -4px;
+    border-radius: 4px;
+    background-color: var(--input-background-color);
+    color: var(--main-text-color);
+    font-size: 13px;
+    line-height: 16px;
+    padding: 1px 4px;
   }
 
   &.section textarea {
-    color: var(--section-text-color);
-    font-size: 14px;
-    font-weight: normal;
-  }
-
-  &:hover .title {
-    text-decoration: underline;
+    color: var(--second-text-color);
+    font-size: 11px;
+    font-weight: 500;
   }
 
   &.section {
-    margin-top: 8px;
+    margin-top: 10px;
   }
 
   &.archived .inner {
@@ -38,12 +35,24 @@
 
 .inner {
   display: flex;
-  align-items: start;
+  align-items: center;
+  gap: 9px;
   text-decoration: none;
   width: 100%;
-  padding: 4px 0 5px 4px;
+  height: 52px;
+  padding: 0 46px 0 14px;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  transition: background-color 0.1s ease;
+
+  &:hover {
+    background-color: var(--colors-gray-200);
+  }
+
+  &.withCloseButton {
+    padding-right: 76px;
+  }
 
   img[src=""] {
     outline-offset: -1px;
@@ -53,12 +62,14 @@
   }
 
   &.opened {
-    background-color: var(--popup-background-color);
-    filter: drop-shadow(1px 1px 0px rgba(0, 0, 0, 0.2));
+    background-color: color-mix(
+      in srgb,
+      var(--colors-blue-200) 55%,
+      transparent 45%
+    );
   }
 
   &[data-selected="true"] {
-    outline: 1px solid var(--colors-blue-500);
     background: color-mix(in srgb, var(--colors-blue-500) 12%, transparent 88%);
   }
 
@@ -74,64 +85,101 @@
     min-height: 16px;
     display: inline-block;
     vertical-align: top;
-    margin-right: 8px;
-    margin-top: 2px;
+    margin: 0;
   }
 
   &.section {
-    padding-top: 8px;
-
-    &:hover .title {
-      text-decoration: none;
-    }
+    height: 34px;
+    padding-left: 14px;
 
     img {
       display: none;
     }
 
     .title {
-      color: var(--section-text-color);
-      font-size: 14px;
-      font-weight: normal;
+      color: var(--second-text-color);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
     }
   }
 }
 
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .title {
+  display: block;
   text-decoration: none;
   color: var(--main-text-color);
-  flex-grow: 1;
-  max-width: 288px;
-  vertical-align: top;
-  font-size: 14px;
+  max-width: 100%;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 17px;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.domain {
+  display: block;
+  max-width: 100%;
+  color: var(--second-text-color);
+  font-size: 11px;
+  line-height: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .notUsed {
   color: salmon;
 }
 
-.closeButton {
-  width: 24px;
-  min-width: 24px;
-  height: 30px;
+.actions {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  transform: translateY(-50%);
+}
+
+.closeButton,
+.menuButton {
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
   cursor: pointer;
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 0;
-  padding: 10px 7px;
-  margin: -6px 0;
-  margin-left: 4px;
+  border-radius: 7px;
+  padding: 0;
   appearance: none;
   background-color: transparent;
-  border: none;
+  color: var(--second-text-color);
 
-  svg {
-    opacity: 0.5;
-    pointer-events: none;
+  &:hover {
+    background-color: var(--button-hover-background-color);
+    color: var(--main-text-color);
   }
 
-  &:hover svg {
+  svg {
+    pointer-events: none;
+  }
+}
+
+.closeButton {
+  opacity: 0.6;
+
+  &:hover {
     opacity: 1;
   }
 }
@@ -140,4 +188,19 @@
   width: 10px;
   height: 10px;
   flex-shrink: 0;
+}
+
+.menuButton {
+  opacity: 0.4;
+  transition: opacity 0.12s ease, background-color 0.12s ease;
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.root:hover .menuButton,
+.selected .menuButton {
+  opacity: 1;
 }

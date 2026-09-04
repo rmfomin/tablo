@@ -18,11 +18,16 @@ export function NewFolderPlaceholder({
       data-folder-id="-1"
       data-folder-new="true"
     >
-      <h2 className={styles.header} onClick={onCreate}>
-        New folder <span className={styles.newText}>+ Click to add</span>
-      </h2>
+      <button
+        type="button"
+        className={styles.newFolderButton}
+        onClick={onCreate}
+      >
+        <span className={styles.newFolderPlus}>+</span>
+        New folder
+      </button>
       <div
-        className={styles.items}
+        className={styles.newFolderDropTarget}
         data-role={DOM_ROLE.folderItems}
         data-folder-id="-1"
       />

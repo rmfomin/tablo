@@ -20,6 +20,7 @@ import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { Color } from "@/newtab/06-shared/lib/color/Color";
 import MenuIcon from "./icons/menu.svg";
 import FolderChevronIcon from "./icons/folder-chevron.svg";
+import FolderIcon from "./icons/folder-open.svg";
 import { getSpacesList } from "@/newtab/04-features/move-to-folder/ui/moveToHelpers";
 
 import {
@@ -204,6 +205,9 @@ export const Folder = React.memo(function Folder(p: {
   const folderItems = flatFolderDisplayItems.filter(
     (item) => p.showArchived || p.search.length > 0 || !item.archived,
   );
+  const bookmarksCount = flatFolderDisplayItems.filter(
+    (item) => !item.isSection
+  ).length;
 
   const folderIsEmptyDuringSearch =
     (p.search !== "" || p.searchFilters.some((filter) => filter.enabled)) &&
@@ -243,26 +247,20 @@ export const Folder = React.memo(function Folder(p: {
       className={folderClassName}
       data-role={DOM_ROLE.folder}
       data-folder-id={p.folder.id}
+      style={{
+        outline: p.folder.archived ? "1px solid rgba(0, 0, 0, 0.3)" : "none",
+      }}
     >
       <h2
-        style={{
-          background: folderIsEmptyDuringSearch
-            ? "transparent"
-            : folderGradientColor,
-          outline: p.folder.archived ? "1px solid rgba(0, 0, 0, 0.3)" : "none",
-        }}
         className={cn("draggable-folder", styles.header, styles.dragHandle)}
         onContextMenu={onHeaderContextMenu}
       >
-        <button
-          className={cn(styles.collapseToggle, {
-            [styles.collapseToggleCollapsed]: p.folder.collapsed,
-          })}
-          onClick={onToggleCollapsed}
-          title={p.folder.collapsed ? "Expand folder" : "Collapse folder"}
+        <span
+          className={styles.folderIcon}
+          style={{ background: folderGradientColor }}
         >
-          <FolderChevronIcon />
-        </button>
+          <FolderIcon />
+        </span>
         <EditableTitle
           className={styles.titleText}
           inEdit={p.folder.id === p.itemInEdit}
@@ -272,23 +270,44 @@ export const Folder = React.memo(function Folder(p: {
           search={p.search}
           onDoubleClick={() => setEditing(true)}
         />
-        {p.folder.archived ? <span> [hidden]</span> : ""}
+        {p.folder.archived ? (
+          <span className={styles.archivedLabel}>Hidden</span>
+        ) : null}
+        {bookmarksCount > 0 ? (
+          <span className={styles.bookmarksCount}>{bookmarksCount}</span>
+        ) : null}
+        <button
+          className={cn(styles.collapseToggle, {
+            [styles.collapseToggleCollapsed]: p.folder.collapsed,
+          })}
+          onClick={onToggleCollapsed}
+          onMouseDown={(event) => event.stopPropagation()}
+          title={p.folder.collapsed ? "Expand folder" : "Collapse folder"}
+          aria-label={p.folder.collapsed ? "Expand folder" : "Collapse folder"}
+        >
+          <FolderChevronIcon />
+        </button>
         {p.folder.id !== p.itemInEdit ? (
-          <span
+          <button
+            type="button"
             className={cn(styles.menuButton, {
               [styles.menuButtonVisible]: showMenu,
             })}
             onClick={() => setShowMenu(!showMenu)}
+            onMouseDown={(event) => event.stopPropagation()}
+            title="Folder actions"
+            aria-label="Folder actions"
           >
             <MenuIcon />
-          </span>
+          </button>
         ) : null}
 
         {showMenu ? (
           <DropdownMenu
             onClose={() => setShowMenu(false)}
             className={"dropdown-menu--folder"}
-            offset={{ top: 5, left: 150, bottom: 38 }}
+            offset={{ top: 44, left: 0, bottom: 16 }}
+            alignRight={true}
           >
             <div
               className="dropdown-menu__colors-row"
@@ -412,7 +431,21 @@ export const Folder = React.memo(function Folder(p: {
       !folderIsEmptyDuringSearch &&
       !p.folder.collapsed ? (
         <div className={styles.emptyTip}>
-          To add bookmark, drop an item form the sidebar
+          <span className={styles.emptyIcon}>
+            <FolderIcon />
+          </span>
+          <span className={styles.emptyTitle}>No bookmarks yet</span>
+          <span className={styles.emptyText}>
+            Drag a tab here or add it manually
+          </span>
+          <button
+            type="button"
+            className={styles.emptyAction}
+            onClick={onAddBookmark}
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            + Add bookmark
+          </button>
         </div>
       ) : null}
 

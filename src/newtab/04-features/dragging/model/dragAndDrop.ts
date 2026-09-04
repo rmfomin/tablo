@@ -530,7 +530,7 @@ export function createFolderDummy(
   itemsBoxEl.style.visibility = "hidden";
 
   const rect = targetRoot.getBoundingClientRect();
-  // dummy.style.width = `${rect.width + 4}px`
+  dummy.style.width = `${rect.width}px`;
   dummy.style.marginTop = `${rect.top - mouseDownEvent.clientY}px`;
   dummy.style.marginLeft = `${rect.left - mouseDownEvent.clientX}px`;
   dummy.classList.add("dad-dummy");

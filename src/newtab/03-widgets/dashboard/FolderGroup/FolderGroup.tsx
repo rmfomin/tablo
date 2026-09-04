@@ -123,6 +123,7 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
           search={p.search}
           onDoubleClick={() => setEditing(true)}
         />
+        <span className={styles.count}>{p.items.length}</span>
         {showMenu ? (
           <DropdownMenu
             onClose={() => setShowMenu(false)}
@@ -155,6 +156,7 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
         data-role={DOM_ROLE.groupItems}
         data-folder-id={p.folderId}
         data-group-id={p.group.id}
+        style={p.group.collapsed ? { display: "none" } : undefined}
       >
         {p.items.map((item) => (
           <FolderItem
