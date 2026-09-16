@@ -1,29 +1,30 @@
 .root {
   position: relative;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   flex-shrink: 0;
-  gap: 4px;
+  gap: 6px;
   min-width: 0;
   padding: 0;
 }
 
 .actions {
   display: flex;
-  flex-shrink: 0;
+  align-self: stretch;
   order: 2;
-  gap: 4px;
+  gap: 6px;
 }
 
 .actionButton {
   appearance: none;
   display: flex;
-  flex: none;
+  flex: 1;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
-  padding: 0;
+  gap: 5px;
+  min-width: 0;
+  height: 30px;
+  padding: 0 7px;
   border: none;
   border-radius: 10px;
   background-color: var(--colors-gray-200);
@@ -32,10 +33,6 @@
   font-family: inherit;
   font-size: 11px;
   font-weight: 500;
-
-  span {
-    display: none;
-  }
 
   svg {
     width: 14px;
@@ -50,11 +47,17 @@
   }
 }
 
+.spacesScroller {
+  position: relative;
+  order: 1;
+  min-width: 0;
+  padding-bottom: 10px;
+}
+
 .spacesList {
   display: flex;
-  flex: 1;
   flex-direction: row;
-  order: 1;
+  width: 100%;
   gap: 4px;
   min-width: 0;
   overflow-x: auto;
@@ -66,6 +69,34 @@
     width: 0;
     height: 0;
   }
+}
+
+.scrollbar {
+  position: absolute;
+  right: 8px;
+  bottom: 1px;
+  left: 8px;
+  height: 4px;
+  border-radius: 999px;
+  background-color: var(--colors-gray-200);
+}
+
+.thumb {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 999px;
+  background-color: var(--colors-gray-400);
+  cursor: grab;
+  transition: background-color 0.15s ease;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.thumbActive {
+  background-color: var(--colors-gray-600);
 }
 
 .item {

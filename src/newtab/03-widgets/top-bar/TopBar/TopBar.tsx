@@ -31,7 +31,10 @@ export function TopBar() {
   }
 
   return (
-    <header className={styles.root}>
+    <header
+      className={styles.root}
+      onMouseDown={(event) => event.stopPropagation()}
+    >
       <div className={styles.searchSlot}>
         <SearchInput />
       </div>
@@ -75,7 +78,7 @@ export function TopBar() {
                 setHelpMenuVisibility(false);
               }}
               alignRight={true}
-              offset={{ top: 56 }}
+              offset={{ top: 44 }}
             >
               <HelpOptions />
             </DropdownMenu>
@@ -102,7 +105,7 @@ export function TopBar() {
                 setSettingsMenuVisibility(false);
               }}
               alignRight={true}
-              offset={{ top: 56 }}
+              offset={{ top: 44 }}
             >
               <SettingsOptions />
             </DropdownMenu>

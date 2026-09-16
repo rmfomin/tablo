@@ -29,6 +29,8 @@ import IconChevron from "./icons/chevron.svg";
 import IconTabs from "./icons/tabs.svg";
 import IconSpaces from "./icons/spaces.svg";
 import { SpacesList } from "@/newtab/03-widgets/spaces-list/SpacesList/SpacesList";
+import { TopBar } from "@/newtab/03-widgets/top-bar/TopBar/TopBar";
+import IconSearch from "@/newtab/04-features/bookmark-search/ui/icons/search.svg";
 
 import {
   convertTabOrRecentToItem,
@@ -149,6 +151,13 @@ export function Sidebar() {
     setSidebarCollapsed(!sidebarCollapsedValue);
   }
 
+  function onOpenSearch() {
+    setSidebarCollapsed(false);
+    requestAnimationFrame(() =>
+      document.querySelector<HTMLInputElement>("input.search")?.focus()
+    );
+  }
+
   const openTabsCount = tabs.filter(
     (tab) => !tab.pinned && !isTabloTab(tab)
   ).length;
@@ -178,6 +187,15 @@ export function Sidebar() {
             <button
               type="button"
               className={styles.collapsedSpacesButton}
+              title="Search"
+              aria-label="Search"
+              onClick={onOpenSearch}
+            >
+              <IconSearch />
+            </button>
+            <button
+              type="button"
+              className={styles.collapsedSpacesButton}
               title="Spaces"
               aria-label="Spaces"
               onClick={onToggleSidebar}
@@ -202,60 +220,63 @@ export function Sidebar() {
         </>
       ) : (
         <>
-          <section className={styles.spacesSection}>
-            <div className={styles.sectionHeader}>
-              <span className={styles.headerText}>Spaces</span>
-              <button
-                id="toggle-sidebar-btn"
-                className={cn(
-                  styles.collapseButton,
-                  styles.expandedCollapseButton,
-                )}
-                onClick={onToggleSidebar}
-                title="Collapse panel"
-                aria-label="Collapse panel"
-              >
-                <IconChevron />
-              </button>
-            </div>
-            <SpacesList />
-          </section>
-
-          <section className={styles.tabsSection}>
-            <div className={styles.header}>
-              <span className={styles.headerText}>Open tabs</span>
-              <span className={styles.tabsCount}>{openTabsCount}</span>
-              <div className={styles.headerActions}>
-                <CleanupButton tabs={tabs} />
-                <StashButton tabs={tabs} />
+          <TopBar />
+          <div className={styles.scrollContent}>
+            <section className={styles.spacesSection}>
+              <div className={styles.sectionHeader}>
+                <span className={styles.headerText}>Spaces</span>
+                <button
+                  id="toggle-sidebar-btn"
+                  className={cn(
+                    styles.collapseButton,
+                    styles.expandedCollapseButton
+                  )}
+                  onClick={onToggleSidebar}
+                  title="Collapse panel"
+                  aria-label="Collapse panel"
+                >
+                  <IconChevron />
+                </button>
               </div>
-            </div>
+              <SpacesList />
+            </section>
 
-            <div className={styles.content}>
-              <SidebarOpenTabs
-                tabs={tabs}
-                spaces={spaces}
-                search={search}
-                searchFilters={searchFilters}
-                searchFilterMode={searchFilterMode}
-                lastActiveTabIds={lastActiveTabIds}
-                currentWindowId={currentWindowId}
-                sidebarCollapsed={false}
-              />
-              {(showRecent ||
-                search ||
-                searchFilters.some((filter) => filter.enabled)) && (
-                <SidebarRecent
+            <section className={styles.tabsSection}>
+              <div className={styles.header}>
+                <span className={styles.headerText}>Open tabs</span>
+                <span className={styles.tabsCount}>{openTabsCount}</span>
+                <div className={styles.headerActions}>
+                  <CleanupButton tabs={tabs} />
+                  <StashButton tabs={tabs} />
+                </div>
+              </div>
+
+              <div className={styles.content}>
+                <SidebarOpenTabs
+                  tabs={tabs}
+                  spaces={spaces}
                   search={search}
                   searchFilters={searchFilters}
                   searchFilterMode={searchFilterMode}
-                  recentItems={recentItems}
-                  spaces={spaces}
+                  lastActiveTabIds={lastActiveTabIds}
+                  currentWindowId={currentWindowId}
                   sidebarCollapsed={false}
                 />
-              )}
-            </div>
-          </section>
+                {(showRecent ||
+                  search ||
+                  searchFilters.some((filter) => filter.enabled)) && (
+                  <SidebarRecent
+                    search={search}
+                    searchFilters={searchFilters}
+                    searchFilterMode={searchFilterMode}
+                    recentItems={recentItems}
+                    spaces={spaces}
+                    sidebarCollapsed={false}
+                  />
+                )}
+              </div>
+            </section>
+          </div>
         </>
       )}
     </div>
