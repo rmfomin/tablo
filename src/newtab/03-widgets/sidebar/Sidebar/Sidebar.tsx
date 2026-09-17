@@ -19,7 +19,8 @@ import {
   isTargetSupportsDragAndDrop,
 } from "@/newtab/06-shared/lib/dom/html";
 import { scrollElementIntoView } from "@/newtab/06-shared/lib/dom/scroll";
-import { DropdownMenu } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
+import { DropdownMenu, getPointerPosition } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
+import type { Point } from "@/newtab/06-shared/lib/math";
 import { useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { useChromeRuntimeStore } from "@/newtab/01-app/model/chrome-runtime/chromeRuntimeStore";
@@ -285,11 +286,13 @@ export function Sidebar() {
 
 const StashButton = React.memo((props: { tabs: BrowserTab[] }) => {
   const [confirmationOpened, setConfirmationOpened] = useState(false);
+  const [menuPosition, setMenuPosition] = useState<Point>();
   const [shouldCloseTabs, setShouldCloseTabs] = useState(true);
   const createFolder = useDashboardStore((state) => state.createFolder);
   const showNotification = useUiStore((state) => state.showNotification);
 
-  const onStashClick = () => {
+  const onStashClick = (event: React.MouseEvent) => {
+    setMenuPosition(getPointerPosition(event));
     setConfirmationOpened(!confirmationOpened);
   };
 
@@ -341,7 +344,7 @@ const StashButton = React.memo((props: { tabs: BrowserTab[] }) => {
           onClose={() => setConfirmationOpened(false)}
           className={styles.stashPopup}
           width={240}
-          offset={{ top: 12, left: 4 }}
+          absPosition={menuPosition}
           skipTabIndexes={true}
         >
           <div style={{ width: "100%" }}>

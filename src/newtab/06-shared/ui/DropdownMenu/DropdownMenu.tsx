@@ -10,8 +10,25 @@ import cn from "clsx";
 import ReactDOM from "react-dom";
 import { isSomeParentHaveClass } from "@/newtab/06-shared/lib/dom/html";
 import { Offset, Point } from "@/newtab/06-shared/lib/math";
+import { DropdownMenuIcon, type DropdownMenuIconName } from "./DropdownMenuIcon";
 
 const DROPDOWN_MENU_OPENED_EVENT = "dropdown-menu-opened";
+const POINTER_GAP = 8;
+
+export function getPointerPosition(
+  event: Pick<MouseEvent, "clientX" | "clientY" | "detail" | "currentTarget">,
+): Point {
+  if (
+    event.detail === 0 &&
+    event.clientX === 0 &&
+    event.clientY === 0 &&
+    event.currentTarget instanceof Element
+  ) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    return { x: rect.left + rect.width / 2, y: rect.bottom };
+  }
+  return { x: event.clientX, y: event.clientY };
+}
 
 export const DropdownSetMenuIdContext = createContext((_id: number) => {});
 export const DropdownMenuIdContext = createContext(-1);
@@ -19,6 +36,7 @@ export const DropdownMenuIdContext = createContext(-1);
 interface DropdownSubMenuProps {
   menuId: number;
   title: string;
+  icon?: DropdownMenuIconName;
   style?: CSSProperties | undefined;
   submenuContent: React.ReactNode; //todo make is a function to calc it lazily
 }
@@ -35,6 +53,7 @@ function getOffsets(o?: Partial<Offset>): Offset {
 export const DropdownSubMenu = ({
   menuId,
   title,
+  icon,
   submenuContent,
   style,
 }: DropdownSubMenuProps) => {
@@ -81,13 +100,15 @@ export const DropdownSubMenu = ({
       <button
         ref={buttonRef}
         style={style}
+        aria-haspopup="menu"
+        aria-expanded={menuId === currentMenuId}
         className={cn("dropdown-menu__button sub-menu__button focusable", {
           active: menuId === currentMenuId,
         })}
         onClick={onClick}
       >
+        {icon ? <DropdownMenuIcon name={icon} /> : null}
         {title}
-        <span className="sub-menu__button__icon">→</span>
       </button>
       {menuId === currentMenuId
         ? ReactDOM.createPortal(
@@ -218,35 +239,43 @@ export function DropdownMenu(p: {
       const pos = { top: 0, left: 0 };
       const offset = getOffsets(p.offset);
       if (p.absPosition) {
-        pos.top = p.absPosition.y;
-        pos.left = p.absPosition.x;
+        pos.top = p.absPosition.y + POINTER_GAP;
+        pos.left = p.absPosition.x + POINTER_GAP;
+
+        if (pos.left + menuRect.width > innerWidth - POINTER_GAP) {
+          pos.left = innerWidth - menuRect.width - POINTER_GAP;
+        }
+        if (pos.top + menuRect.height > innerHeight - POINTER_GAP) {
+          pos.top = p.absPosition.y - menuRect.height - POINTER_GAP;
+        }
+
+        pos.left = Math.max(POINTER_GAP, pos.left);
+        pos.top = Math.max(POINTER_GAP, pos.top);
       } else {
         pos.top = anchorRect.top + offset.top;
-        pos.left = anchorRect.left + offset.left;
-      }
+        pos.left = p.alignRight
+          ? Math.max(offset.right, anchorRect.right - menuRect.width + offset.left)
+          : anchorRect.left + offset.left;
 
-      // Adjust positioning if submenu overflows the viewport
-      if (pos.left + menuRect.width > innerWidth) {
-        if (p.absPosition) {
-          pos.left = innerWidth - menuRect.width - offset.right;
-        } else {
+        // Adjust positioning if submenu overflows the viewport
+        if (pos.left + menuRect.width > innerWidth) {
           pos.left = anchorRect.left - menuRect.width - offset.right;
         }
-      }
 
-      if (pos.top + menuRect.height > innerHeight) {
-        pos.top = pos.top - (menuRect.height + offset.bottom);
+        if (pos.top + menuRect.height > innerHeight) {
+          pos.top = pos.top - (menuRect.height + offset.bottom);
+        }
       }
 
       setMenuPos(pos);
     }
-  }, []);
+  }, [p.absPosition?.x, p.absPosition?.y]);
 
   return (
     <>
       <div
         className="dropdown-menu__anchor"
-        style={p.alignRight ? { right: 0 } : {}}
+        style={p.alignRight ? { top: 0, right: 0 } : {}}
         ref={anchorRef}
       ></div>
       {ReactDOM.createPortal(

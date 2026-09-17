@@ -32,12 +32,12 @@ export function getFoldersList(
           </span>
         </button>
       ))}
+      <div className="dropdown-menu__separator" />
       <button
-        className="btn__setting"
-        style={{ marginTop: "12px" }}
+        className="dropdown-menu__button focusable"
         onClick={() => onCreateFolderClick(space.id)}
       >
-        + new folder
+        New folder
       </button>
     </>
   );
@@ -54,7 +54,6 @@ export function getSpacesList(
       {spaces.map((space) => (
         <button
           key={space.id}
-          style={{ marginLeft: "8px" }}
           className="dropdown-menu__button focusable"
           disabled={currentSpaceId === space.id}
           onClick={() => onSpaceClick(space.id)}
@@ -93,7 +92,6 @@ export function getSpacesWithNestedFoldersList(
           {spaces.map((space) => (
             <DropdownSubMenu
               key={space.id}
-              style={{ marginLeft: "8px" }}
               menuId={space.id}
               title={space.title}
               submenuContent={getFoldersList(

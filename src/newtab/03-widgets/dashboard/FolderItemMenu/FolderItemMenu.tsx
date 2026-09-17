@@ -1,4 +1,3 @@
-import { createTab, updateTab, removeTabs, getCurrentTab, queryTabs, getCurrentWindow, focusWindow, type BrowserTab } from "@/newtab/06-shared/api/chrome/tabs";
 import React, { useEffect, useState } from "react";
 import { BookmarkItemV3, SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
 import {
@@ -10,6 +9,8 @@ import { useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStor
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { getSpacesWithNestedFoldersList } from "@/newtab/04-features/move-to-folder/ui/moveToHelpers";
 import { scrollElementIntoView } from "@/newtab/06-shared/lib/dom/scroll";
+import type { Point } from "@/newtab/06-shared/lib/math";
+import { DropdownMenuIcon } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenuIcon";
 
 export const FolderItemMenu = React.memo(
   (p: {
@@ -20,6 +21,7 @@ export const FolderItemMenu = React.memo(
     onClose: () => void;
     item: BookmarkItemV3;
     hiddenFeatureIsEnabled: boolean;
+    position?: Point;
   }) => {
     const deleteFolderItems = useDashboardStore((state) => state.deleteFolderItems);
     const updateFolderItem = useDashboardStore((state) => state.updateFolderItem);
@@ -37,16 +39,6 @@ export const FolderItemMenu = React.memo(
         setSelectedItems([p.item]);
       }
     }, []);
-
-    // support multiple
-    function onOpenNewTab() {
-      selectedItems.forEach((item) => {
-        if (item.url) {
-          createTab({ url: item.url });
-        }
-      });
-      p.onClose();
-    }
 
     // support multiple
     function onDeleteItem() {
@@ -81,6 +73,16 @@ export const FolderItemMenu = React.memo(
       p.onClose();
     }
 
+    function onTextAreaKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        e.stopPropagation();
+        onSaveAndClose();
+      } else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+        e.stopPropagation();
+      }
+    }
+
     const moveToFolder = (folderId: number) => {
       moveFolderItems({
         itemIds: selectedItems.map((item) => item.id),
@@ -113,15 +115,9 @@ export const FolderItemMenu = React.memo(
         {selectedItems.length > 1 ? (
           <DropdownMenu
             onClose={p.onClose}
-            className={"dropdown-menu--folder-item"}
-            offset={{ top: 46, bottom: 52 }}
+            absPosition={p.position}
+            className="dropdown-menu--context"
           >
-            <button
-              className="dropdown-menu__button focusable"
-              onClick={onOpenNewTab}
-            >
-              Open in New Tab
-            </button>
             {p.hiddenFeatureIsEnabled ? (
               selectedItems.some((item) => item.archived) ? (
                 <button
@@ -142,6 +138,7 @@ export const FolderItemMenu = React.memo(
             <DropdownSubMenu
               menuId={1}
               title={"Move to"}
+              icon="move"
               submenuContent={getSpacesWithNestedFoldersList(
                 p.spaces,
                 moveToFolder,
@@ -153,10 +150,12 @@ export const FolderItemMenu = React.memo(
                 ))?.id,
               )}
             />
+            <div className="dropdown-menu__separator" />
             <button
               className="dropdown-menu__button dropdown-menu__button--dander focusable"
               onClick={onDeleteItem}
             >
+              <DropdownMenuIcon name="remove" />
               Delete
             </button>
           </DropdownMenu>
@@ -165,21 +164,22 @@ export const FolderItemMenu = React.memo(
             {p.item.isSection ? (
               <DropdownMenu
                 onClose={onSaveAndClose}
-                className={
-                  "dropdown-menu--folder-item dropdown-menu--folder-section"
-                }
-                offset={{ top: 32, bottom: 38 }}
+                absPosition={p.position}
+                className="dropdown-menu--context"
               >
                 <label className="input-label">
-                  <span>Title</span>
-                  <input
-                    type="text"
+                  <span className="input-label__text">Title</span>
+                  <textarea
                     className="focusable"
                     autoFocus={true}
+                    rows={1}
+                    aria-label="Title"
                     value={p.localTitle}
                     onChange={(e) => p.setLocalTitle(e.target.value)}
+                    onKeyDown={onTextAreaKeyDown}
                   />
                 </label>
+                <div className="dropdown-menu__separator" />
                 {p.hiddenFeatureIsEnabled ? (
                   p.item.archived ? (
                     <button
@@ -197,51 +197,56 @@ export const FolderItemMenu = React.memo(
                     </button>
                   )
                 ) : null}
+                {p.hiddenFeatureIsEnabled ? (
+                  <div className="dropdown-menu__separator" />
+                ) : null}
                 <button
                   className="dropdown-menu__button dropdown-menu__button--dander focusable"
                   onClick={onDeleteItem}
                 >
+                  <DropdownMenuIcon name="remove" />
                   Delete
                 </button>
               </DropdownMenu>
             ) : (
               <DropdownMenu
                 onClose={onSaveAndClose}
-                className={"dropdown-menu--folder-item"}
-                offset={{ top: 46, bottom: 52 }}
-                width={334}
+                absPosition={p.position}
+                width={300}
+                className="dropdown-menu--context"
               >
                 <label className="input-label">
-                  <span>Title</span>
-                  <input
-                    type="text"
+                  <span className="input-label__text">Title</span>
+                  <textarea
                     className="focusable"
                     autoFocus={true}
+                    rows={1}
+                    aria-label="Title"
                     value={p.localTitle}
                     onChange={(e) => p.setLocalTitle(e.target.value)}
+                    onKeyDown={onTextAreaKeyDown}
                   />
                 </label>
                 <label className="input-label">
-                  <span>URL</span>
-                  <input
-                    type="text"
+                  <span className="input-label__text">URL</span>
+                  <textarea
                     className="focusable"
+                    rows={1}
+                    aria-label="URL"
                     value={localURL}
                     onChange={(e) => setLocalURL(e.target.value)}
+                    onKeyDown={onTextAreaKeyDown}
                   />
                 </label>
-                <button
-                  className="dropdown-menu__button focusable"
-                  onClick={onOpenNewTab}
-                >
-                  Open in New Tab
-                </button>
+                <div className="dropdown-menu__separator" />
                 <button
                   className="dropdown-menu__button focusable"
                   onClick={onCopyUrl}
                 >
+                  <DropdownMenuIcon name="bookmarkCopy" />
                   Copy URL
                 </button>
+                <div className="dropdown-menu__separator" />
                 {p.hiddenFeatureIsEnabled ? (
                   p.item.archived ? (
                     <button
@@ -262,6 +267,7 @@ export const FolderItemMenu = React.memo(
                 <DropdownSubMenu
                   menuId={1}
                   title={"Move to"}
+                  icon="move"
                   submenuContent={getSpacesWithNestedFoldersList(
                     p.spaces,
                     moveToFolder,
@@ -273,10 +279,12 @@ export const FolderItemMenu = React.memo(
                     ))?.id,
                   )}
                 />
+                <div className="dropdown-menu__separator" />
                 <button
                   className="dropdown-menu__button dropdown-menu__button--dander focusable"
                   onClick={onDeleteItem}
                 >
+                  <DropdownMenuIcon name="remove" />
                   Delete
                 </button>
               </DropdownMenu>

@@ -10,7 +10,9 @@ import {
 import {
   DropdownMenu,
   DropdownSubMenu,
+  getPointerPosition,
 } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
+import type { Point } from "@/newtab/06-shared/lib/math";
 import { FolderItem } from "@/newtab/03-widgets/dashboard/FolderItem/FolderItem";
 import { FolderGroup } from "@/newtab/03-widgets/dashboard/FolderGroup/FolderGroup";
 import { EditableTitle } from "@/newtab/03-widgets/ui/EditableTitle/EditableTitle";
@@ -20,8 +22,9 @@ import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { Color } from "@/newtab/06-shared/lib/color/Color";
 import MenuIcon from "./icons/menu.svg";
 import FolderChevronIcon from "./icons/folder-chevron.svg";
-import FolderIcon from "./icons/folder-open.svg";
+import FolderIcon from "./icons/folder.svg";
 import { getSpacesList } from "@/newtab/04-features/move-to-folder/ui/moveToHelpers";
+import { DropdownMenuIcon } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenuIcon";
 
 import {
   createNewFolderItem,
@@ -29,7 +32,7 @@ import {
 } from "@/newtab/05-entities/dashboard/model/itemUtils";
 import { RecentItem } from "@/newtab/06-shared/api/chrome/history";
 import { getVisibleFolderDisplayItems } from "./getFolderDisplayItems";
-import { DOM_ROLE, roleSelector } from "@/newtab/06-shared/lib/dom/roles";
+import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
 import styles from "./Folder.module.scss";
 
 export const Folder = React.memo(function Folder(p: {
@@ -54,6 +57,7 @@ export const Folder = React.memo(function Folder(p: {
   const setItemInEdit = useUiStore((state) => state.setItemInEdit);
   const showNotification = useUiStore((state) => state.showNotification);
   const [showMenu, setShowMenu] = useState<boolean>(false);
+  const [menuPosition, setMenuPosition] = useState<Point>();
   const [localColor, setLocalColor] = useState<string | undefined>(undefined);
   const [localTitle, setLocalTitle] = useState<string>(p.folder.title);
 
@@ -115,18 +119,6 @@ export const Folder = React.memo(function Folder(p: {
   function onAddBookmark() {
     const newBookmark = createNewFolderItem(undefined, "New bookmark");
     createFolderItem({ folderId: p.folder.id, item: newBookmark });
-
-    requestAnimationFrame(() => {
-      const bookmarkElement = document.querySelector(
-        `[data-id="${newBookmark.id}"]`,
-      );
-      const menuButton = bookmarkElement?.parentElement?.querySelector(
-        roleSelector(DOM_ROLE.folderItemMenu),
-      ) as HTMLButtonElement;
-      if (menuButton) {
-        menuButton.click();
-      }
-    });
 
     setShowMenu(false);
 
@@ -228,6 +220,7 @@ export const Folder = React.memo(function Folder(p: {
   const folderGradientColor = `linear-gradient(45deg, ${color.getRGBA()}, ${color2.getRGBA()})`;
 
   const onHeaderContextMenu = (e: React.MouseEvent) => {
+    setMenuPosition(getPointerPosition(e));
     setShowMenu(!showMenu);
     e.preventDefault();
   };
@@ -293,7 +286,10 @@ export const Folder = React.memo(function Folder(p: {
             className={cn(styles.menuButton, {
               [styles.menuButtonVisible]: showMenu,
             })}
-            onClick={() => setShowMenu(!showMenu)}
+            onClick={(event) => {
+              setMenuPosition(getPointerPosition(event));
+              setShowMenu(!showMenu);
+            }}
             onMouseDown={(event) => event.stopPropagation()}
             title="Folder actions"
             aria-label="Folder actions"
@@ -305,14 +301,10 @@ export const Folder = React.memo(function Folder(p: {
         {showMenu ? (
           <DropdownMenu
             onClose={() => setShowMenu(false)}
-            className={"dropdown-menu--folder"}
-            offset={{ top: 44, left: 0, bottom: 16 }}
-            alignRight={true}
+            className="dropdown-menu--folder dropdown-menu--context"
+            absPosition={menuPosition}
           >
-            <div
-              className="dropdown-menu__colors-row"
-              style={{ marginTop: "4px" }}
-            >
+            <div className="dropdown-menu__colors-row">
               <PresetColor
                 color={PRESET_COLORS[0]}
                 onClick={setColorConfirmed}
@@ -333,11 +325,7 @@ export const Folder = React.memo(function Folder(p: {
                 onClick={setColorConfirmed}
                 currentColor={folderColor}
               />
-            </div>
-            <div
-              className="dropdown-menu__colors-row"
-              style={{ marginBottom: "4px" }}
-            >
+
               <PresetColor
                 color={PRESET_COLORS[4]}
                 onClick={setColorConfirmed}
@@ -359,36 +347,44 @@ export const Folder = React.memo(function Folder(p: {
                 currentColor={folderColor}
               />
             </div>
+            <div className="dropdown-menu__separator" />
             <button
               className="dropdown-menu__button focusable"
               onClick={onAddBookmark}
             >
-              + Add Bookmark
+              <DropdownMenuIcon name="newBookmark" />
+              New bookmark
             </button>
             <button
               className="dropdown-menu__button focusable"
               onClick={onAddSection}
             >
-              + Add Group
+              <DropdownMenuIcon name="newGroup" />
+              New group
             </button>
+            <div className="dropdown-menu__separator" />
             <button
               className="dropdown-menu__button focusable"
               onClick={onOpenAll}
             >
-              Open All
+              <DropdownMenuIcon name="folderOpenAll" />
+              Open all
             </button>
             <button
               className="dropdown-menu__button focusable"
               onClick={onCollapseAllGroups}
             >
+              <DropdownMenuIcon name="collapseAll" />
               Collapse all
             </button>
             <button
               className="dropdown-menu__button focusable"
               onClick={onExpandAllGroups}
             >
-              Expand All
+              <DropdownMenuIcon name="expandAll" />
+              Expand all
             </button>
+            <div className="dropdown-menu__separator" />
             {p.hiddenFeatureIsEnabled && (
               <button
                 className="dropdown-menu__button focusable"
@@ -401,6 +397,7 @@ export const Folder = React.memo(function Folder(p: {
               <DropdownSubMenu
                 menuId={1}
                 title={"Move to space"}
+                icon="folderMoveTo"
                 submenuContent={getSpacesList(
                   p.spaces,
                   moveFolderToSpace,
@@ -415,12 +412,15 @@ export const Folder = React.memo(function Folder(p: {
               className="dropdown-menu__button focusable"
               onClick={onRename}
             >
+              <DropdownMenuIcon name="folderRename" />
               Rename
             </button>
+            <div className="dropdown-menu__separator" />
             <button
               className="dropdown-menu__button dropdown-menu__button--dander focusable"
               onClick={onDelete}
             >
+              <DropdownMenuIcon name="remove" />
               Delete
             </button>
           </DropdownMenu>

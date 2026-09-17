@@ -4,7 +4,9 @@ import { scrollElementIntoView } from "@/newtab/06-shared/lib/dom/scroll";
 import {
   DropdownMenu,
   DropdownSubMenu,
+  getPointerPosition,
 } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
+import type { Point } from "@/newtab/06-shared/lib/math";
 import cn from "clsx";
 import { useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
@@ -16,8 +18,10 @@ import {
   TabOrRecentData,
 } from "@/newtab/06-shared/api/chrome/tabs";
 import { SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
-import IconSaved from "./icons/saved.svg";
+import IconCheck from "./icons/check.svg";
+import IconCloseTab from "./icons/x.svg";
 import { getFoldersList } from "@/newtab/04-features/move-to-folder/ui/moveToHelpers";
+import { DropdownMenuIcon } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenuIcon";
 import { getBrokenImgSVG } from "@/newtab/06-shared/api/chrome/favicons";
 import { collectBookmarksV3 } from "@/newtab/05-entities/dashboard/model/traversal";
 import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
@@ -36,6 +40,7 @@ export const TabOrRecentItem = (p: {
   const setItemInEdit = useUiStore((state) => state.setItemInEdit);
   const showNotification = useUiStore((state) => state.showNotification);
   const [showMenu, setShowMenu] = useState<boolean>(false);
+  const [menuPosition, setMenuPosition] = useState<Point>();
   const isTab = isTabData(p.data);
 
   function getBgColor(tabId?: number): string {
@@ -53,7 +58,8 @@ export const TabOrRecentItem = (p: {
   const onTabContextMenu = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    setShowMenu(true);
+    setMenuPosition(getPointerPosition(e));
+    setShowMenu((wasOpen) => !wasOpen);
   };
 
   const onMenuCloseClicked = () => {
@@ -147,28 +153,31 @@ export const TabOrRecentItem = (p: {
           })}
           title="Close tab"
         >
-          ⨉
+          <IconCloseTab />
         </div>
       )}
 
-      {savedInFolders ? <IconSaved className={styles.savedTabIcon} /> : null}
+      {savedInFolders ? <IconCheck className={styles.savedTabIcon} /> : null}
 
       {showMenu ? (
         <DropdownMenu
           onClose={hideMenu}
-          className="stop-dad-propagation"
-          offset={{ top: 8, left: -8 }}
+          className="stop-dad-propagation dropdown-menu--context"
+          absPosition={menuPosition}
         >
           <button
             className="dropdown-menu__button focusable"
             onClick={onMenuCopyClicked}
           >
+            <DropdownMenuIcon name="copy" />
             Copy url
           </button>
+          <div className="dropdown-menu__separator" />
           {p.spaces.length === 1 ? (
             <DropdownSubMenu
               menuId={1}
               title={"Save to"}
+              icon="organize"
               submenuContent={getFoldersList(
                 p.spaces[0],
                 moveToFolder,
@@ -182,6 +191,7 @@ export const TabOrRecentItem = (p: {
                   key={s.id}
                   menuId={s.id}
                   title={`Save to "${s.title}"`}
+                  icon="organize"
                   submenuContent={getFoldersList(
                     s,
                     moveToFolder,
@@ -193,12 +203,15 @@ export const TabOrRecentItem = (p: {
           )}
 
           {isTab && (
-            <button
-              className="dropdown-menu__button dropdown-menu__button--dander focusable"
-              onClick={onMenuCloseClicked}
-            >
-              Close tab
-            </button>
+            <>
+              <div className="dropdown-menu__separator" />
+              <button
+                className="dropdown-menu__button dropdown-menu__button--dander focusable"
+                onClick={onMenuCloseClicked}
+              >
+                Close tab
+              </button>
+            </>
           )}
         </DropdownMenu>
       ) : null}

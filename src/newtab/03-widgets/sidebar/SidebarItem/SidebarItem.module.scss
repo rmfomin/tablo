@@ -59,23 +59,26 @@
   border-radius: 7px;
   text-align: center;
   visibility: hidden;
-  color: var(--colors-gray-600);
   box-sizing: border-box;
-  font-size: 14px;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    color: var(--menu-icon-color);
+  }
 
   &:hover {
     background-color: var(--button-hover-background-color);
-    color: var(--main-text-color);
   }
 }
 
 .savedTabIcon {
   color: var(--active-control-color);
   position: absolute;
-  right: 12px;
+  right: 9px;
   top: 50%;
-  width: 10px;
-  height: 9px;
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
   transform: translateY(-50%);
 }

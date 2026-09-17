@@ -12,11 +12,12 @@ import { useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStor
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import cn from "clsx";
 import IconClose from "./icons/close.svg";
-import IconMore from "./icons/more.svg";
 import { FolderItemMenu } from "@/newtab/03-widgets/dashboard/FolderItemMenu/FolderItemMenu";
 import { getBrokenImgSVG, loadFaviconUrl } from "@/newtab/06-shared/api/chrome/favicons";
 import { RecentItem } from "@/newtab/06-shared/api/chrome/history";
 import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
+import { getPointerPosition } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
+import type { Point } from "@/newtab/06-shared/lib/math";
 import styles from "./FolderItem.module.scss";
 
 
@@ -37,6 +38,7 @@ export const FolderItem = React.memo(
       state.selectedItemIds.includes(p.item.id),
     );
     const [showMenu, setShowMenu] = useState<boolean>(false);
+    const [menuPosition, setMenuPosition] = useState<Point>();
     const [localTitle, setLocalTitle] = useState<string>(p.item.title);
 
     useEffect(() => {
@@ -62,14 +64,9 @@ export const FolderItem = React.memo(
     }
 
     function onContextMenu(e: React.MouseEvent) {
-      setShowMenu(true);
+      setMenuPosition(getPointerPosition(e));
+      setShowMenu((wasOpen) => !wasOpen);
       e.preventDefault();
-    }
-
-    function onMenuClick(e: React.MouseEvent) {
-      e.preventDefault();
-      e.stopPropagation();
-      setShowMenu((value) => !value);
     }
 
     function onCloseTab(e: React.MouseEvent) {
@@ -105,6 +102,7 @@ export const FolderItem = React.memo(
             setLocalTitle={setLocalTitle}
             onSave={trySaveTitleAndURL}
             onClose={() => setShowMenu(false)}
+            position={menuPosition}
           />
         ) : null}
         <a
@@ -144,8 +142,8 @@ export const FolderItem = React.memo(
             ) : null}
           </span>
         </a>
-        <span className={styles.actions}>
-          {folderItemOpened ? (
+        {folderItemOpened ? (
+          <span className={styles.actions}>
             <button
               className={cn(styles.closeButton, "stop-dad-propagation")}
               tabIndex={2}
@@ -155,20 +153,8 @@ export const FolderItem = React.memo(
             >
               <IconClose></IconClose>
             </button>
-          ) : null}
-          <button
-            type="button"
-            className={cn(styles.menuButton, "stop-dad-propagation")}
-            tabIndex={2}
-            data-role={DOM_ROLE.folderItemMenu}
-            title="Bookmark actions"
-            aria-label="Bookmark actions"
-            onClick={onMenuClick}
-            onMouseDown={(e) => e.stopPropagation()}
-          >
-            <IconMore />
-          </button>
-        </span>
+          </span>
+        ) : null}
       </div>
     );
   },

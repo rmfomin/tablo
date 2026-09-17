@@ -8,7 +8,9 @@ import { EditableTitle } from "@/newtab/03-widgets/ui/EditableTitle/EditableTitl
 import { useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import cn from "clsx";
-import { DropdownMenu } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
+import { DropdownMenu, getPointerPosition } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
+import { DropdownMenuIcon } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenuIcon";
+import type { Point } from "@/newtab/06-shared/lib/math";
 import GroupChevronIcon from "./icons/group-chevron.svg";
 import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
 import styles from "./FolderGroup.module.scss";
@@ -34,6 +36,7 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
     state.selectedItemIds.includes(p.group.id),
   );
   const [showMenu, setShowMenu] = useState(false);
+  const [menuPosition, setMenuPosition] = useState<Point>();
   const [localTitle, setLocalTitle] = useState(p.group.title);
 
   useEffect(() => {
@@ -81,7 +84,8 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
 
   function onHeaderContextMenu(e: React.MouseEvent) {
     e.preventDefault();
-    setShowMenu(true);
+    setMenuPosition(getPointerPosition(e));
+    setShowMenu((wasOpen) => !wasOpen);
   }
 
   return (
@@ -127,25 +131,30 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
         {showMenu ? (
           <DropdownMenu
             onClose={() => setShowMenu(false)}
-            className="dropdown-menu--folder-group"
-            offset={{ top: 4, left: 24, bottom: 20 }}
+            className="dropdown-menu--folder-group dropdown-menu--context"
+            absPosition={menuPosition}
           >
             <button
               className="dropdown-menu__button focusable"
               onClick={onRename}
             >
+              <DropdownMenuIcon name="groupRename" />
               Rename
             </button>
+            <div className="dropdown-menu__separator" />
             <button
               className="dropdown-menu__button focusable"
               onClick={onOpenAllTabs}
             >
+              <DropdownMenuIcon name="openAll" />
               Open all tabs
             </button>
+            <div className="dropdown-menu__separator" />
             <button
               className="dropdown-menu__button dropdown-menu__button--dander focusable"
               onClick={onDelete}
             >
+              <DropdownMenuIcon name="remove" />
               Delete group
             </button>
           </DropdownMenu>

@@ -10,7 +10,9 @@ import {
 import IconFilter from "./icons/filter.svg";
 import IconClearFilter from "./icons/filter-clear.svg";
 import { Modal } from "@/newtab/06-shared/ui/Modal/Modal";
-import { DropdownMenu } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
+import { DropdownMenu, getPointerPosition } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
+import { DropdownMenuIcon } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenuIcon";
+import type { Point } from "@/newtab/06-shared/lib/math";
 import {
   getSearchFilterRegexError,
   SearchFilter,
@@ -110,6 +112,7 @@ export function SearchInput() {
   const [menuFilterId, setMenuFilterId] = useState<string | undefined>(
     undefined
   );
+  const [menuPosition, setMenuPosition] = useState<Point>();
   const enabledFiltersCount = searchFilters.reduce(
     (prevVal, filter) => prevVal + (filter.enabled ? 1 : 0),
     0
@@ -252,7 +255,10 @@ export function SearchInput() {
   ) {
     event.preventDefault();
     event.stopPropagation();
-    setMenuFilterId(filter.id);
+    setMenuPosition(getPointerPosition(event));
+    setMenuFilterId((currentId) =>
+      currentId === filter.id ? undefined : filter.id,
+    );
   }
 
   return (
@@ -337,19 +343,22 @@ export function SearchInput() {
                     {menuFilterId === filter.id ? (
                       <DropdownMenu
                         onClose={() => setMenuFilterId(undefined)}
-                        className="dropdown-menu--folder"
-                        offset={{ top: 2, left: -16 }}
+                        className="dropdown-menu--folder dropdown-menu--context"
+                        absPosition={menuPosition}
                       >
                         <button
                           className="dropdown-menu__button focusable"
                           onClick={() => onEditFilter(filter)}
                         >
+                          <DropdownMenuIcon name="rename" />
                           Edit filter
                         </button>
+                        <div className="dropdown-menu__separator" />
                         <button
                           className="dropdown-menu__button dropdown-menu__button--dander focusable"
                           onClick={() => onDeleteFilter(filter)}
                         >
+                          <DropdownMenuIcon name="remove" />
                           Delete filter
                         </button>
                       </DropdownMenu>

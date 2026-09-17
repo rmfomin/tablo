@@ -7,7 +7,6 @@ export const DOM_ROLE = {
   folder: "folder",
   folderItems: "folder-items",
   folderItem: "folder-item",
-  folderItemMenu: "folder-item-menu",
   folderGroup: "folder-group",
   groupHeader: "group-header",
   groupItems: "group-items",
@@ -18,4 +17,3 @@ export const DOM_ROLE = {
 export function roleSelector(role: typeof DOM_ROLE[keyof typeof DOM_ROLE]) {
   return `[data-role="${role}"]`;
 }
-

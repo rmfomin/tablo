@@ -4,13 +4,16 @@ import { SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
 import { useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { SimpleEditableTitle } from "@/newtab/03-widgets/ui/EditableTitle/EditableTitle";
-import { DropdownMenu } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
+import { DropdownMenu, getPointerPosition } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
+import { DropdownMenuIcon } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenuIcon";
+import type { Point } from "@/newtab/06-shared/lib/math";
 import { collectBookmarksV3 } from "@/newtab/05-entities/dashboard/model/traversal";
 import { importSpaceFromJsonWithCallback } from "@/newtab/04-features/bookmarks-import/model/dashboardImportExport";
 import { onExportSpaceJson } from "@/newtab/04-features/bookmarks-export/model/dashboardExport";
 import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
 import IconNewSpace from "./icons/new-space.svg";
 import IconImportSpace from "./icons/import-space.svg";
+import IconExportSpace from "./icons/space-export.svg";
 import styles from "./SpacesList.module.scss";
 
 const DEFAULT_THUMB_WIDTH = 80;
@@ -34,6 +37,7 @@ export function SpacesList() {
   const activeTimeoutRef = useRef<number>();
   const dragCleanupRef = useRef<(() => void) | null>(null);
   const [menuSpaceId, setMenuSpaceId] = useState(-1);
+  const [menuPosition, setMenuPosition] = useState<Point>();
   const thumbWidth =
     spaces.length <= SHORT_LIST_MAX_ELEMENTS
       ? SHORT_LIST_THUMB_WIDTH
@@ -312,7 +316,10 @@ export function SpacesList() {
               onDoubleClick={() => setEditingSpaceId(space.id)}
               onContextMenu={(event) => {
                 event.preventDefault();
-                setMenuSpaceId(space.id);
+                setMenuPosition(getPointerPosition(event));
+                setMenuSpaceId((currentId) =>
+                  currentId === space.id ? -1 : space.id,
+                );
               }}
             >
               <SimpleEditableTitle
@@ -336,28 +343,39 @@ export function SpacesList() {
               {menuSpaceId === space.id ? (
                 <DropdownMenu
                   onClose={() => setMenuSpaceId(-1)}
-                  className="dropdown-menu--folder"
-                  offset={{ top: 2, left: -16 }}
+                  className="dropdown-menu--folder dropdown-menu--context"
+                  absPosition={menuPosition}
                 >
                   <button
                     className="dropdown-menu__button focusable"
                     onClick={() => onRenameSpace(space.id)}
                   >
+                    <DropdownMenuIcon name="rename" />
                     Rename space
                   </button>
+                  <div className="dropdown-menu__separator" />
                   <button
                     className="dropdown-menu__button focusable"
                     onClick={() => onExportSpace(space)}
                   >
+                    <IconExportSpace
+                      className="dropdown-menu__icon"
+                      aria-hidden="true"
+                      focusable="false"
+                    />
                     Export space
                   </button>
                   {spaces.length > 1 ? (
-                    <button
-                      className="dropdown-menu__button dropdown-menu__button--dander focusable"
-                      onClick={() => deleteSpace(space)}
-                    >
-                      Delete space
-                    </button>
+                    <>
+                      <div className="dropdown-menu__separator" />
+                      <button
+                        className="dropdown-menu__button dropdown-menu__button--dander focusable"
+                        onClick={() => deleteSpace(space)}
+                      >
+                        <DropdownMenuIcon name="remove" />
+                        Delete space
+                      </button>
+                    </>
                   ) : null}
                 </DropdownMenu>
               ) : null}

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { DropdownMenu } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
+import { DropdownMenu, getPointerPosition } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
+import type { Point } from "@/newtab/06-shared/lib/math";
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { HelpOptions, SettingsOptions } from "./settingsOptions";
 import cn from "clsx";
@@ -19,14 +20,18 @@ const themes: Array<{ value: ColorTheme; title: string }> = [
 export function TopBar() {
   const [settingsMenuVisibility, setSettingsMenuVisibility] = useState(false);
   const [helpMenuVisibility, setHelpMenuVisibility] = useState(false);
+  const [settingsMenuPosition, setSettingsMenuPosition] = useState<Point>();
+  const [helpMenuPosition, setHelpMenuPosition] = useState<Point>();
   const colorTheme = useUiStore((state) => state.colorTheme);
   const setColorTheme = useUiStore((state) => state.setColorTheme);
 
-  function onToggleHelpSettings() {
+  function onToggleHelpSettings(event: React.MouseEvent) {
+    setHelpMenuPosition(getPointerPosition(event));
     setHelpMenuVisibility(!helpMenuVisibility);
   }
 
-  function onToggleSettings() {
+  function onToggleSettings(event: React.MouseEvent) {
+    setSettingsMenuPosition(getPointerPosition(event));
     setSettingsMenuVisibility(!settingsMenuVisibility);
   }
 
@@ -77,8 +82,7 @@ export function TopBar() {
               onClose={() => {
                 setHelpMenuVisibility(false);
               }}
-              alignRight={true}
-              offset={{ top: 44 }}
+              absPosition={helpMenuPosition}
             >
               <HelpOptions />
             </DropdownMenu>
@@ -104,8 +108,7 @@ export function TopBar() {
               onClose={() => {
                 setSettingsMenuVisibility(false);
               }}
-              alignRight={true}
-              offset={{ top: 44 }}
+              absPosition={settingsMenuPosition}
             >
               <SettingsOptions />
             </DropdownMenu>
