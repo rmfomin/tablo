@@ -83,7 +83,7 @@
 
 .tabsCount {
   min-width: 20px;
-  height: 20px;
+  height: 18px;
   padding: 0 6px;
   border-radius: 6px;
   background-color: var(--colors-gray-200);
@@ -91,7 +91,7 @@
   box-sizing: border-box;
   font-size: 11px;
   font-weight: 600;
-  line-height: 20px;
+  line-height: 18px;
   text-align: center;
 }
 
@@ -106,19 +106,38 @@
 }
 
 .actionButton {
-  width: 28px;
-  min-width: 28px;
-  height: 28px;
-  border-radius: 8px;
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--input-background-color);
   color: var(--menu-icon-color);
+  cursor: pointer;
 
   svg {
     width: 20px;
     height: 20px;
+    color: currentColor;
   }
 
-  &:hover:not(:disabled) {
+  &:hover:not(:disabled),
+  &.activeControl {
     background-color: var(--button-hover-background-color);
+    color: var(--main-text-color);
+  }
+
+  &:disabled {
+    cursor: default;
+
+    svg {
+      opacity: 0.2;
+    }
   }
 }
 
@@ -163,15 +182,10 @@
   justify-content: center;
 }
 
-.stashPopup {
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 16px;
-  font-size: 14px;
-
-  input[type="checkbox"] {
-    margin: 0 4px 0 0;
-    padding: 0;
-    vertical-align: middle;
-  }
+.stashTitle {
+  padding: 4px 8px 8px;
+  color: var(--menu-text-color);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 17px;
 }

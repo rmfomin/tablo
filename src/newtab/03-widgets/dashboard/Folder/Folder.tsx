@@ -186,6 +186,13 @@ export const Folder = React.memo(function Folder(p: {
     p.searchFilters,
     p.searchFilterMode,
   );
+  const countDisplayItems = getVisibleFolderDisplayItems(
+    p.folder,
+    p.search,
+    p.searchFilters,
+    p.searchFilterMode,
+    true,
+  );
   const flatFolderDisplayItems = visibleFolderDisplayItems.flatMap((item) => {
     if (item.type === "bookmark") {
       return [item.item];
@@ -197,9 +204,14 @@ export const Folder = React.memo(function Folder(p: {
   const folderItems = flatFolderDisplayItems.filter(
     (item) => p.showArchived || p.search.length > 0 || !item.archived,
   );
-  const bookmarksCount = flatFolderDisplayItems.filter(
-    (item) => !item.isSection
-  ).length;
+  const bookmarksCount = countDisplayItems.reduce(
+    (count, item) =>
+      count +
+      (item.type === "bookmark"
+        ? Number(!item.item.isSection)
+        : item.items.filter((groupItem) => !groupItem.isSection).length),
+    0,
+  );
 
   const folderIsEmptyDuringSearch =
     (p.search !== "" || p.searchFilters.some((filter) => filter.enabled)) &&
@@ -479,6 +491,17 @@ export const Folder = React.memo(function Folder(p: {
           const visibleGroupItems = item.items.filter(
             (groupItem) => p.showArchived || p.search.length > 0 || !groupItem.archived,
           );
+          const countedGroup = countDisplayItems.find(
+            (countedItem) =>
+              countedItem.type === "group" &&
+              countedItem.group.id === item.group.id,
+          );
+          const groupCount = countedGroup?.type === "group"
+            ? countedGroup.items.filter(
+                (groupItem) =>
+                  p.showArchived || p.search.length > 0 || !groupItem.archived,
+              ).length
+            : 0;
 
           if (p.search !== "" && visibleGroupItems.length === 0) {
             return null;
@@ -491,6 +514,7 @@ export const Folder = React.memo(function Folder(p: {
               folderId={p.folder.id}
               group={item.group}
               items={visibleGroupItems}
+              count={groupCount}
               tabs={p.tabs}
               recentItems={p.recentItems}
               showNotUsed={p.showNotUsed}

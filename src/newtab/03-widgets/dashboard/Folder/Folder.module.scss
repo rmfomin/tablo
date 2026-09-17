@@ -30,10 +30,10 @@
     color: var(--main-text-color);
     cursor: grab;
     font-family: var(--title-font-family);
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: normal;
+    line-height: 24px;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
@@ -42,15 +42,16 @@
     flex: 1;
     min-width: 0;
     height: 32px;
-    padding: 6px 8px;
+    padding: 0 8px;
     border: 1px solid var(--colors-blue-300);
     border-radius: 8px;
     background-color: var(--input-background-color);
     color: var(--main-text-color);
     box-sizing: border-box;
     font-family: var(--title-font-family);
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 30px;
     resize: none;
   }
 
@@ -75,21 +76,29 @@
   }
 }
 
-.bookmarksCount,
+.bookmarksCount {
+  flex-shrink: 0;
+  min-width: 20px;
+  padding: 1px 6px;
+  border-radius: 5px;
+  background-color: var(--colors-gray-200);
+  color: var(--second-text-color);
+  box-sizing: border-box;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  text-align: center;
+}
+
 .archivedLabel {
   flex-shrink: 0;
   padding: 2px 7px;
-  border: 1px solid var(--colors-gray-300);
   border-radius: 6px;
+  background-color: var(--colors-gray-200);
   color: var(--second-text-color);
   font-size: 11px;
   font-weight: 600;
   line-height: 16px;
-}
-
-.archivedLabel {
-  border: none;
-  background-color: var(--colors-gray-200);
 }
 
 .collapseToggle,

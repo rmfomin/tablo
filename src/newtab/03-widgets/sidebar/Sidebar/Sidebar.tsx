@@ -23,6 +23,8 @@ import { useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStor
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { useChromeRuntimeStore } from "@/newtab/01-app/model/chrome-runtime/chromeRuntimeStore";
 import IconSave from "./icons/save.svg";
+import ToggleLeftIcon from "@/newtab/06-shared/ui/DropdownMenu/img/toggle-left.svg";
+import ToggleRightIcon from "@/newtab/06-shared/ui/DropdownMenu/img/toggle-right.svg";
 import IconPanelRightClose from "./icons/panel-right-close.svg";
 import IconPanelRightOpen from "./icons/panel-right-open.svg";
 import { SpacesList } from "@/newtab/03-widgets/spaces-list/SpacesList/SpacesList";
@@ -330,8 +332,8 @@ const StashButton = React.memo((props: { tabs: BrowserTab[] }) => {
   return (
     <div className={styles.actionWrap}>
       <button
-        className={cn("btn__icon", styles.actionButton, {
-          active: confirmationOpened,
+        className={cn(styles.actionButton, {
+          [styles.activeControl]: confirmationOpened,
         })}
         disabled={filteredTabs.length < 1}
         title="Stash open Tabs in the new Folder"
@@ -342,39 +344,36 @@ const StashButton = React.memo((props: { tabs: BrowserTab[] }) => {
       {confirmationOpened ? (
         <DropdownMenu
           onClose={() => setConfirmationOpened(false)}
-          className={styles.stashPopup}
-          width={240}
+          className="dropdown-menu--context"
           absPosition={menuPosition}
-          skipTabIndexes={true}
         >
-          <div style={{ width: "100%" }}>
-            <p>Save all open Tabs to a new Folder</p>
-            <p>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={shouldCloseTabs}
-                  onChange={(e) => setShouldCloseTabs(e.target.checked)}
-                />
-                and close all the tabs
-              </label>
-            </p>
-          </div>
-          <div style={{ width: "100%", display: "flex" }}>
-            <button
-              className="focusable btn__setting primary"
-              style={{ marginRight: "8px" }}
-              onClick={shelveTabs}
-            >
-              Stash tabs
-            </button>
-            <button
-              className="focusable btn__setting"
-              onClick={() => setConfirmationOpened(false)}
-            >
-              Cancel
-            </button>
-          </div>
+          <div className={styles.stashTitle}>Save all open Tabs to a new Folder</div>
+          <button
+            type="button"
+            className={cn(
+              "dropdown-menu__button dropdown-menu__button--with-icon focusable",
+              { "dropdown-menu__toggle-button--active": shouldCloseTabs },
+            )}
+            aria-pressed={shouldCloseTabs}
+            onClick={() => setShouldCloseTabs((value) => !value)}
+          >
+            <span className="dropdown-menu__toggle-icon" aria-hidden="true">
+              <ToggleLeftIcon focusable="false" />
+              <ToggleRightIcon focusable="false" />
+            </span>
+            <span>and close all the tabs</span>
+          </button>
+          <div className="dropdown-menu__separator" />
+          <button className="dropdown-menu__button focusable" onClick={shelveTabs}>
+            <IconSave className="dropdown-menu__icon" aria-hidden="true" focusable="false" />
+            Stash tabs
+          </button>
+          <button
+            className="dropdown-menu__button dropdown-menu__button--dander focusable"
+            onClick={() => setConfirmationOpened(false)}
+          >
+            Cancel
+          </button>
         </DropdownMenu>
       ) : null}
     </div>

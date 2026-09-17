@@ -20,6 +20,7 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
   folderId: number;
   group: GroupV3;
   items: BookmarkItemV3[];
+  count: number;
   tabs: BrowserTab[];
   recentItems: RecentItem[];
   showNotUsed: boolean;
@@ -127,7 +128,7 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
           search={p.search}
           onDoubleClick={() => setEditing(true)}
         />
-        <span className={styles.count}>{p.items.length}</span>
+        <span className={styles.count}>{p.count}</span>
         {showMenu ? (
           <DropdownMenu
             onClose={() => setShowMenu(false)}

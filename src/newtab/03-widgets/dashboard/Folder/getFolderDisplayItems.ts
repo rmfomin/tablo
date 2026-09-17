@@ -17,8 +17,11 @@ export type FolderDisplayItem =
       items: BookmarkItemV3[];
     };
 
-export function getFolderDisplayItems(folder: FolderV3): FolderDisplayItem[] {
-  if (folder.collapsed) {
+export function getFolderDisplayItems(
+  folder: FolderV3,
+  includeCollapsedItems = false,
+): FolderDisplayItem[] {
+  if (folder.collapsed && !includeCollapsedItems) {
     return [];
   }
 
@@ -33,7 +36,7 @@ export function getFolderDisplayItems(folder: FolderV3): FolderDisplayItem[] {
     return {
       type: "group",
       group: item,
-      items: item.collapsed ? [] : item.groupItems,
+      items: item.collapsed && !includeCollapsedItems ? [] : item.groupItems,
     };
   });
 }
@@ -43,8 +46,9 @@ export function getVisibleFolderDisplayItems(
   search: string,
   filters: SearchFilter[] = [],
   filterMode: SearchFilterMode = "or",
+  includeCollapsedItems = false,
 ): FolderDisplayItem[] {
-  const displayItems = getFolderDisplayItems(folder);
+  const displayItems = getFolderDisplayItems(folder, includeCollapsedItems);
   if (!hasSearch(search, filters)) {
     return displayItems;
   }
