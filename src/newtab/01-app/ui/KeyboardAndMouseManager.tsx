@@ -36,6 +36,25 @@ export const KeyboardAndMouseManager = React.memo((p: { search: string }) => {
         return;
       }
 
+      if (e.code === "Escape") {
+        // DropdownMenu listens for Escape itself. Let it close first instead
+        // of moving focus to the search field in the same key press.
+        if (document.querySelector(".dropdown-menu, .sub-menu")) {
+          return;
+        }
+
+        if (
+          document.activeElement &&
+          isTargetInputOrTextArea(document.activeElement)
+        ) {
+          return;
+        }
+
+        focusSearch();
+        e.preventDefault();
+        return;
+      }
+
       if (
         document.activeElement &&
         isTargetInputOrTextArea(document.activeElement)
