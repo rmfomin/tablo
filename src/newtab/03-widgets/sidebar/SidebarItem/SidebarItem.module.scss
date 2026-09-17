@@ -15,7 +15,7 @@
     background-color: var(--colors-gray-200);
   }
 
-  &:hover .savedTabIcon {
+  &:not(.recentItem):hover .savedTabIcon {
     display: none;
   }
 
@@ -32,6 +32,11 @@
   .savedTabIcon {
     display: block;
   }
+}
+
+.savedWithIcon .text {
+  box-sizing: border-box;
+  padding-right: 25px;
 }
 
 .icon {

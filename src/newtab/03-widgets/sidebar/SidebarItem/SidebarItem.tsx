@@ -113,6 +113,7 @@ export const TabOrRecentItem = (p: {
       className={cn(styles.item, {
         [styles.active]: showMenu,
         [styles.recentItem]: !isTab,
+        [styles.savedWithIcon]: Boolean(savedInFolders),
         "draggable-item": true,
       })}
       data-id={p.data.id}
