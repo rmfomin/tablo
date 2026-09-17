@@ -208,6 +208,7 @@ label.input-label + label.input-label {
 
 .dropdown-menu__separator {
   height: 1px;
+  flex-shrink: 0;
   background-color: var(--menu-divider-color);
   margin: 8px;
 }

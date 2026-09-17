@@ -76,7 +76,7 @@ export function getSpacesList(
 
 export function getSpacesWithNestedFoldersList(
   spaces: Pick<SpaceV3, "id" | "title" | "folders">[],
-  onFolderClick: (folderId: number) => void,
+  onFolderClick: (folderId: number, spaceId: number) => void,
   onCreateFolderClick: (spaceId: number) => void,
   currentFolderId?: number,
   onCreateSpaceClick?: () => void,

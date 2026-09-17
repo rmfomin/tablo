@@ -20,7 +20,7 @@ import {
 import { SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
 import IconCheck from "./icons/check.svg";
 import IconCloseTab from "./icons/x.svg";
-import { getFoldersList } from "@/newtab/04-features/move-to-folder/ui/moveToHelpers";
+import { getSpacesWithNestedFoldersList } from "@/newtab/04-features/move-to-folder/ui/moveToHelpers";
 import { DropdownMenuIcon } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenuIcon";
 import { getBrokenImgSVG } from "@/newtab/06-shared/api/chrome/favicons";
 import { collectBookmarksV3 } from "@/newtab/05-entities/dashboard/model/traversal";
@@ -175,34 +175,16 @@ export const TabOrRecentItem = (p: {
             Copy url
           </button>
           <div className="dropdown-menu__separator" />
-          {p.spaces.length === 1 ? (
-            <DropdownSubMenu
-              menuId={1}
-              title={"Save to"}
-              icon="organize"
-              submenuContent={getFoldersList(
-                p.spaces[0],
-                moveToFolder,
-                moveToNewFolder,
-              )}
-            />
-          ) : (
-            p.spaces.map((s) => {
-              return (
-                <DropdownSubMenu
-                  key={s.id}
-                  menuId={s.id}
-                  title={`Save to "${s.title}"`}
-                  icon="organize"
-                  submenuContent={getFoldersList(
-                    s,
-                    moveToFolder,
-                    moveToNewFolder,
-                  )}
-                />
-              );
-            })
-          )}
+          <DropdownSubMenu
+            menuId={1}
+            title={"Save to"}
+            icon="organize"
+            submenuContent={getSpacesWithNestedFoldersList(
+              p.spaces,
+              moveToFolder,
+              moveToNewFolder,
+            )}
+          />
 
           {isTab && (
             <>
