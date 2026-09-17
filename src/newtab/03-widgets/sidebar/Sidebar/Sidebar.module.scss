@@ -132,8 +132,8 @@
   border-radius: 8px;
 
   svg {
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
   }
 
   &:hover:not(:disabled) {
@@ -162,19 +162,14 @@
   border-radius: 8px;
 
   svg {
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
     color: currentColor;
-    transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   &:hover {
     background-color: var(--button-hover-background-color);
   }
-}
-
-.expandedCollapseButton svg {
-  transform: rotate(180deg);
 }
 
 .content {
@@ -243,19 +238,4 @@
     padding: 0;
     vertical-align: middle;
   }
-}
-
-.duplicateCount {
-  position: absolute;
-  top: -3px;
-  right: -3px;
-  width: 14px;
-  height: 14px;
-  border: 1px solid var(--popup-background-color);
-  border-radius: 50%;
-  background-color: var(--active-control-color);
-  color: var(--active-control-text);
-  font-size: 9px;
-  line-height: 14px;
-  text-align: center;
 }

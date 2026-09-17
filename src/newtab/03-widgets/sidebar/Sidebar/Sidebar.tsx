@@ -2,9 +2,7 @@ import {
   createTab,
   updateTab,
   removeTabs,
-  getCurrentTab,
   queryTabs,
-  getCurrentWindow,
   focusWindow,
   type BrowserTab,
 } from "@/newtab/06-shared/api/chrome/tabs";
@@ -24,9 +22,9 @@ import type { Point } from "@/newtab/06-shared/lib/math";
 import { useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { useChromeRuntimeStore } from "@/newtab/01-app/model/chrome-runtime/chromeRuntimeStore";
-import IconDelDuplicates from "./icons/delete-duplicates.svg";
 import IconSave from "./icons/save.svg";
-import IconChevron from "./icons/chevron.svg";
+import IconPanelRightClose from "./icons/panel-right-close.svg";
+import IconPanelRightOpen from "./icons/panel-right-open.svg";
 import IconTabs from "./icons/tabs.svg";
 import IconSpaces from "./icons/spaces.svg";
 import { SpacesList } from "@/newtab/03-widgets/spaces-list/SpacesList/SpacesList";
@@ -181,7 +179,7 @@ export function Sidebar() {
               title="Expand panel"
               aria-label="Expand panel"
             >
-              <IconChevron />
+              <IconPanelRightOpen />
             </button>
           </div>
           <div className={styles.collapsedNavigation}>
@@ -228,15 +226,12 @@ export function Sidebar() {
                 <span className={styles.headerText}>Spaces</span>
                 <button
                   id="toggle-sidebar-btn"
-                  className={cn(
-                    styles.collapseButton,
-                    styles.expandedCollapseButton
-                  )}
+                  className={styles.collapseButton}
                   onClick={onToggleSidebar}
                   title="Collapse panel"
                   aria-label="Collapse panel"
                 >
-                  <IconChevron />
+                  <IconPanelRightClose />
                 </button>
               </div>
               <SpacesList />
@@ -247,7 +242,6 @@ export function Sidebar() {
                 <span className={styles.headerText}>Open tabs</span>
                 <span className={styles.tabsCount}>{openTabsCount}</span>
                 <div className={styles.headerActions}>
-                  <CleanupButton tabs={tabs} />
                   <StashButton tabs={tabs} />
                 </div>
               </div>
@@ -380,77 +374,3 @@ const StashButton = React.memo((props: { tabs: BrowserTab[] }) => {
     </div>
   );
 });
-
-const CleanupButton = React.memo((props: { tabs: BrowserTab[] }) => {
-  const [duplicateTabsCount, setDuplicateTabsCount] = useState(0);
-  const showNotification = useUiStore((state) => state.showNotification);
-
-  function onCleanupTabs() {
-    getDuplicatedTabs((duplicatedTabs) => {
-      duplicatedTabs.forEach((t) => {
-        if (t.id) {
-          removeTabs(t.id);
-        }
-      });
-      const message =
-        duplicatedTabs.length > 0
-          ? `${duplicatedTabs.length} duplicate tabs was closed`
-          : "There are no duplicate tabs";
-      showNotification({ message });
-    });
-  }
-
-  useEffect(() => {
-    getDuplicatedTabs((dt) => {
-      setDuplicateTabsCount(dt.length);
-    });
-  }, [props.tabs]);
-  return (
-    <button
-      className={cn("btn__icon", styles.actionButton)}
-      style={{ position: "relative" }}
-      title="Close duplicate tabs"
-      disabled={duplicateTabsCount === 0}
-      onClick={onCleanupTabs}
-    >
-      <IconDelDuplicates />
-      {duplicateTabsCount > 0 ? (
-        <div className={styles.duplicateCount}>{duplicateTabsCount}</div>
-      ) : null}
-    </button>
-  );
-});
-
-function getDuplicatedTabs(cb: (value: BrowserTab[]) => void): void {
-  const tabsByUrl = new Map<string, BrowserTab[]>();
-  getCurrentWindow((chromeWindow) => {
-    queryTabs({ windowId: chromeWindow.id }, (tabs) => {
-      tabs.reverse().forEach((t) => {
-        if (!t.url) {
-          return;
-        }
-        if (!tabsByUrl.has(t.url)) {
-          tabsByUrl.set(t.url, []);
-        }
-        const groupedTabsByUrl = tabsByUrl.get(t.url)!;
-
-        //special condition to now close current tab with Tablo but close all others
-        if (isTabloTab(t) && t.active) {
-          groupedTabsByUrl.unshift(t);
-        } else {
-          groupedTabsByUrl.push(t);
-        }
-      });
-      const duplicatedTabs: BrowserTab[] = [];
-      tabsByUrl.forEach((groupedTabs) => {
-        for (let i = 1; i < groupedTabs.length; i++) {
-          const duplicatedTab = groupedTabs[i];
-          if (duplicatedTab.id) {
-            duplicatedTabs.push(duplicatedTab);
-          }
-        }
-      });
-      cb(duplicatedTabs);
-    });
-  });
-}
