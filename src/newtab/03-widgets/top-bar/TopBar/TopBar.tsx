@@ -3,7 +3,6 @@ import { DropdownMenu, getPointerPosition } from "@/newtab/06-shared/ui/Dropdown
 import type { Point } from "@/newtab/06-shared/lib/math";
 import { SettingsOptions } from "./settingsOptions";
 import cn from "clsx";
-import { SearchInput } from "@/newtab/04-features/bookmark-search/ui/SearchInput";
 import IconSettings from "./icons/settings.svg";
 import styles from "./TopBar.module.scss";
 
@@ -21,10 +20,6 @@ export function TopBar() {
       className={styles.root}
       onMouseDown={(event) => event.stopPropagation()}
     >
-      <div className={styles.searchSlot}>
-        <SearchInput />
-      </div>
-
       <div className={styles.menuButtons}>
         <div className={styles.menuButtonWrap}>
           <button

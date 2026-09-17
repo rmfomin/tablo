@@ -8,7 +8,11 @@ import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { isSomeModalOpened } from "@/newtab/06-shared/ui/Modal/Modal";
 import { isTargetInputOrTextArea } from "@/newtab/06-shared/lib/dom/html";
 
-export const KeyboardAndMouseManager = React.memo((p: { search: string }) => {
+export const KeyboardAndMouseManager = React.memo((p: {
+  searchOpen: boolean;
+  onOpenSearch: () => void;
+  onCloseSearch: () => void;
+}) => {
   const deleteFolderItems = useDashboardStore(
     (state) => state.deleteFolderItems
   );
@@ -16,23 +20,20 @@ export const KeyboardAndMouseManager = React.memo((p: { search: string }) => {
   const setCurrentSpace = useDashboardStore((state) => state.selectSpace);
   const spaces = useDashboardStore((state) => state.spaces);
   const showNotification = useUiStore((state) => state.showNotification);
-  const setSidebarCollapsed = useUiStore((state) => state.setSidebarCollapsed);
   useEffect(() => {
     const focusSearch = () => {
-      const input = document.querySelector<HTMLInputElement>("input.search");
-      if (input) {
-        input.focus();
-        return;
-      }
-      setSidebarCollapsed(false);
-      requestAnimationFrame(() =>
-        document.querySelector<HTMLInputElement>("input.search")?.focus()
-      );
+      p.onOpenSearch();
     };
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (isSomeModalOpened()) {
         // disabling hotkeys when any Modal open
+        return;
+      }
+
+      if (e.code === "KeyF" && (e.ctrlKey || e.metaKey)) {
+        focusSearch();
+        e.preventDefault();
         return;
       }
 
@@ -50,7 +51,11 @@ export const KeyboardAndMouseManager = React.memo((p: { search: string }) => {
           return;
         }
 
-        focusSearch();
+        if (p.searchOpen) {
+          p.onCloseSearch();
+        } else {
+          focusSearch();
+        }
         e.preventDefault();
         return;
       }
@@ -70,12 +75,6 @@ export const KeyboardAndMouseManager = React.memo((p: { search: string }) => {
           showNotification({ message: "Bookmark has been deleted" });
           return;
         }
-      }
-
-      if (e.code === "KeyF" && (e.ctrlKey || e.metaKey)) {
-        focusSearch();
-        e.preventDefault();
-        return;
       }
 
       if (e.code === "KeyZ" && (e.metaKey || e.ctrlKey)) {
@@ -106,13 +105,14 @@ export const KeyboardAndMouseManager = React.memo((p: { search: string }) => {
       document.removeEventListener("keydown", onKeyDown);
     };
   }, [
-    p.search,
+    p.searchOpen,
+    p.onOpenSearch,
+    p.onCloseSearch,
     deleteFolderItems,
     undo,
     setCurrentSpace,
     spaces,
     showNotification,
-    setSidebarCollapsed,
   ]);
   return null;
 });

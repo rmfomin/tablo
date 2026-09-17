@@ -20,7 +20,6 @@ let notificationTimeout: number | undefined;
  */
 export function App() {
   const loaded = useChromeRuntimeStore((state) => state.loaded);
-  const search = useUiStore((state) => state.search);
   const page = useUiStore((state) => state.page);
   const sidebarCollapsed = useUiStore((state) => state.sidebarCollapsed);
   const notification = useUiStore((state) => state.notification);
@@ -74,7 +73,6 @@ export function App() {
   return (
     <NewtabPage
       page={page}
-      search={search}
       sidebarCollapsed={sidebarCollapsed}
     />
   );

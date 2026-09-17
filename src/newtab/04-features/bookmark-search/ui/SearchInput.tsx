@@ -3,7 +3,13 @@ import { handleSearchKeyDown } from "@/newtab/04-features/bookmarks/model/handle
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import styles from "./SearchInput.module.scss";
 
-export function SearchInput() {
+export function SearchInput({
+  inputRef,
+  onEscape,
+}: {
+  inputRef: React.Ref<HTMLInputElement>;
+  onEscape: () => void;
+}) {
   const search = useUiStore((state) => state.search);
   const setSearch = useUiStore((state) => state.setSearch);
 
@@ -19,13 +25,23 @@ export function SearchInput() {
     <div className={styles.searchBlock}>
       <div className={styles.searchWrapper}>
         <input
+          ref={inputRef}
+          autoFocus
           tabIndex={1}
           className="search"
           type="text"
           placeholder="Search in Tablo"
           value={search}
           onChange={onSearchChange}
-          onKeyDown={(event) => handleSearchKeyDown(event, onClearSearch)}
+          onKeyDown={(event) => {
+            if (event.code === "Escape") {
+              event.preventDefault();
+              event.stopPropagation();
+              onEscape();
+              return;
+            }
+            handleSearchKeyDown(event, onClearSearch);
+          }}
         />
         {search ? (
           <button

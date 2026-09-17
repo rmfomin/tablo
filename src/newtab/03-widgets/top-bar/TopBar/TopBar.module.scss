@@ -3,19 +3,9 @@
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  gap: 12px;
   min-width: 0;
   box-sizing: border-box;
   z-index: 5;
-}
-
-.searchSlot {
-  display: flex;
-  min-width: 0;
-}
-
-.searchSlot > * {
-  width: 100%;
 }
 
 .menuButtons {

@@ -29,7 +29,6 @@ import IconTabs from "./icons/tabs.svg";
 import IconSpaces from "./icons/spaces.svg";
 import { SpacesList } from "@/newtab/03-widgets/spaces-list/SpacesList/SpacesList";
 import { TopBar } from "@/newtab/03-widgets/top-bar/TopBar/TopBar";
-import IconSearch from "@/newtab/04-features/bookmark-search/ui/icons/search.svg";
 
 import {
   convertTabOrRecentToItem,
@@ -200,13 +199,6 @@ export function Sidebar() {
     setSidebarCollapsed(!sidebarCollapsedValue);
   }
 
-  function onOpenSearch() {
-    setSidebarCollapsed(false);
-    requestAnimationFrame(() =>
-      document.querySelector<HTMLInputElement>("input.search")?.focus()
-    );
-  }
-
   const openTabsCount = tabs.filter(
     (tab) => !tab.pinned && !isTabloTab(tab)
   ).length;
@@ -233,15 +225,6 @@ export function Sidebar() {
             </button>
           </div>
           <div className={styles.collapsedNavigation}>
-            <button
-              type="button"
-              className={styles.collapsedSpacesButton}
-              title="Search"
-              aria-label="Search"
-              onClick={onOpenSearch}
-            >
-              <IconSearch />
-            </button>
             <button
               type="button"
               className={styles.collapsedSpacesButton}

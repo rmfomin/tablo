@@ -46,28 +46,6 @@
   }
 }
 
-.workspaceHeader {
-  position: relative;
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  height: 68px;
-  box-sizing: border-box;
-  padding: 12px 0 16px 72px;
-}
-
-.scrolled {
-  border-bottom: 1px solid var(--border-color);
-}
-
-.searchResultsHeader {
-  padding: 0 6px;
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 40px;
-  opacity: 0.7;
-}
-
 .noBookmarksFound {
   padding: 28px 8px;
   color: var(--second-text-color);

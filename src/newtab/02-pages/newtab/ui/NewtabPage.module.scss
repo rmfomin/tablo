@@ -12,3 +12,37 @@
   min-width: 0;
   min-height: 0;
 }
+
+.searchPanel {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  z-index: 20;
+  width: min(560px, calc(100vw - 32px));
+  padding: 8px;
+  border: 1px solid var(--input-border-color);
+  border-radius: 32px;
+  background-color: var(--popup-background-color);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  transform: translateX(-50%);
+  animation: searchDrop 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes searchDrop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-100% - 20px));
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .searchPanel {
+    animation: none;
+  }
+}
