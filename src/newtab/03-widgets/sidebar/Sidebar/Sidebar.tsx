@@ -25,8 +25,6 @@ import { useChromeRuntimeStore } from "@/newtab/01-app/model/chrome-runtime/chro
 import IconSave from "./icons/save.svg";
 import IconPanelRightClose from "./icons/panel-right-close.svg";
 import IconPanelRightOpen from "./icons/panel-right-open.svg";
-import IconTabs from "./icons/tabs.svg";
-import IconSpaces from "./icons/spaces.svg";
 import { SpacesList } from "@/newtab/03-widgets/spaces-list/SpacesList/SpacesList";
 import { TopBar } from "@/newtab/03-widgets/top-bar/TopBar/TopBar";
 
@@ -224,87 +222,62 @@ export function Sidebar() {
               <IconPanelRightOpen />
             </button>
           </div>
-          <div className={styles.collapsedNavigation}>
-            <button
-              type="button"
-              className={styles.collapsedSpacesButton}
-              title="Spaces"
-              aria-label="Spaces"
-              onClick={onToggleSidebar}
-            >
-              <IconSpaces />
-            </button>
-            <button
-              type="button"
-              className={styles.collapsedTabsButton}
-              title="Open tabs"
-              aria-label={`${openTabsCount} open tabs`}
-              onClick={onToggleSidebar}
-            >
-              <IconTabs />
-              {openTabsCount > 0 ? (
-                <span className={styles.collapsedTabsCount}>
-                  {openTabsCount}
-                </span>
-              ) : null}
-            </button>
+          <div className={styles.collapsedSettings}>
+            <TopBar />
           </div>
         </>
       ) : (
         <>
-          <TopBar />
-          <div className={styles.scrollContent}>
-            <section className={styles.spacesSection}>
-              <div className={styles.sectionHeader}>
-                <span className={styles.headerText}>Spaces</span>
-                <button
-                  id="toggle-sidebar-btn"
-                  className={styles.collapseButton}
-                  onClick={onToggleSidebar}
-                  title="Collapse panel"
-                  aria-label="Collapse panel"
-                >
-                  <IconPanelRightClose />
-                </button>
-              </div>
-              <SpacesList />
-            </section>
-
-            <section className={styles.tabsSection}>
-              <div className={styles.header}>
-                <span className={styles.headerText}>Open tabs</span>
-                <span className={styles.tabsCount}>{openTabsCount}</span>
-                <div className={styles.headerActions}>
-                  <StashButton tabs={tabs} />
-                </div>
-              </div>
-
-              <div className={styles.content}>
-                <SidebarOpenTabs
-                  tabs={tabs}
-                  spaces={spaces}
-                  search={search}
-                  searchFilters={searchFilters}
-                  searchFilterMode={searchFilterMode}
-                  lastActiveTabIds={lastActiveTabIds}
-                  currentWindowId={currentWindowId}
-                  sidebarCollapsed={false}
-                />
-                {(showRecent ||
-                  search ||
-                  searchFilters.some((filter) => filter.enabled)) && (
-                  <SidebarRecent
-                    search={search}
-                    searchFilters={searchFilters}
-                    searchFilterMode={searchFilterMode}
-                    recentItems={recentItems}
-                    spaces={spaces}
-                    sidebarCollapsed={false}
-                  />
-                )}
-              </div>
-            </section>
+          <div className={styles.toolbarRow}>
+            <button
+              id="toggle-sidebar-btn"
+              className={styles.collapseButton}
+              onClick={onToggleSidebar}
+              title="Collapse panel"
+              aria-label="Collapse panel"
+            >
+              <IconPanelRightClose />
+            </button>
+            <TopBar />
           </div>
+          <section className={styles.spacesSection}>
+            <SpacesList />
+          </section>
+
+          <section className={styles.tabsSection}>
+            <div className={styles.header}>
+              <span className={styles.headerText}>Open tabs</span>
+              <span className={styles.tabsCount}>{openTabsCount}</span>
+              <div className={styles.headerActions}>
+                <StashButton tabs={tabs} />
+              </div>
+            </div>
+
+            <div className={styles.content}>
+              <SidebarOpenTabs
+                tabs={tabs}
+                spaces={spaces}
+                search={search}
+                searchFilters={searchFilters}
+                searchFilterMode={searchFilterMode}
+                lastActiveTabIds={lastActiveTabIds}
+                currentWindowId={currentWindowId}
+                sidebarCollapsed={false}
+              />
+            </div>
+          </section>
+          {(showRecent ||
+            search ||
+            searchFilters.some((filter) => filter.enabled)) && (
+            <SidebarRecent
+              search={search}
+              searchFilters={searchFilters}
+              searchFilterMode={searchFilterMode}
+              recentItems={recentItems}
+              spaces={spaces}
+              sidebarCollapsed={false}
+            />
+          )}
         </>
       )}
     </div>

@@ -7,7 +7,8 @@
   width: var(--workspace-card-width);
   min-height: 0;
   margin: 0;
-  padding: var(--container-padding);
+  padding: var(--sidebar-padding);
+  padding-bottom: 0;
   border-radius: 0;
   background-color: var(--popup-background-color);
   box-sizing: border-box;
@@ -18,26 +19,17 @@
   &.collapsed {
     width: 48px;
     gap: 0;
-    padding: 0;
+    padding: var(--sidebar-padding) 0 0;
     overflow: hidden;
   }
 }
 
-.scrollContent {
+.toolbarRow {
   display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: var(--container-gap);
-  min-height: 0;
-  min-width: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-  }
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  min-height: 36px;
 }
 
 .spacesSection,
@@ -50,34 +42,22 @@
 
 .spacesSection {
   gap: 6px;
+  margin-inline: calc(-1 * var(--sidebar-padding));
 }
 
 .tabsSection {
   gap: 2px;
 }
 
-.sectionHeader,
 .collapsedHeader {
   display: flex;
   align-items: center;
+  justify-content: center;
   height: 36px;
   min-height: 36px;
 }
 
-.sectionHeader {
-  padding: 0 8px;
-}
-
-.collapsedHeader {
-  justify-content: center;
-  height: 48px;
-  min-height: 48px;
-}
-
 .header {
-  position: sticky;
-  top: 0;
-  z-index: 2;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -142,60 +122,20 @@
   }
 }
 
-.collapseButton,
-.collapsedTabsButton,
-.collapsedSpacesButton {
+.collapseButton {
   appearance: none;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
   padding: 0;
   border: none;
+  border-radius: 50%;
   background-color: transparent;
   color: var(--menu-icon-color);
   cursor: pointer;
-}
-
-.collapseButton {
-  width: 28px;
-  min-width: 28px;
-  height: 28px;
-  border-radius: 8px;
-
-  svg {
-    width: 20px;
-    height: 20px;
-    color: currentColor;
-  }
-
-  &:hover {
-    background-color: var(--button-hover-background-color);
-  }
-}
-
-.content {
-  padding: 0;
-
-  :global(.sidebar-message) {
-    padding: 20px 8px;
-    font-size: 12px;
-  }
-}
-
-.collapsedNavigation {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding-top: 12px;
-}
-
-.collapsedTabsButton,
-.collapsedSpacesButton {
-  position: relative;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
 
   svg {
     width: 20px;
@@ -209,23 +149,18 @@
   }
 }
 
-.collapsedTabsCount {
-  position: absolute;
-  top: -2px;
-  right: -2px;
+.content {
+  padding: 0;
+
+  :global(.sidebar-message) {
+    padding: 20px 8px;
+    font-size: 12px;
+  }
+}
+
+.collapsedSettings {
   display: flex;
-  align-items: center;
   justify-content: center;
-  min-width: 15px;
-  height: 15px;
-  padding: 0 3px;
-  border-radius: 8px;
-  background-color: var(--active-control-color);
-  color: var(--active-control-text);
-  box-sizing: border-box;
-  font-size: 9px;
-  font-weight: 700;
-  line-height: 1;
 }
 
 .stashPopup {

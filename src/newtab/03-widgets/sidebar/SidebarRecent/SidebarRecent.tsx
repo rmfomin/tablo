@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import cn from "clsx";
 import {
   filterRecentItemsBySearch,
@@ -14,12 +14,16 @@ import { useChromeRuntimeStore } from "@/newtab/01-app/model/chrome-runtime/chro
 import { TabOrRecentItem } from "@/newtab/03-widgets/sidebar/SidebarItem/SidebarItem";
 import { SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
 import styles from "./SidebarRecent.module.scss";
-import { DOM_ROLE, roleSelector } from "@/newtab/06-shared/lib/dom/roles";
 
 const PAGE_SIZE = 100;
 
 const RecentList = React.memo(
-  (p: { items: RecentItem[]; spaces: SpaceV3[]; search: string }) => {
+  (p: {
+    items: RecentItem[];
+    spaces: SpaceV3[];
+    search: string;
+    scrollContainerRef: React.RefObject<HTMLDivElement>;
+  }) => {
     const setRecentItems = useChromeRuntimeStore((state) => state.setRecentItems);
     const [displayedItems, setDisplayedItems] = useState<RecentItem[]>([]);
     const [page, setPage] = useState<number>(1);
@@ -40,26 +44,26 @@ const RecentList = React.memo(
     }, [page, p.items, displayedItems, setRecentItems]);
 
     const handleScroll = useCallback(() => {
-      const sidebar = document.querySelector(roleSelector(DOM_ROLE.sidebar))!;
-      if (sidebar) {
-        const { scrollTop, scrollHeight, clientHeight } = sidebar;
+      const scrollContainer = p.scrollContainerRef.current;
+      if (scrollContainer) {
+        const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
         if (scrollTop + clientHeight >= scrollHeight - 200) {
           loadMore();
         }
       }
-    }, [loadMore]);
+    }, [loadMore, p.scrollContainerRef]);
 
     useEffect(() => {
-      const sidebar = document.querySelector(roleSelector(DOM_ROLE.sidebar))!;
-      if (sidebar) {
-        sidebar.addEventListener("scroll", handleScroll);
+      const scrollContainer = p.scrollContainerRef.current;
+      if (scrollContainer) {
+        scrollContainer.addEventListener("scroll", handleScroll);
       }
       return () => {
-        if (sidebar) {
-          sidebar.removeEventListener("scroll", handleScroll);
+        if (scrollContainer) {
+          scrollContainer.removeEventListener("scroll", handleScroll);
         }
       };
-    }, [handleScroll]);
+    }, [handleScroll, p.scrollContainerRef]);
 
     return (
       <div>
@@ -88,6 +92,7 @@ export const SidebarRecent = React.memo(
     spaces: SpaceV3[];
     sidebarCollapsed: boolean;
   }) => {
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
     const itemsFilteredBySearch = filterRecentItemsBySearch(
       p.recentItems,
       p.search,
@@ -100,7 +105,7 @@ export const SidebarRecent = React.memo(
     );
 
     return (
-      <div className={styles.recentList}>
+      <div ref={scrollContainerRef} className={styles.recentList}>
         <div
           className={cn(styles.header, {
             [styles.collapsedHeader]: p.sidebarCollapsed,
@@ -115,6 +120,7 @@ export const SidebarRecent = React.memo(
           items={itemsFilteredBySearchAndFilter}
           search={p.search}
           spaces={p.spaces}
+          scrollContainerRef={scrollContainerRef}
         />
         <div className="sidebar-message">
           <span>History is limited by 2 month</span>

@@ -1,11 +1,19 @@
 .recentList {
+  flex: 1;
+  min-height: 0;
   width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-width: none;
 
-  &::before {
-    content: "";
-    display: block;
-    position: relative;
-    height: 16px;
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+
+  :global(.sidebar-message) {
+    padding: 20px 8px;
+    font-size: 12px;
   }
 }
 

@@ -19,6 +19,8 @@
   width: 100%;
   gap: 4px;
   min-width: 0;
+  padding-left: var(--sidebar-padding);
+  box-sizing: border-box;
   overflow-x: auto;
   overflow-y: hidden;
   overscroll-behavior-x: contain;

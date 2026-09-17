@@ -184,13 +184,18 @@ export function SpacesList() {
       return;
     }
 
+    const initialInset =
+      parseFloat(getComputedStyle(scrollContainer).paddingLeft) || 0;
     const visibleLeft = scrollContainer.scrollLeft;
-    const visibleRight = visibleLeft + scrollContainer.clientWidth;
+    const visibleRight = scrollContainer.scrollLeft + scrollContainer.clientWidth;
     const spaceLeft = activeSpace.offsetLeft;
     const spaceRight = spaceLeft + activeSpace.offsetWidth;
 
     if (spaceLeft < visibleLeft) {
-      scrollContainer.scrollTo({ left: spaceLeft, behavior: "smooth" });
+      scrollContainer.scrollTo({
+        left: Math.max(spaceLeft - initialInset, 0),
+        behavior: "smooth",
+      });
     } else if (spaceRight > visibleRight) {
       scrollContainer.scrollTo({
         left: spaceRight - scrollContainer.clientWidth,

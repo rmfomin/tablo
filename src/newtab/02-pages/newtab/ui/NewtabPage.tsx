@@ -48,10 +48,10 @@ export function NewtabPage({
             </div>
           ) : null}
           <div className={styles.workspace}>
-            <Sidebar />
             <div className={styles.mainColumn}>
               <Bookmarks />
             </div>
+            <Sidebar />
           </div>
           <KeyboardAndMouseManager
             searchOpen={searchOpen}
