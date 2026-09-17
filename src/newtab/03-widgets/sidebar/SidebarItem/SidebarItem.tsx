@@ -117,6 +117,7 @@ export const TabOrRecentItem = (p: {
         "draggable-item": true,
       })}
       data-id={p.data.id}
+      data-tab-or-recent={isTab ? "tab" : "recent"}
       onContextMenu={onTabContextMenu}
     >
       <img

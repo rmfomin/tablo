@@ -55,6 +55,7 @@ export function Sidebar() {
     (state) => state.clearSelectedItemIds
   );
   const tabs = useChromeRuntimeStore((state) => state.tabs);
+  const closeTabs = useChromeRuntimeStore((state) => state.closeTabs);
   const recentItems = useChromeRuntimeStore((state) => state.recentItems);
   const lastActiveTabIds = useChromeRuntimeStore(
     (state) => state.lastActiveTabIds
@@ -140,10 +141,59 @@ export function Sidebar() {
   }
 
   function onMouseDown(e: React.MouseEvent) {
+    if (e.button === 1 && toggleTabFromSidebar(e)) {
+      return;
+    }
     if (isTargetSupportsDragAndDrop(e)) {
       blurSearch(e);
       startDragAndDrop(e);
     }
+  }
+
+  function toggleTabFromSidebar(e: React.MouseEvent): boolean {
+    const target = e.target as HTMLElement;
+    const item = target.closest<HTMLElement>(".draggable-item");
+    const itemType = item?.dataset.tabOrRecent;
+    if (!item || !itemType) {
+      return false;
+    }
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const itemId = Number(item.dataset.id);
+    if (!Number.isFinite(itemId)) {
+      return true;
+    }
+
+    if (itemType === "tab") {
+      const tab = tabs.find((candidate) => candidate.id === itemId);
+      if (tab?.id !== undefined) {
+        removeTabs(tab.id);
+        closeTabs([tab.id]);
+      }
+      return true;
+    }
+
+    const recent = recentItems.find((candidate) => candidate.id === itemId);
+    if (!recent?.url) {
+      return true;
+    }
+
+    const openedTabIds = tabs
+      .filter(
+        (tab) => tab.url === recent.url || tab.pendingUrl === recent.url,
+      )
+      .map((tab) => tab.id)
+      .filter((tabId): tabId is number => tabId !== undefined);
+
+    if (openedTabIds.length > 0) {
+      removeTabs(openedTabIds);
+      closeTabs(openedTabIds);
+    } else {
+      createTab({ url: recent.url, active: false });
+    }
+    return true;
   }
 
   function onToggleSidebar() {
