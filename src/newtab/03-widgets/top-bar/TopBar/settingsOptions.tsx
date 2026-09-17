@@ -13,15 +13,24 @@ import { hasItemsToHighlight } from "@/newtab/04-features/bookmarks/model/bookma
 import { useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { useChromeRuntimeStore } from "@/newtab/01-app/model/chrome-runtime/chromeRuntimeStore";
-import Switch from "react-switch";
 import { importFromJsonWithCallbacks } from "@/newtab/04-features/bookmarks-import/model/dashboardImportExport";
 import { onExportJson } from "@/newtab/04-features/bookmarks-export/model/dashboardExport";
 import { ImportConfirmationModal } from "@/newtab/04-features/bookmarks-import/ui/ImportConfirmationModal";
 import { loadFaviconUrl } from "@/newtab/06-shared/api/chrome/favicons";
 import { ShortcutsModal } from "@/newtab/03-widgets/ui/ShortcutsModal/ShortcutsModal";
-import { BookmarkItemV3 } from "@/newtab/05-entities/dashboard/model/types";
+import type { BookmarkItemV3, ColorTheme } from "@/newtab/05-entities/dashboard/model/types";
 import cn from "clsx";
 import { collectBookmarksV3 } from "@/newtab/05-entities/dashboard/model/traversal";
+import { ThemeOptionIcon } from "@/newtab/03-widgets/ui/ThemeOptionIcon/ThemeOptionIcon";
+import { DropdownSubMenu } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
+import { importSpaceFromJsonWithCallback } from "@/newtab/04-features/bookmarks-import/model/dashboardImportExport";
+import IconNewSpace from "@/newtab/03-widgets/spaces-list/SpacesList/icons/new-space.svg";
+import IconImportSpace from "@/newtab/03-widgets/spaces-list/SpacesList/icons/import-space.svg";
+import ToggleRightIcon from "@/newtab/06-shared/ui/DropdownMenu/img/toggle-right.svg";
+import ToggleLeftIcon from "@/newtab/06-shared/ui/DropdownMenu/img/toggle-left.svg";
+import ImportJsonIcon from "@/newtab/06-shared/ui/DropdownMenu/img/import-json.svg";
+import ExportJsonIcon from "@/newtab/06-shared/ui/DropdownMenu/img/export-json.svg";
+import ImportBrowserIcon from "@/newtab/06-shared/ui/DropdownMenu/img/import-browser.svg";
 
 type OnClickOption = {
   onClick: (e: any) => void;
@@ -29,6 +38,8 @@ type OnClickOption = {
   text: string;
   hidden?: boolean;
   isFile?: boolean;
+  accept?: string;
+  icon?: React.ReactNode;
   dangerStyle?: boolean;
 };
 type OnToggleOption = {
@@ -55,6 +66,12 @@ type SegmentedOption<T extends string> = {
 export type OptionsConfig = Array<
   OnClickOption | OnToggleOption | SegmentedOption<any> | { separator: true }
 >;
+
+const themeOptions: Array<{ value: ColorTheme; text: string }> = [
+  { value: "light", text: "Light theme" },
+  { value: "system", text: "System theme" },
+  { value: "dark", text: "Dark theme" },
+];
 
 export const HelpOptions = () => {
   const spaces = useDashboardStore((state) => state.spaces);
@@ -154,12 +171,22 @@ export const HelpOptions = () => {
   );
 };
 
-export const SettingsOptions = () => {
+export const SettingsOptions = ({
+  onClose = () => {},
+}: {
+  onClose?: () => void;
+}) => {
   const [importConfirmationOpen, setImportConfirmationOpen] = useState(false);
   const fileEvent = useRef(null);
   const spaces = useDashboardStore((state) => state.spaces);
   const currentSpaceId = useDashboardStore((state) => state.currentSpaceId);
   const hydrate = useDashboardStore((state) => state.hydrate);
+  const createSpace = useDashboardStore((state) => state.createSpace);
+  const updateSpace = useDashboardStore((state) => state.updateSpace);
+  const setCurrentSpace = useDashboardStore((state) => state.selectSpace);
+  const setItemInEdit = useUiStore((state) => state.setItemInEdit);
+  const colorTheme = useUiStore((state) => state.colorTheme);
+  const setColorTheme = useUiStore((state) => state.setColorTheme);
   const showNotUsed = useUiStore((state) => state.showNotUsed);
   const setShowNotUsed = useUiStore((state) => state.setShowNotUsed);
   const showArchived = useUiStore((state) => state.showArchived);
@@ -239,7 +266,46 @@ export const SettingsOptions = () => {
     }
   }
 
+  function onAddSpace() {
+    const spaceId = Date.now() + Math.round(Math.random() * 10_000_000);
+    createSpace({ id: spaceId, title: "New space" });
+    setCurrentSpace(spaceId);
+    setItemInEdit(spaceId);
+    onClose();
+  }
+
+  function onImportSpace(event: React.ChangeEvent<HTMLInputElement>) {
+    importSpaceFromJsonWithCallback(
+      event,
+      spaces,
+      (space) => {
+        createSpace({
+          id: space.id,
+          title: space.title,
+          position: space.position,
+        });
+        updateSpace(space.id, { folders: space.folders });
+        setCurrentSpace(space.id);
+        showNotification({ message: "Space has been imported" });
+      },
+      (message) => showNotification({ message, isError: true }),
+    );
+    onClose();
+  }
+
   const settingsOptions: OptionsConfig = [
+    {
+      onSelect: setColorTheme,
+      value: colorTheme,
+      title: "Theme",
+      text: "",
+      items: themeOptions.map(({ value, text }) => ({
+        value,
+        text,
+        icon: <ThemeOptionIcon theme={value} />,
+      })),
+    },
+    { separator: true },
     {
       onToggle: onToggleNotUsed,
       value: showNotUsed,
@@ -272,15 +338,56 @@ export const SettingsOptions = () => {
       separator: true,
     },
     {
+      onClick: onAddSpace,
+      title: "Create new space",
+      text: "New space",
+      icon: (
+        <IconNewSpace
+          className="dropdown-menu__icon"
+          aria-hidden="true"
+          focusable="false"
+        />
+      ),
+    },
+    {
+      onClick: onImportSpace,
+      title: "Import space from JSON file",
+      text: "Import space",
+      isFile: true,
+      accept: ".json,application/json",
+      icon: (
+        <IconImportSpace
+          className="dropdown-menu__icon"
+          aria-hidden="true"
+          focusable="false"
+        />
+      ),
+    },
+    { separator: true },
+    {
       onClick: onImportExistingBookmarks,
       title: "Import existing Chrome bookmarks into Tablo",
       text: "Import from browser bookmarks",
+      icon: (
+        <ImportBrowserIcon
+          className="dropdown-menu__icon"
+          aria-hidden="true"
+          focusable="false"
+        />
+      ),
     },
     {
       onClick: (e) => onImportClick(e),
       title: "Open exported Tablo JSON file",
       text: "Import from JSON",
       isFile: true,
+      icon: (
+        <ImportJsonIcon
+          className="dropdown-menu__icon"
+          aria-hidden="true"
+          focusable="false"
+        />
+      ),
     },
     {
       onClick: () => {
@@ -288,12 +395,26 @@ export const SettingsOptions = () => {
       },
       title: "Export all Folders and Bookmarks to JSON file",
       text: "Export to JSON",
+      icon: (
+        <ExportJsonIcon
+          className="dropdown-menu__icon"
+          aria-hidden="true"
+          focusable="false"
+        />
+      ),
     },
   ];
 
   return (
     <>
       <Options optionsConfig={settingsOptions} />
+      <div className="dropdown-menu__separator" />
+      <DropdownSubMenu
+        menuId={1}
+        title="Help"
+        icon="help"
+        submenuContent={<HelpOptions />}
+      />
 
       {importConfirmationOpen && (
         <ImportConfirmationModal onClose={onImportTypeConfirmed} />
@@ -344,10 +465,26 @@ export const Options = (props: {
               className="dropdown-menu__segmented-row"
               title={option.title}
             >
-              <span className="dropdown-menu__segmented-label">
-                {option.text}
-              </span>
-              <div className="dropdown-menu__segmented-control">
+              {option.text ? (
+                <span className="dropdown-menu__segmented-label">
+                  {option.text}
+                </span>
+              ) : null}
+              <div
+                className="dropdown-menu__segmented-control"
+                style={
+                  {
+                    "--segmented-index": Math.max(
+                      option.items.findIndex((item) => item.value === option.value),
+                      0,
+                    ),
+                  } as React.CSSProperties
+                }
+              >
+                <span
+                  className="dropdown-menu__segmented-indicator"
+                  aria-hidden="true"
+                />
                 {option.items.map((item) => (
                   <button
                     key={item.value}
@@ -357,6 +494,7 @@ export const Options = (props: {
                     })}
                     title={item.title}
                     aria-label={item.text}
+                    aria-pressed={item.value === option.value}
                     style={item.buttonStyle?.(item.value === option.value)}
                     onClick={() => option.onSelect(item.value)}
                   >
@@ -368,39 +506,41 @@ export const Options = (props: {
           );
         } else if (isToggle(option)) {
           return (
-            <label
+            <button
+              type="button"
               key={index}
-              className="dropdown-menu__button focusable"
+              className={cn(
+                "dropdown-menu__button dropdown-menu__button--with-icon focusable",
+                { "dropdown-menu__toggle-button--active": option.value },
+              )}
               title={option.title}
+              aria-pressed={option.value}
+              onClick={option.onToggle}
             >
-              <Switch
-                className={"switch"}
-                height={16}
-                width={28}
-                onColor={"#0066FF"}
-                offColor={"#cbcbcb"}
-                checkedIcon={false}
-                uncheckedIcon={false}
-                checked={option.value}
-                onChange={option.onToggle}
-              />
+              <span className="dropdown-menu__toggle-icon" aria-hidden="true">
+                <ToggleLeftIcon focusable="false" />
+                <ToggleRightIcon focusable="false" />
+              </span>
               <span>{option.text}</span>
-            </label>
+            </button>
           );
         } else if (isClick(option)) {
           if (option.isFile) {
             return (
               <label
                 key={index}
-                className="dropdown-menu__button focusable"
+                className={cn("dropdown-menu__button focusable", {
+                  "dropdown-menu__button--with-icon": option.icon,
+                })}
                 style={{ position: "relative" }}
                 title={option.title}
                 tabIndex={0}
               >
+                {option.icon}
                 <span>{option.text}</span>
                 <input
                   type="file"
-                  accept=".json"
+                  accept={option.accept ?? ".json"}
                   className="hidden-file-input"
                   onChange={option.onClick}
                   tabIndex={-1}
@@ -413,10 +553,12 @@ export const Options = (props: {
                 key={index}
                 className={cn("dropdown-menu__button focusable", {
                   "dropdown-menu__button--dander": option.dangerStyle,
+                  "dropdown-menu__button--with-icon": option.icon,
                 })}
                 onClick={option.onClick}
                 title={option.title}
               >
+                {option.icon}
                 {option.text}
               </button>
             );

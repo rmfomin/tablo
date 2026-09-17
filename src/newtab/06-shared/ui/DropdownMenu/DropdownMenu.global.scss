@@ -77,10 +77,6 @@
   background-color: #454545;
 }
 
-.switch {
-  margin-right: 6px;
-}
-
 .dropdown-menu__segmented-row {
   display: flex;
   align-items: center;
@@ -97,29 +93,47 @@
 }
 
 .dropdown-menu__segmented-control {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  padding: 2px;
-  border-radius: 16px;
+  overflow: hidden;
+  border-radius: 999px;
   background-color: var(--colors-gray-200);
 }
 
+.dropdown-menu__segmented-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 24px;
+  border-radius: 999px;
+  background-color: var(--active-control-color);
+  pointer-events: none;
+  transform: translateX(calc(var(--segmented-index, 0) * 36px));
+  transition: transform 180ms ease;
+}
+
 .dropdown-menu__segmented-button {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   appearance: none;
   border: none;
-  border-radius: 6px;
+  border-radius: 999px;
   background-color: transparent;
   color: var(--menu-text-color);
   cursor: pointer;
   font-size: 13px;
   line-height: 17px;
   height: 24px;
-  min-width: 42px;
-  padding: 0 8px;
+  min-width: 36px;
 
   &.active {
-    background-color: var(--active-control-color);
-    color: var(--active-control-text);
+    background-color: transparent;
+    color: var(--menu-icon-color);
   }
 
   &:hover:not(.active) {
@@ -238,6 +252,51 @@ label.input-label + label.input-label {
   &.sub-menu__button {
     &.active {
       background-color: var(--colors-blue-200);
+    }
+  }
+}
+
+.dropdown-menu__button--with-icon {
+  position: relative;
+  padding-left: 36px;
+}
+
+.dropdown-menu__toggle-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  width: 16px;
+  height: 16px;
+  color: var(--menu-icon-color);
+  transform: translateY(-50%);
+
+  svg {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 16px;
+    height: 16px;
+    will-change: opacity;
+    transition: opacity 200ms ease-in-out;
+  }
+
+  svg:first-child {
+    opacity: 1;
+  }
+
+  svg:last-child {
+    opacity: 0;
+  }
+}
+
+.dropdown-menu__toggle-button--active {
+  .dropdown-menu__toggle-icon {
+    svg:first-child {
+      opacity: 0;
+    }
+
+    svg:last-child {
+      opacity: 1;
     }
   }
 }

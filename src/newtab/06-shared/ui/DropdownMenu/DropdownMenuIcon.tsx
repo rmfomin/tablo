@@ -14,6 +14,7 @@ import GroupBookmarkOpenAllIcon from "./img/group-bookmark-open-all.svg";
 import FolderOpenAllIcon from "./img/folder-open-all.svg";
 import CollapseAllIcon from "./img/collapse-all.svg";
 import ExpandAllIcon from "./img/expand-all.svg";
+import HelpIcon from "./img/help.svg";
 
 const icons = {
   copy: CopyIcon,
@@ -31,6 +32,7 @@ const icons = {
   folderOpenAll: FolderOpenAllIcon,
   collapseAll: CollapseAllIcon,
   expandAll: ExpandAllIcon,
+  help: HelpIcon,
 };
 
 export type DropdownMenuIconName = keyof typeof icons;

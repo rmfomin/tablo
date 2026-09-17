@@ -22,22 +22,12 @@
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   flex-wrap: wrap;
   gap: 8px;
   width: 100%;
 }
 
-.themeSwitcher {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  padding: 4px;
-  border-radius: 999px;
-  background-color: var(--input-background-color);
-}
-
-.themeButton,
 .controlButton {
   appearance: none;
   display: flex;
@@ -47,28 +37,6 @@
   border: none;
   color: var(--icon-color);
   cursor: pointer;
-}
-
-.themeButton {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background-color: transparent;
-
-  svg {
-    width: 16px;
-    height: 16px;
-    color: currentColor;
-  }
-
-  &:hover:not(.activeTheme) {
-    background-color: var(--button-hover-background-color);
-  }
-}
-
-.activeTheme {
-  color: var(--active-control-text);
-  background-color: var(--active-control-color);
 }
 
 .menuButtonWrap {

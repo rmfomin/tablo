@@ -8,11 +8,8 @@ import { DropdownMenu, getPointerPosition } from "@/newtab/06-shared/ui/Dropdown
 import { DropdownMenuIcon } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenuIcon";
 import type { Point } from "@/newtab/06-shared/lib/math";
 import { collectBookmarksV3 } from "@/newtab/05-entities/dashboard/model/traversal";
-import { importSpaceFromJsonWithCallback } from "@/newtab/04-features/bookmarks-import/model/dashboardImportExport";
 import { onExportSpaceJson } from "@/newtab/04-features/bookmarks-export/model/dashboardExport";
 import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
-import IconNewSpace from "./icons/new-space.svg";
-import IconImportSpace from "./icons/import-space.svg";
 import IconExportSpace from "./icons/space-export.svg";
 import styles from "./SpacesList.module.scss";
 
@@ -25,13 +22,10 @@ export function SpacesList() {
   const spaces = useDashboardStore((state) => state.spaces);
   const currentSpaceId = useDashboardStore((state) => state.currentSpaceId);
   const setCurrentSpace = useDashboardStore((state) => state.selectSpace);
-  const createSpace = useDashboardStore((state) => state.createSpace);
   const updateSpace = useDashboardStore((state) => state.updateSpace);
   const deleteDashboardSpace = useDashboardStore((state) => state.deleteSpace);
   const itemInEdit = useUiStore((state) => state.itemInEdit);
   const setItemInEdit = useUiStore((state) => state.setItemInEdit);
-  const showNotification = useUiStore((state) => state.showNotification);
-  const importSpaceInputRef = useRef<HTMLInputElement>(null);
   const spacesListRef = useRef<HTMLDivElement>(null);
   const scrollbarRef = useRef<HTMLDivElement>(null);
   const activeTimeoutRef = useRef<number>();
@@ -234,65 +228,8 @@ export function SpacesList() {
     }
   };
 
-  const onAddSpace = () => {
-    const spaceId = Date.now() + Math.round(Math.random() * 10_000_000);
-    createSpace({ id: spaceId, title: "New space" });
-    setCurrentSpace(spaceId);
-    setEditingSpaceId(spaceId);
-  };
-
-  const onImportSpaceClick = () => {
-    importSpaceInputRef.current?.click();
-  };
-
   return (
     <section className={styles.root} aria-label="Spaces">
-      <div className={styles.actions}>
-        <input
-          ref={importSpaceInputRef}
-          type="file"
-          accept=".json,application/json"
-          className={styles.importInput}
-          onChange={(event) =>
-            importSpaceFromJsonWithCallback(
-              event,
-              spaces,
-              (space) => {
-                createSpace({
-                  id: space.id,
-                  title: space.title,
-                  position: space.position,
-                });
-                // createSpace создаёт пустой space; импортированное дерево нужно
-                // положить целиком через hydrate-подобное обновление ниже
-                updateSpace(space.id, { folders: space.folders });
-                setCurrentSpace(space.id);
-                showNotification({ message: "Space has been imported" });
-              },
-              (message) => showNotification({ message, isError: true })
-            )
-          }
-        />
-        <button
-          type="button"
-          className={styles.actionButton}
-          onClick={onAddSpace}
-          title="Create new space"
-        >
-          <IconNewSpace />
-          <span>New space</span>
-        </button>
-        <button
-          type="button"
-          className={styles.actionButton}
-          onClick={onImportSpaceClick}
-          title="Import space"
-        >
-          <IconImportSpace />
-          <span>Import</span>
-        </button>
-      </div>
-
       <div className={styles.spacesScroller}>
         <div
           ref={spacesListRef}
