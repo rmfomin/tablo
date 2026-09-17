@@ -27,7 +27,10 @@ export const FolderItemMenu = React.memo(
     const updateFolderItem = useDashboardStore((state) => state.updateFolderItem);
     const moveFolderItems = useDashboardStore((state) => state.moveFolderItems);
     const createFolder = useDashboardStore((state) => state.createFolder);
+    const createSpace = useDashboardStore((state) => state.createSpace);
+    const setCurrentSpace = useDashboardStore((state) => state.selectSpace);
     const showNotification = useUiStore((state) => state.showNotification);
+    const setItemInEdit = useUiStore((state) => state.setItemInEdit);
     const [selectedItems, setSelectedItems] = useState<BookmarkItemV3[]>([]);
     const [localURL, setLocalURL] = useState<string>(p.item.url);
 
@@ -110,6 +113,14 @@ export const FolderItemMenu = React.memo(
       p.onClose();
     };
 
+    const onCreateSpace = () => {
+      const spaceId = Date.now() + Math.round(Math.random() * 10_000_000);
+      createSpace({ id: spaceId, title: "New space" });
+      setCurrentSpace(spaceId);
+      setItemInEdit(spaceId);
+      p.onClose();
+    };
+
     return (
       <>
         {selectedItems.length > 1 ? (
@@ -148,6 +159,7 @@ export const FolderItemMenu = React.memo(
                     item.type === "group" && item.groupItems.some((child) => child.id === p.item.id)
                   ))
                 ))?.id,
+                onCreateSpace,
               )}
             />
             <div className="dropdown-menu__separator" />
@@ -277,6 +289,7 @@ export const FolderItemMenu = React.memo(
                         item.type === "group" && item.groupItems.some((child) => child.id === p.item.id)
                       ))
                     ))?.id,
+                    onCreateSpace,
                   )}
                 />
                 <div className="dropdown-menu__separator" />

@@ -9,6 +9,7 @@ import GroupRenameIcon from "./img/group-rename.svg";
 import FolderRenameIcon from "./img/folder-rename.svg";
 import DeleteIcon from "./img/delete.svg";
 import BookmarkNewIcon from "./img/bookmark-new.svg";
+import FolderNewIcon from "./img/folder-new.svg";
 import GroupNewIcon from "./img/group-new.svg";
 import GroupBookmarkOpenAllIcon from "./img/group-bookmark-open-all.svg";
 import FolderOpenAllIcon from "./img/folder-open-all.svg";
@@ -27,6 +28,7 @@ const icons = {
   folderRename: FolderRenameIcon,
   remove: DeleteIcon,
   newBookmark: BookmarkNewIcon,
+  newFolder: FolderNewIcon,
   newGroup: GroupNewIcon,
   openAll: GroupBookmarkOpenAllIcon,
   folderOpenAll: FolderOpenAllIcon,

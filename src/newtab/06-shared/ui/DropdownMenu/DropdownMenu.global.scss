@@ -58,7 +58,7 @@
   max-width: 180px;
 
   max-height: min(100vh - 20px, 600px);
-  overflow-y: scroll;
+  overflow-y: auto;
 
   border: 1px solid var(--input-border-color);
 }
@@ -168,6 +168,7 @@ label.input-label {
     font-size: 10px;
     line-height: 12px;
     pointer-events: none;
+    padding-top: 5px;
   }
 
   input,
@@ -194,7 +195,7 @@ label.input-label {
   textarea {
     field-sizing: content;
     min-height: 34px;
-    padding-top: 18px;
+    padding-top: 25px;
     padding-bottom: 5px;
     resize: none;
     overflow-wrap: anywhere;
@@ -307,6 +308,11 @@ label.input-label + label.input-label {
   padding-left: 36px;
 }
 
+.sub-menu .sub-menu__button,
+.sub-menu .sub-menu__button--no-icon {
+  padding-left: 8px;
+}
+
 .dropdown-menu__icon {
   position: absolute;
   left: 10px;
@@ -320,7 +326,11 @@ label.input-label + label.input-label {
 
 .dropdown-menu--context .dropdown-menu__button--dander,
 .sub-menu .dropdown-menu__button--dander {
-  color: var(--menu-text-color);
+  color: #d1242f;
+}
+
+.dropdown-menu__button--dander .dropdown-menu__icon {
+  color: inherit;
 }
 
 .sub-menu__title {
@@ -373,12 +383,25 @@ label.input-label + label.input-label {
   color: #d1242f;
 }
 
-.dropdown-menu__button--dander:hover {
-  background-color: #f2d5d7;
+.dropdown-menu--context .dropdown-menu__button--dander:hover,
+.dropdown-menu--context .dropdown-menu__button--dander:active,
+.sub-menu .dropdown-menu__button--dander:hover,
+.sub-menu .dropdown-menu__button--dander:active {
+  color: #d1242f;
+  background-color: #fbe8e8;
 }
 
-.dropdown-menu__button--dander:active {
-  background-color: #f1c6c8;
+.dark-theme .dropdown-menu--context .dropdown-menu__button--dander,
+.dark-theme .sub-menu .dropdown-menu__button--dander {
+  color: #ff7b72;
+}
+
+.dark-theme .dropdown-menu--context .dropdown-menu__button--dander:hover,
+.dark-theme .dropdown-menu--context .dropdown-menu__button--dander:active,
+.dark-theme .sub-menu .dropdown-menu__button--dander:hover,
+.dark-theme .sub-menu .dropdown-menu__button--dander:active {
+  color: #fff;
+  background-color: #ff2432;
 }
 
 .dropdown-menu__button:disabled {

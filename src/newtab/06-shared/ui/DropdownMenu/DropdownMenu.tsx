@@ -108,7 +108,7 @@ export const DropdownSubMenu = ({
         onClick={onClick}
       >
         {icon ? <DropdownMenuIcon name={icon} /> : null}
-        {title}
+        {title} ...
       </button>
       {menuId === currentMenuId
         ? ReactDOM.createPortal(
