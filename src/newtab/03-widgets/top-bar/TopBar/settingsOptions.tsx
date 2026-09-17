@@ -26,6 +26,9 @@ import { DropdownSubMenu } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu
 import { importSpaceFromJsonWithCallback } from "@/newtab/04-features/bookmarks-import/model/dashboardImportExport";
 import IconNewSpace from "@/newtab/03-widgets/spaces-list/SpacesList/icons/new-space.svg";
 import IconImportSpace from "@/newtab/03-widgets/spaces-list/SpacesList/icons/import-space.svg";
+import IconKeyboard from "./icons/keyboard.svg";
+import IconReload from "./icons/reload.svg";
+import IconGithub from "./icons/github.svg";
 import ToggleRightIcon from "@/newtab/06-shared/ui/DropdownMenu/img/toggle-right.svg";
 import ToggleLeftIcon from "@/newtab/06-shared/ui/DropdownMenu/img/toggle-left.svg";
 import ImportJsonIcon from "@/newtab/06-shared/ui/DropdownMenu/img/import-json.svg";
@@ -83,7 +86,7 @@ export const HelpOptions = () => {
 
   function onGithubOpen() {
     createTab({
-      url: "https://github.com/",
+      url: "https://github.com/rmfomin/tablo",
       active: true,
     });
   }
@@ -123,40 +126,43 @@ export const HelpOptions = () => {
     });
   }
 
-  type OnClickOption = {
-    onClick: (e: any) => void;
-    title: string;
-    text: string;
-    hidden?: boolean;
-    isFile?: boolean;
-  };
-
-  type OnToggleOption = {
-    onToggle: () => void;
-    value: boolean;
-    title: string;
-    text: string;
-    hidden?: boolean;
-  };
-
-  const settingsOptions: Array<
-    OnClickOption | OnToggleOption | { separator: true }
-  > = [
+  const settingsOptions: OptionsConfig = [
     {
       onClick: showShortcutsModal,
       title: "Keyboard shortcuts",
       text: "Keyboard shortcuts",
+      icon: (
+        <IconKeyboard
+          className="dropdown-menu__icon"
+          aria-hidden="true"
+          focusable="false"
+        />
+      ),
     },
     {
       onClick: invalidateBrokenIcons,
       title:
         "Sometimes favicons are not showing, this option may help to fix it. Applied only for bookmarks in the current space.",
       text: "Reload favicons",
+      icon: (
+        <IconReload
+          className="dropdown-menu__icon"
+          aria-hidden="true"
+          focusable="false"
+        />
+      ),
     },
     {
       onClick: onGithubOpen,
-      title: "Open Github",
-      text: "Open Github (example)",
+      title: "Open GitHub",
+      text: "Open GitHub",
+      icon: (
+        <IconGithub
+          className="dropdown-menu__icon"
+          aria-hidden="true"
+          focusable="false"
+        />
+      ),
     },
   ];
 
