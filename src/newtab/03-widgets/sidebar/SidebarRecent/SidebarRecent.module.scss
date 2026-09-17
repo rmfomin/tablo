@@ -2,6 +2,10 @@
   flex: 1;
   min-height: 0;
   width: 100%;
+  padding: 12px;
+  border: 1px dashed var(--colors-gray-400);
+  border-radius: var(--container-border-radius) var(--container-border-radius) 0 0;
+  box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior-y: contain;
@@ -17,8 +21,19 @@
   }
 }
 
+.recentListCollapsed {
+  flex: 0 0 auto;
+  border-radius: var(--container-border-radius);
+  overflow-y: hidden;
+}
+
 .header {
-  padding: 8px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 36px;
+  box-sizing: border-box;
 }
 
 .collapsedHeader {
@@ -28,6 +43,7 @@
 .innerHeader {
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .headerText {
@@ -35,7 +51,37 @@
   color: var(--second-text-color);
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: normal;
+  text-align: center;
   white-space: nowrap;
+}
+
+.visibilityToggle {
+  appearance: none;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--input-background-color);
+  color: var(--menu-icon-color);
+  cursor: pointer;
+  transform: translateY(-50%);
+
+  svg {
+    width: 20px;
+    height: 20px;
+    color: currentColor;
+  }
+
+  &:hover {
+    background: var(--button-hover-background-color);
+    color: var(--main-text-color);
+  }
 }

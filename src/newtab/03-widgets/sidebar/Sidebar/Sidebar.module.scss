@@ -47,6 +47,9 @@
 
 .tabsSection {
   gap: 2px;
+  padding: 12px;
+  border: 1px dashed var(--colors-gray-400);
+  border-radius: var(--container-border-radius);
 }
 
 .collapsedHeader {
@@ -58,7 +61,8 @@
 }
 
 .header {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: 6px;
   height: 48px;
@@ -69,19 +73,16 @@
 }
 
 .headerText {
-  flex-grow: 1;
-  min-width: 0;
-  overflow: hidden;
   color: var(--second-text-color);
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-overflow: ellipsis;
-  text-transform: uppercase;
+  letter-spacing: normal;
+  text-align: center;
   white-space: nowrap;
 }
 
 .tabsCount {
+  justify-self: start;
   min-width: 20px;
   height: 18px;
   padding: 0 6px;
@@ -98,6 +99,7 @@
 .headerActions {
   display: flex;
   align-items: center;
+  justify-self: end;
 }
 
 .actionWrap {

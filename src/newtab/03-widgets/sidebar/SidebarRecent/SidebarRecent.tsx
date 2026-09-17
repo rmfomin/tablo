@@ -11,8 +11,11 @@ import {
   tryLoadMoreHistory,
 } from "@/newtab/06-shared/api/chrome/history";
 import { useChromeRuntimeStore } from "@/newtab/01-app/model/chrome-runtime/chromeRuntimeStore";
+import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { TabOrRecentItem } from "@/newtab/03-widgets/sidebar/SidebarItem/SidebarItem";
 import { SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
+import EyeIcon from "./icons/eye.svg";
+import EyeOffIcon from "./icons/eye-off.svg";
 import styles from "./SidebarRecent.module.scss";
 
 const PAGE_SIZE = 100;
@@ -93,6 +96,12 @@ export const SidebarRecent = React.memo(
     sidebarCollapsed: boolean;
   }) => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const showRecent = useUiStore((state) => state.showRecent);
+    const setShowRecent = useUiStore((state) => state.setShowRecent);
+    const showItems =
+      showRecent ||
+      p.search.length > 0 ||
+      p.searchFilters.some((filter) => filter.enabled);
     const itemsFilteredBySearch = filterRecentItemsBySearch(
       p.recentItems,
       p.search,
@@ -105,7 +114,12 @@ export const SidebarRecent = React.memo(
     );
 
     return (
-      <div ref={scrollContainerRef} className={styles.recentList}>
+      <div
+        ref={scrollContainerRef}
+        className={cn(styles.recentList, {
+          [styles.recentListCollapsed]: !showItems,
+        })}
+      >
         <div
           className={cn(styles.header, {
             [styles.collapsedHeader]: p.sidebarCollapsed,
@@ -114,17 +128,32 @@ export const SidebarRecent = React.memo(
           <div className={styles.innerHeader}>
             <span className={styles.headerText}>Recent</span>
           </div>
+          <button
+            type="button"
+            className={styles.visibilityToggle}
+            aria-label={showRecent ? "Hide recent items" : "Show recent items"}
+            aria-pressed={showRecent}
+            title={showRecent ? "Hide recent items" : "Show recent items"}
+            onMouseDown={(event) => event.stopPropagation()}
+            onClick={() => setShowRecent(!showRecent)}
+          >
+            {showRecent ? <EyeIcon /> : <EyeOffIcon />}
+          </button>
         </div>
 
-        <RecentList
-          items={itemsFilteredBySearchAndFilter}
-          search={p.search}
-          spaces={p.spaces}
-          scrollContainerRef={scrollContainerRef}
-        />
-        <div className="sidebar-message">
-          <span>History is limited by 2 month</span>
-        </div>
+        {showItems ? (
+          <>
+            <RecentList
+              items={itemsFilteredBySearchAndFilter}
+              search={p.search}
+              spaces={p.spaces}
+              scrollContainerRef={scrollContainerRef}
+            />
+            <div className="sidebar-message">
+              <span>History is limited by 2 month</span>
+            </div>
+          </>
+        ) : null}
       </div>
     );
   },

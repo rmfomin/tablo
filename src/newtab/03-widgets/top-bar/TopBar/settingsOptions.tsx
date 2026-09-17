@@ -197,8 +197,6 @@ export const SettingsOptions = ({
   const setShowNotUsed = useUiStore((state) => state.setShowNotUsed);
   const showArchived = useUiStore((state) => state.showArchived);
   const setShowArchived = useUiStore((state) => state.setShowArchived);
-  const showRecent = useUiStore((state) => state.showRecent);
-  const setShowRecent = useUiStore((state) => state.setShowRecent);
   const openBookmarksInNewTab = useUiStore(
     (state) => state.openBookmarksInNewTab
   );
@@ -241,10 +239,6 @@ export const SettingsOptions = ({
 
   function onImportExistingBookmarks() {
     setPage("import");
-  }
-
-  function onToggleRecentVisibility() {
-    setShowRecent(!showRecent);
   }
 
   function onToggleOpenInTheNewTab() {
@@ -325,13 +319,6 @@ export const SettingsOptions = ({
       title: "You can hide unused folders and bookmarks to keep space clean",
       text: "Show hidden items",
       hidden: !hiddenFeatureIsEnabled,
-    },
-    {
-      onToggle: onToggleRecentVisibility,
-      value: showRecent,
-      title:
-        "Show recently closed tabs in the sidebar. When off, they appear only during search.",
-      text: "Show Recent in Sidebar",
     },
     {
       onToggle: onToggleOpenInTheNewTab,

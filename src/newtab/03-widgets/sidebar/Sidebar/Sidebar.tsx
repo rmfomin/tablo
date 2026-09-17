@@ -62,7 +62,6 @@ export function Sidebar() {
   const currentWindowId = useChromeRuntimeStore(
     (state) => state.currentWindowId
   );
-  const showRecent = useUiStore((state) => state.showRecent);
   const sidebarCollapsed = sidebarCollapsedValue;
 
   const dragCleanupRef = useRef<() => void>();
@@ -246,10 +245,10 @@ export function Sidebar() {
             <SpacesList />
           </section>
 
-          <section className={styles.tabsSection}>
+          <section className={styles.tabsSection} aria-label="Open tabs">
             <div className={styles.header}>
-              <span className={styles.headerText}>Open tabs</span>
               <span className={styles.tabsCount}>{openTabsCount}</span>
+              <span className={styles.headerText}>Opened</span>
               <div className={styles.headerActions}>
                 <StashButton tabs={tabs} />
               </div>
@@ -268,18 +267,14 @@ export function Sidebar() {
               />
             </div>
           </section>
-          {(showRecent ||
-            search ||
-            searchFilters.some((filter) => filter.enabled)) && (
-            <SidebarRecent
-              search={search}
-              searchFilters={searchFilters}
-              searchFilterMode={searchFilterMode}
-              recentItems={recentItems}
-              spaces={spaces}
-              sidebarCollapsed={false}
-            />
-          )}
+          <SidebarRecent
+            search={search}
+            searchFilters={searchFilters}
+            searchFilterMode={searchFilterMode}
+            recentItems={recentItems}
+            spaces={spaces}
+            sidebarCollapsed={false}
+          />
         </>
       )}
     </div>
