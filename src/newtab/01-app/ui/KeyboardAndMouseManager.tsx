@@ -51,6 +51,12 @@ export const KeyboardAndMouseManager = React.memo((p: {
           return;
         }
 
+        if (getSelectedItemsIds().length > 0) {
+          unselectAllItems();
+          e.preventDefault();
+          return;
+        }
+
         if (p.searchOpen) {
           p.onCloseSearch();
         } else {

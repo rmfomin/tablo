@@ -34,6 +34,8 @@
 }
 
 .inner {
+  position: relative;
+  isolation: isolate;
   display: flex;
   align-items: center;
   gap: 9px;
@@ -42,11 +44,20 @@
   height: 52px;
   padding: 0 8px 0 0;
   cursor: pointer;
-  border-radius: 10px;
   box-sizing: border-box;
   transition: background-color 0.1s ease;
 
-  &:hover {
+  &::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 0 var(--folder-item-background-right, 0)
+      0 var(--folder-item-background-left, 0);
+    pointer-events: none;
+    transition: background-color 0.1s ease;
+  }
+
+  &:not([data-selection-active="true"]):hover::before {
     background-color: var(--colors-gray-200);
   }
 
@@ -61,7 +72,7 @@
     background-color: var(--colors-gray-400);
   }
 
-  &.opened {
+  &.opened::before {
     background-color: color-mix(
       in srgb,
       var(--colors-blue-200) 55%,
@@ -69,12 +80,15 @@
     );
   }
 
-  &[data-selected="true"] {
+  &[data-selected="true"]::before {
     background: color-mix(in srgb, var(--colors-blue-500) 12%, transparent 88%);
   }
 
-  &.dragPreviewSelected {
+  &.dragPreviewSelected::before {
     background-color: rgb(209 224 255);
+  }
+
+  &.dragPreviewSelected {
     opacity: 0.7;
   }
 

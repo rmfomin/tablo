@@ -11,6 +11,7 @@ import { getSpacesWithNestedFoldersList } from "@/newtab/04-features/move-to-fol
 import { scrollElementIntoView } from "@/newtab/06-shared/lib/dom/scroll";
 import type { Point } from "@/newtab/06-shared/lib/math";
 import { DropdownMenuIcon } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenuIcon";
+import { createTab } from "@/newtab/06-shared/api/chrome/tabs";
 
 export const FolderItemMenu = React.memo(
   (p: {
@@ -53,6 +54,15 @@ export const FolderItemMenu = React.memo(
       navigator.clipboard.writeText(p.item.url);
       p.onClose();
       showNotification({ message: "URL has been copied" });
+    }
+
+    function onOpenAll() {
+      selectedItems.forEach((item) => {
+        if (!item.isSection && item.url) {
+          createTab({ url: item.url, active: false });
+        }
+      });
+      p.onClose();
     }
 
     // support multiple
@@ -129,6 +139,14 @@ export const FolderItemMenu = React.memo(
             absPosition={p.position}
             className="dropdown-menu--context"
           >
+            <button
+              className="dropdown-menu__button focusable"
+              onClick={onOpenAll}
+            >
+              <DropdownMenuIcon name="openAll" />
+              Open all
+            </button>
+            <div className="dropdown-menu__separator" />
             {p.hiddenFeatureIsEnabled ? (
               selectedItems.some((item) => item.archived) ? (
                 <button

@@ -152,6 +152,8 @@
   flex-grow: 1;
   min-height: 0;
   padding: 0;
+  --folder-item-background-left: calc(var(--container-padding) * -1);
+  --folder-item-background-right: calc(var(--container-padding) * -1);
 }
 
 .dragHandle {

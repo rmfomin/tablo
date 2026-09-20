@@ -50,6 +50,13 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
     updateFolderItem(p.group.id, { collapsed: !p.group.collapsed });
   }
 
+  function onHeaderClick(e: React.MouseEvent) {
+    const target = e.target as HTMLElement;
+    if (target.closest("button, input, textarea, .dropdown-menu")) return;
+
+    onToggleCollapsed(e);
+  }
+
   function setEditing(value: boolean) {
     setItemInEdit(value ? p.group.id : undefined);
   }
@@ -103,6 +110,7 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
         data-folder-id={p.folderId}
         data-group-id={p.group.id}
         data-drop-insert="end"
+        onClick={onHeaderClick}
         onContextMenu={onHeaderContextMenu}
         onDragStart={(e) => {
           e.preventDefault();

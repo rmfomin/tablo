@@ -3,8 +3,7 @@
   min-width: 0;
   margin-top: 10px;
   padding-left: 12px;
-  border-left: 1px dashed var(--colors-gray-400);
-  border-radius: 0 12px 12px 0;
+  border-radius: 12px;
   background: transparent;
   box-sizing: border-box;
   transition: background-color 0.16s ease, outline-color 0.16s ease;
@@ -103,4 +102,7 @@
   position: relative;
   padding: 0;
   min-height: 18px;
+  --folder-item-background-left: calc(
+    (var(--container-padding) + 12px) * -1
+  );
 }

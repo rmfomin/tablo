@@ -268,6 +268,7 @@ export const Folder = React.memo(function Folder(p: {
         <EditableTitle
           className={styles.titleText}
           inEdit={p.folder.id === p.itemInEdit}
+          setEditing={setEditing}
           localTitle={localTitle}
           setLocalTitle={setLocalTitle}
           onSaveTitle={saveFolderTitle}

@@ -56,6 +56,8 @@ export function EditableTitle(p: {
     const isEscape = event.key === "Escape";
 
     if (isEscape) {
+      event.preventDefault();
+      event.stopPropagation();
       if (p.setEditing) {
         p.setEditing(false);
       }
@@ -153,6 +155,8 @@ export function SimpleEditableTitle(p: {
     const isEscape = event.key === "Escape";
 
     if (isEscape) {
+      event.preventDefault();
+      event.stopPropagation();
       if (p.onSave) {
         setLocalValue(p.value);
         p.onSave(p.value);

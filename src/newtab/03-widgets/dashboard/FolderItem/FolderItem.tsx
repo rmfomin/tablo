@@ -37,6 +37,9 @@ export const FolderItem = React.memo(
     const isSelected = useUiStore((state) =>
       state.selectedItemIds.includes(p.item.id),
     );
+    const hasSelectedItems = useUiStore(
+      (state) => state.selectedItemIds.length > 0,
+    );
     const [showMenu, setShowMenu] = useState<boolean>(false);
     const [menuPosition, setMenuPosition] = useState<Point>();
     const [localTitle, setLocalTitle] = useState<string>(p.item.title);
@@ -118,6 +121,7 @@ export const FolderItem = React.memo(
           data-role={DOM_ROLE.folderItem}
           data-id={p.item.id}
           data-selected={isSelected || undefined}
+          data-selection-active={hasSelectedItems || undefined}
           onClick={(e) => e.preventDefault()}
           title={p.item.url}
           href={p.item.url}
