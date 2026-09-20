@@ -5,6 +5,7 @@ import {
   createFolderDummy,
   createFolderDropIndicator,
   DropArea,
+  getFolderDropAreaInHorizontalGap,
   getFolderId,
   getOverlappedDropArea,
   getOverlappedSpaceDropArea,
@@ -76,7 +77,9 @@ export function processFolderDragAndDrop(
         dropArea = undefined;
       } else {
         prevSpaceDropArea = undefined;
-        dropArea = getOverlappedDropArea(dropFoldersAreas, e);
+        dropArea =
+          getOverlappedDropArea(dropFoldersAreas, e) ??
+          getFolderDropAreaInHorizontalGap(dropFoldersAreas, e);
         if (dropArea) {
           const insertBefore =
             e.clientX < dropArea.rect.left + dropArea.rect.width / 2;
@@ -88,7 +91,12 @@ export function processFolderDragAndDrop(
 
           if (dropArea.objectId !== draggingFolderId) {
             dropIndicator ??= createFolderDropIndicator();
-            placeFolderDropIndicator(dropIndicator, dropArea, insertBefore);
+            placeFolderDropIndicator(
+              dropIndicator,
+              dropFoldersAreas,
+              dropArea,
+              insertBefore
+            );
           } else {
             clearDropIndicator();
           }

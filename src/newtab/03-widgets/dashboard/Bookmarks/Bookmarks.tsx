@@ -8,7 +8,7 @@ import {
   focusWindow,
   type BrowserTab,
 } from "@/newtab/06-shared/api/chrome/tabs";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import cn from "clsx";
 import styles from "./Bookmarks.module.scss";
 import {
@@ -26,6 +26,21 @@ import { useBookmarksScreen } from "@/newtab/04-features/bookmarks/model/useBook
 
 let __prevCurrentSpaceId: number | undefined = undefined;
 let __prevSearch: string | undefined = undefined;
+
+function updateMasonryLayout(grid: HTMLDivElement) {
+  const gridStyles = getComputedStyle(grid);
+  const rowHeight = Number.parseFloat(gridStyles.gridAutoRows);
+  const itemGap = Number.parseFloat(gridStyles.columnGap);
+
+  if (!rowHeight) return;
+
+  Array.from(grid.children).forEach((child) => {
+    const item = child as HTMLElement;
+    const itemHeight = item.getBoundingClientRect().height;
+    const rowSpan = Math.ceil((itemHeight + itemGap) / rowHeight);
+    item.style.gridRowEnd = `span ${rowSpan}`;
+  });
+}
 
 export function Bookmarks() {
   const {
@@ -54,6 +69,7 @@ export function Bookmarks() {
   const dragCleanupRef = useRef<() => void>();
 
   const bookmarksRef = useRef<HTMLDivElement>(null);
+  const folderGridRef = useRef<HTMLDivElement>(null);
   const { onMouseDown: onAreaSelectionMouseDown, selectionRect } =
     useAreaSelection({
       containerRef: bookmarksRef,
@@ -82,6 +98,41 @@ export function Bookmarks() {
 
   useEffect(() => {
     return () => dragCleanupRef.current?.();
+  }, []);
+
+  useLayoutEffect(() => {
+    const grid = folderGridRef.current;
+    if (!grid) return;
+
+    let animationFrame: number | undefined;
+    const scheduleLayout = () => {
+      if (animationFrame !== undefined) {
+        cancelAnimationFrame(animationFrame);
+      }
+      animationFrame = requestAnimationFrame(() => {
+        updateMasonryLayout(grid);
+      });
+    };
+    const resizeObserver = new ResizeObserver(scheduleLayout);
+    const observeItems = () => {
+      resizeObserver.disconnect();
+      Array.from(grid.children).forEach((child) => {
+        resizeObserver.observe(child);
+      });
+      scheduleLayout();
+    };
+    const mutationObserver = new MutationObserver(observeItems);
+
+    observeItems();
+    mutationObserver.observe(grid, { childList: true });
+
+    return () => {
+      if (animationFrame !== undefined) {
+        cancelAnimationFrame(animationFrame);
+      }
+      mutationObserver.disconnect();
+      resizeObserver.disconnect();
+    };
   }, []);
 
   function startDragAndDrop(mouseDownEvent: React.MouseEvent) {
@@ -225,7 +276,7 @@ export function Bookmarks() {
           handleBookmarksKeyDown(event, { spaces }, openFolderItem)
         }
       >
-        <div className={styles.folderGrid}>
+        <div className={styles.folderGrid} ref={folderGridRef}>
           {folders.map((folder) => (
             <Folder key={folder.id} folder={folder} {...folderProps} />
           ))}

@@ -177,6 +177,32 @@ export function getOverlappedDropArea(
   return overlappedAreas.sort(compareDropAreasByPriority)[0];
 }
 
+export function getFolderDropAreaInHorizontalGap(
+  dropAreas: DropArea[],
+  e: MouseEvent
+): DropArea | undefined {
+  for (let index = 1; index < dropAreas.length; index += 1) {
+    const previousArea = dropAreas[index - 1];
+    const nextArea = dropAreas[index];
+    const overlapTop = Math.max(previousArea.rect.top, nextArea.rect.top);
+    const overlapBottom = Math.min(
+      previousArea.rect.bottom,
+      nextArea.rect.bottom
+    );
+
+    if (
+      previousArea.rect.right <= e.clientX &&
+      e.clientX <= nextArea.rect.left &&
+      overlapTop < e.clientY &&
+      e.clientY < overlapBottom
+    ) {
+      return nextArea;
+    }
+  }
+
+  return undefined;
+}
+
 function compareDropAreasByPriority(a: DropArea, b: DropArea): number {
   return a.rect.width * a.rect.height - b.rect.width * b.rect.height;
 }
@@ -454,12 +480,39 @@ export function createFolderDropIndicator(): HTMLElement {
 
 export function placeFolderDropIndicator(
   indicator: HTMLElement,
+  dropAreas: DropArea[],
   dropArea: DropArea,
   insertBefore: boolean
 ) {
   if (!indicator.isConnected) {
     document.body.append(indicator);
   }
+
+  const dropAreaIndex = dropAreas.indexOf(dropArea);
+  const insertionIndex = dropAreaIndex + Number(!insertBefore);
+  const previousArea = dropAreas[insertionIndex - 1];
+  const nextArea = dropAreas[insertionIndex];
+
+  if (previousArea && nextArea) {
+    const overlapTop = Math.max(previousArea.rect.top, nextArea.rect.top);
+    const overlapBottom = Math.min(
+      previousArea.rect.bottom,
+      nextArea.rect.bottom
+    );
+
+    if (
+      previousArea.rect.right <= nextArea.rect.left &&
+      overlapTop < overlapBottom
+    ) {
+      indicator.style.left = `${
+        (previousArea.rect.right + nextArea.rect.left) / 2
+      }px`;
+      indicator.style.top = `${overlapTop}px`;
+      indicator.style.height = `${overlapBottom - overlapTop}px`;
+      return;
+    }
+  }
+
   indicator.style.left = `${
     insertBefore ? dropArea.rect.left : dropArea.rect.right
   }px`;
