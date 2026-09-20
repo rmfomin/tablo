@@ -2,13 +2,13 @@
 
 .whats-new {
   display: flex;
-  color: #ff00dd;
+  color: var(--accent-color);
   align-items: center;
   margin-right: 16px;
   cursor: pointer;
 
   svg {
-    color: #ff00dd;
+    color: var(--accent-color);
     transition: transform 0.2s ease;
   }
 
@@ -44,7 +44,7 @@
 
   &.active {
     svg {
-      color: var(--active-control-color);
+      color: var(--accent-color);
       opacity: 1;
     }
   }
@@ -66,11 +66,11 @@
 
 .btn__setting {
   appearance: none;
-  background-color: var(--button-background-color);
-  border: 1px solid var(--button-border-color);
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
   box-sizing: border-box;
   height: 36px;
-  color: var(--button-text-color);
+  color: var(--main-text-color);
   display: inline-block;
 
   font-size: 16px;
@@ -88,45 +88,53 @@
   cursor: pointer;
 
   &:hover {
-    background-color: var(--button-hover-background-color);
+    background-color: var(--hover-color);
     text-decoration: none;
   }
 
   &:active {
-    background-color: var(--button-active-background-color);
+    background-color: var(--gray-400);
   }
 
   &.btn__setting--active {
-    background-color: #bebebe;
+    background-color: var(--gray-400);
   }
 
   &[disabled] {
-    color: var(--colors-gray-600);
-    background-color: var(--colors-gray-200);
+    color: var(--gray-600);
+    background-color: var(--gray-200);
     pointer-events: none;
   }
 }
 
 .btn__setting.primary {
-  color: #fff;
-  background-color: var(--colors-blue-600);
+  color: var(--on-accent-color);
+  background-color: var(--accent-color);
 
   &:hover {
-    background-color: var(--colors-blue-700);
+    background-color: color-mix(
+      in srgb,
+      var(--accent-color) 88%,
+      var(--overlay-color)
+    );
     text-decoration: none;
   }
 
   &:active {
-    background-color: var(--colors-blue-800);
+    background-color: color-mix(
+      in srgb,
+      var(--accent-color) 76%,
+      var(--overlay-color)
+    );
   }
 
   &:focus {
-    outline: 1px solid var(--colors-gray-900);
+    outline: 1px solid var(--gray-900);
   }
 
   &[disabled] {
-    color: var(--colors-gray-600);
-    background-color: var(--colors-gray-200);
+    color: var(--gray-600);
+    background-color: var(--gray-200);
     pointer-events: none;
   }
 }
@@ -137,8 +145,8 @@
 
   &:hover,
   &:active {
-    background-color: var(--button-background-color);
-    border: 1px solid var(--button-border-color);
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
   }
 }
 
@@ -171,10 +179,10 @@
 
   &.active {
     opacity: 1;
-    color: var(--active-control-color);
+    color: var(--accent-color);
 
     svg {
-      color: var(--active-control-color);
+      color: var(--accent-color);
     }
   }
 

@@ -26,12 +26,12 @@
   border: none;
   border-radius: 9px;
   background-color: transparent;
-  color: var(--second-text-color);
+  color: var(--secondary-text-color);
   cursor: pointer;
   font-family: inherit;
 
   &:hover {
-    background-color: var(--colors-gray-200);
+    background-color: var(--hover-color);
     color: var(--main-text-color);
   }
 }

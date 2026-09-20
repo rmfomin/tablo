@@ -14,8 +14,8 @@
   justify-content: center;
   align-items: center;
   padding: 0 20px;
-  background-color: var(--notification-background-color);
-  color: var(--notification-text-color);
+  background-color: var(--main-text-color);
+  color: var(--background-color);
   min-width: 80px;
   margin-top: 5px;
   border-radius: 8px;
@@ -24,7 +24,7 @@
   height: 48px;
 
   svg {
-    color: var(--notification-text-color);
+    color: currentColor;
     margin-right: 8px;
     animation: rotate 2s linear infinite;
   }
@@ -37,7 +37,8 @@
 }
 
 .error {
-  background-color: var(--colors-red-600);
+  background-color: var(--danger-color);
+  color: var(--on-accent-color);
 }
 
 .button {

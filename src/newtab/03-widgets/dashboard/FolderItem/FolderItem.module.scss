@@ -9,9 +9,9 @@
     min-height: 18px;
     box-sizing: border-box;
     resize: none;
-    border: 1px solid var(--colors-blue-300);
+    border: 1px solid var(--accent-color);
     border-radius: 4px;
-    background-color: var(--input-background-color);
+    background-color: var(--surface-color);
     color: var(--main-text-color);
     font-size: 13px;
     line-height: 16px;
@@ -19,7 +19,7 @@
   }
 
   &.section textarea {
-    color: var(--second-text-color);
+    color: var(--secondary-text-color);
     font-size: 11px;
     font-weight: 500;
   }
@@ -58,26 +58,34 @@
   }
 
   &:not([data-selection-active="true"]):hover::before {
-    background-color: var(--colors-gray-200);
+    background-color: var(--hover-color);
   }
 
   img[src=""] {
     outline-offset: -1px;
     visibility: visible;
     border-radius: 3px;
-    background-color: var(--colors-gray-400);
+    background-color: var(--gray-400);
   }
 
   &.opened::before {
-    background-color: var(--colors-blue-200);
+    background-color: color-mix(
+      in srgb,
+      var(--accent-color) 14%,
+      transparent
+    );
   }
 
   &[data-selected="true"]::before {
-    background: color-mix(in srgb, var(--colors-blue-500) 12%, transparent 88%);
+    background: color-mix(in srgb, var(--accent-color) 12%, transparent 88%);
   }
 
   &.dragPreviewSelected::before {
-    background-color: rgb(209 224 255);
+    background-color: color-mix(
+      in srgb,
+      var(--accent-color) 16%,
+      transparent
+    );
   }
 
   &.dragPreviewSelected {
@@ -103,7 +111,7 @@
     }
 
     .title {
-      color: var(--second-text-color);
+      color: var(--secondary-text-color);
       font-size: 11px;
       font-weight: 500;
       letter-spacing: 0.05em;
@@ -134,7 +142,7 @@
 .domain {
   display: block;
   max-width: 100%;
-  color: var(--second-text-color);
+  color: var(--secondary-text-color);
   font-size: 11px;
   line-height: 15px;
   overflow: hidden;

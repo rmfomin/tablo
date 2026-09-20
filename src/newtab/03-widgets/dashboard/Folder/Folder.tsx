@@ -268,7 +268,9 @@ export const Folder = React.memo(function Folder(p: {
       data-role={DOM_ROLE.folder}
       data-folder-id={p.folder.id}
       style={{
-        outline: p.folder.archived ? "1px solid rgba(0, 0, 0, 0.3)" : "none",
+        outline: p.folder.archived
+          ? "1px solid color-mix(in srgb, var(--overlay-color) 30%, transparent)"
+          : "none",
       }}
     >
       <h2

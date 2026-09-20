@@ -45,7 +45,7 @@ export const TabOrRecentItem = (p: {
 
   function getBgColor(tabId?: number): string {
     if (tabId && p.lastActiveTabId === tabId) {
-      return "rgba(181, 192, 235, 0.6)";
+      return "color-mix(in srgb, var(--accent-color) 14%, transparent)";
     } else {
       return "";
     }

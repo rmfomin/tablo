@@ -9,13 +9,13 @@
   transition: background-color 0.16s ease, outline-color 0.16s ease;
 
   &[data-drop-target="true"] {
-    outline: 2px solid var(--colors-blue-500);
-    background: color-mix(in srgb, var(--colors-blue-500) 14%, transparent 86%);
+    outline: 2px solid var(--accent-color);
+    background: color-mix(in srgb, var(--accent-color) 14%, transparent 86%);
   }
 
   &[data-selected="true"] {
-    outline: 1px solid var(--colors-blue-500);
-    background: color-mix(in srgb, var(--colors-blue-500) 12%, transparent 88%);
+    outline: 1px solid var(--accent-color);
+    background: color-mix(in srgb, var(--accent-color) 12%, transparent 88%);
   }
 }
 
@@ -34,7 +34,7 @@
   border: none;
   background: transparent;
   cursor: pointer;
-  color: var(--second-text-color);
+  color: var(--secondary-text-color);
   width: 14px;
   height: 20px;
   padding: 0;
@@ -57,7 +57,7 @@
 }
 
 .title {
-  color: var(--second-text-color);
+  color: var(--secondary-text-color);
   font-family: var(--title-font-family);
   font-size: 13px;
   font-weight: 600;
@@ -89,8 +89,8 @@
   min-width: 20px;
   padding: 1px 6px;
   border-radius: 5px;
-  background-color: var(--colors-gray-200);
-  color: var(--second-text-color);
+  background-color: var(--gray-200);
+  color: var(--secondary-text-color);
   box-sizing: border-box;
   font-size: 11px;
   font-weight: 600;

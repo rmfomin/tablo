@@ -5,7 +5,7 @@
   min-width: 0;
   padding: var(--container-padding);
   border-radius: var(--container-border-radius);
-  background-color: var(--popup-background-color);
+  background-color: var(--surface-color);
   box-sizing: border-box;
   overflow: hidden;
   user-select: none;
@@ -43,9 +43,9 @@
     min-width: 0;
     height: 32px;
     padding: 0 8px;
-    border: 1px solid var(--colors-blue-300);
+    border: 1px solid var(--accent-color);
     border-radius: 8px;
-    background-color: var(--input-background-color);
+    background-color: var(--surface-color);
     color: var(--main-text-color);
     box-sizing: border-box;
     font-family: var(--title-font-family);
@@ -68,7 +68,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  color: var(--active-control-text);
+  color: var(--on-accent-color);
 
   svg {
     width: 20px;
@@ -81,8 +81,8 @@
   min-width: 20px;
   padding: 1px 6px;
   border-radius: 5px;
-  background-color: var(--colors-gray-200);
-  color: var(--second-text-color);
+  background-color: var(--gray-200);
+  color: var(--secondary-text-color);
   box-sizing: border-box;
   font-size: 11px;
   font-weight: 600;
@@ -94,8 +94,8 @@
   flex-shrink: 0;
   padding: 2px 7px;
   border-radius: 6px;
-  background-color: var(--colors-gray-200);
-  color: var(--second-text-color);
+  background-color: var(--gray-200);
+  color: var(--secondary-text-color);
   font-size: 11px;
   font-weight: 600;
   line-height: 16px;
@@ -124,7 +124,7 @@
   }
 
   &:hover {
-    background-color: var(--button-hover-background-color);
+    background-color: var(--hover-color);
     color: var(--main-text-color);
   }
 }
@@ -192,15 +192,19 @@
   padding: 0 11px;
   border: none;
   border-radius: 10px;
-  background-color: var(--colors-blue-200);
-  color: var(--active-control-color);
+  background-color: color-mix(
+    in srgb,
+    var(--accent-color) 14%,
+    transparent
+  );
+  color: var(--accent-color);
   cursor: pointer;
   font-family: inherit;
   font-size: 11px;
   font-weight: 600;
 
   &:hover {
-    background-color: var(--button-hover-background-color);
+    background-color: var(--hover-color);
   }
 }
 
@@ -225,14 +229,14 @@
   border: none;
   border-radius: 10px;
   background-color: transparent;
-  color: var(--second-text-color);
+  color: var(--secondary-text-color);
   cursor: pointer;
   font-family: inherit;
   font-size: 12px;
   font-weight: 500;
 
   &:hover {
-    background-color: var(--button-hover-background-color);
+    background-color: var(--hover-color);
     color: var(--main-text-color);
   }
 }

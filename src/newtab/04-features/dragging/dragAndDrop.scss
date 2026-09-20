@@ -40,7 +40,7 @@ body.spaces-drag-outside * {
   width: 3px;
   pointer-events: none;
   border-radius: 3px;
-  background: var(--colors-blue-500);
+  background: var(--accent-color);
   transform: translateX(-1px);
 }
 
@@ -50,5 +50,5 @@ body.spaces-drag-outside * {
   padding-left: 12px;
   font-weight: 100;
   font-style: italic;
-  color: var(--colors-gray-600);
+  color: var(--gray-600);
 }

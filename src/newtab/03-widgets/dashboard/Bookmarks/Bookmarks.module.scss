@@ -87,7 +87,7 @@
 
 .noBookmarksFound {
   padding: 28px 8px;
-  color: var(--second-text-color);
+  color: var(--secondary-text-color);
   font-size: 13px;
 }
 
@@ -96,6 +96,6 @@
   pointer-events: none;
   z-index: 2;
   box-sizing: border-box;
-  border: 1px solid var(--colors-blue-500);
-  background: color-mix(in srgb, var(--colors-blue-500) 15%, transparent 85%);
+  border: 1px solid var(--accent-color);
+  background: color-mix(in srgb, var(--accent-color) 15%, transparent 85%);
 }

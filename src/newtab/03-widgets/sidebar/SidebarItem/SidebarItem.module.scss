@@ -12,7 +12,7 @@
   transition: background-color 100ms;
 
   &:hover {
-    background-color: var(--colors-gray-200);
+    background-color: var(--hover-color);
   }
 
   &:not(.recentItem):hover .savedTabIcon {
@@ -25,7 +25,11 @@
 }
 
 .active {
-  background-color: var(--colors-blue-200);
+  background-color: color-mix(
+    in srgb,
+    var(--accent-color) 14%,
+    transparent
+  );
 }
 
 .recentItem {
@@ -69,16 +73,16 @@
   svg {
     width: 16px;
     height: 16px;
-    color: var(--menu-icon-color);
+    color: var(--icon-color);
   }
 
   &:hover {
-    background-color: var(--button-hover-background-color);
+    background-color: var(--hover-color);
   }
 }
 
 .savedTabIcon {
-  color: var(--active-control-color);
+  color: var(--accent-color);
   position: absolute;
   right: 9px;
   top: 50%;
@@ -106,7 +110,7 @@
 
 .url {
   display: none;
-  color: var(--colors-gray-600);
+  color: var(--gray-600);
   font-size: 10px;
   line-height: 14px;
 }
@@ -116,5 +120,5 @@
   max-width: 100%;
   display: none;
   white-space: normal;
-  color: var(--colors-blue-600);
+  color: var(--accent-color);
 }

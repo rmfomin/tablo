@@ -9,7 +9,7 @@
   margin: 0;
   padding: var(--sidebar-padding);
   border-radius: 0;
-  background-color: var(--popup-background-color);
+  background-color: var(--surface-color);
   box-sizing: border-box;
   overflow: visible;
   user-select: none;
@@ -62,7 +62,7 @@
   max-height: 50%;
   min-height: 0;
   padding: 12px 12px 0;
-  border: 1px dashed var(--colors-gray-400);
+  border: 1px dashed var(--border-color);
   border-radius: var(--container-border-radius);
   overflow: hidden;
 }
@@ -83,12 +83,12 @@
   height: 48px;
   min-height: 48px;
   padding: 0;
-  background-color: var(--popup-background-color);
+  background-color: var(--surface-color);
   box-sizing: border-box;
 }
 
 .headerText {
-  color: var(--second-text-color);
+  color: var(--secondary-text-color);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: normal;
@@ -102,8 +102,8 @@
   height: 18px;
   padding: 0 6px;
   border-radius: 6px;
-  background-color: var(--colors-gray-200);
-  color: var(--second-text-color);
+  background-color: var(--gray-200);
+  color: var(--secondary-text-color);
   box-sizing: border-box;
   font-size: 11px;
   font-weight: 600;
@@ -133,8 +133,8 @@
   padding: 0;
   border: none;
   border-radius: 50%;
-  background-color: var(--input-background-color);
-  color: var(--menu-icon-color);
+  background-color: var(--surface-color);
+  color: var(--icon-color);
   cursor: pointer;
 
   svg {
@@ -145,7 +145,7 @@
 
   &:hover:not(:disabled),
   &.activeControl {
-    background-color: var(--button-hover-background-color);
+    background-color: var(--hover-color);
     color: var(--main-text-color);
   }
 
@@ -170,7 +170,7 @@
   border: none;
   border-radius: 50%;
   background-color: transparent;
-  color: var(--menu-icon-color);
+  color: var(--icon-color);
   cursor: pointer;
 
   svg {
@@ -180,7 +180,7 @@
   }
 
   &:hover {
-    background-color: var(--button-hover-background-color);
+    background-color: var(--hover-color);
     color: var(--main-text-color);
   }
 }
@@ -202,7 +202,7 @@
 
 .stashTitle {
   padding: 4px 8px 8px;
-  color: var(--menu-text-color);
+  color: var(--main-text-color);
   font-size: 13px;
   font-weight: 600;
   line-height: 17px;

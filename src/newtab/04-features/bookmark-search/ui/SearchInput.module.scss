@@ -9,10 +9,10 @@
   align-items: center;
   width: 100%;
   border-radius: 999px;
-  background-color: var(--input-background-color);
+  background-color: var(--surface-color);
 
   &:focus-within {
-    outline: 2px solid var(--input-border-color-active);
+    outline: 2px solid var(--accent-color);
   }
 
   :global(input.search) {
@@ -48,7 +48,7 @@
   opacity: 0.6;
 
   &:hover {
-    background-color: var(--button-hover-background-color);
+    background-color: var(--hover-color);
     opacity: 1;
   }
 }
@@ -58,8 +58,8 @@
   right: 12px;
   padding: 2px 6px;
   border-radius: 5px;
-  background-color: var(--button-background-color);
-  color: var(--second-text-color);
+  background-color: var(--surface-color);
+  color: var(--secondary-text-color);
   font-size: 11px;
   font-weight: 500;
   line-height: 18px;

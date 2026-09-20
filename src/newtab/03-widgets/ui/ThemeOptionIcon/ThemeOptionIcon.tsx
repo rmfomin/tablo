@@ -27,8 +27,10 @@ export function getThemeOptionButtonStyle(
     minWidth: 28,
     padding: 0,
     borderRadius: "50%",
-    backgroundColor: isActive ? "#dbe7ff" : undefined,
-    color: isActive ? "#111827" : undefined,
+    backgroundColor: isActive
+      ? "color-mix(in srgb, var(--accent-color) 14%, transparent)"
+      : undefined,
+    color: isActive ? "var(--main-text-color)" : undefined,
   };
 }
 

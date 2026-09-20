@@ -35,8 +35,8 @@ button {
 input[type="text"],
 textarea {
   color: var(--main-text-color);
-  border: 1px solid var(--input-border-color);
-  background-color: var(--input-background-color);
+  border: 1px solid var(--border-color);
+  background-color: var(--surface-color);
 }
 
 svg {
@@ -50,7 +50,11 @@ svg {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: color-mix(
+    in srgb,
+    var(--main-text-color) 30%,
+    transparent
+  );
   border-radius: 6px;
   transition: background-color 0.3s ease;
 
@@ -59,7 +63,11 @@ svg {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: color-mix(
+    in srgb,
+    var(--main-text-color) 50%,
+    transparent
+  );
 }
 
 ::-webkit-scrollbar-track {
@@ -83,9 +91,9 @@ input.search {
 }
 
 .searched {
-  background-color: #f0f000;
-}
-
-.dark-theme .searched {
-  color: var(--background-color);
+  background-color: color-mix(
+    in srgb,
+    var(--accent-color) 18%,
+    transparent
+  );
 }
