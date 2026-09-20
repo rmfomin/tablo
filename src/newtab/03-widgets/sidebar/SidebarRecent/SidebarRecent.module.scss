@@ -9,16 +9,13 @@
   border-radius: var(--container-border-radius);
   box-sizing: border-box;
   overflow: hidden;
-
-  :global(.sidebar-message) {
-    padding: 20px 8px;
-    font-size: 12px;
-  }
 }
 
 .recentContent {
   flex: 1 1 auto;
   min-height: 0;
+  padding-bottom: 12px;
+  box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior-y: contain;

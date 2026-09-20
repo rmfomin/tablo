@@ -3,7 +3,7 @@ import { hlSearch } from "@/newtab/06-shared/lib/dom/html";
 
 export function EditableTitle(p: {
   className?: string;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLSpanElement>) => void;
   onDoubleClick?: () => void;
   inEdit: boolean;
   setEditing?: (value: boolean) => void; //todo seems like it can be simplified and setEditing() can be removed at all

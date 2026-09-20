@@ -3,7 +3,6 @@ import React, { memo, useState } from "react";
 import cn from "clsx";
 import {
   filterTabsBySearch,
-  hasSearch,
   SearchFilter,
   SearchFilterMode,
 } from "@/newtab/04-features/bookmark-search/model/filters";
@@ -35,7 +34,6 @@ export const SidebarOpenTabs = memo(
     }
 
     const tabsByWindows: Map<number, BrowserTab[]> = new Map();
-    let tabsCount = 0;
     filterTabsBySearch(
       p.tabs,
       p.search,
@@ -48,7 +46,6 @@ export const SidebarOpenTabs = memo(
         tabsByWindows.set(t.windowId, tabsInWindow);
       }
       tabsInWindow.push(t);
-      tabsCount++;
     });
 
     const sortedWindowsWithTabs = getSortedWindowsWithTabs(
@@ -86,12 +83,6 @@ export const SidebarOpenTabs = memo(
                 />
               );
             })}
-        {tabsCount === 0 && !hasSearch(p.search, p.searchFilters) ? (
-          <p className="sidebar-message">
-            No open tabs.
-            <br /> Pinned tabs are filtered out.
-          </p>
-        ) : null}
       </div>
     );
   },

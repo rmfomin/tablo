@@ -58,6 +58,8 @@ export const Folder = React.memo(function Folder(p: {
   const showNotification = useUiStore((state) => state.showNotification);
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [menuPosition, setMenuPosition] = useState<Point>();
+  const [showColorMenu, setShowColorMenu] = useState<boolean>(false);
+  const [colorMenuPosition, setColorMenuPosition] = useState<Point>();
   const [localColor, setLocalColor] = useState<string | undefined>(undefined);
   const [localTitle, setLocalTitle] = useState<string>(p.folder.title);
 
@@ -176,6 +178,7 @@ export const Folder = React.memo(function Folder(p: {
   function setEditing(val: boolean) {
     if (val) {
       setShowMenu(false);
+      setShowColorMenu(false);
     }
     setItemInEdit(val ? p.folder.id : undefined);
   }
@@ -230,10 +233,23 @@ export const Folder = React.memo(function Folder(p: {
   color2.value.h = color2.value.h + 0.05;
   const folderGradientColor = `linear-gradient(45deg, ${color.getRGBA()}, ${color2.getRGBA()})`;
 
-  const onHeaderContextMenu = (e: React.MouseEvent) => {
+  const onMainMenuClick = (e: React.MouseEvent) => {
+    setShowColorMenu(false);
     setMenuPosition(getPointerPosition(e));
-    setShowMenu(!showMenu);
+    setShowMenu((wasOpen) => !wasOpen);
+  };
+
+  const onHeaderContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
+    onMainMenuClick(e);
+  };
+
+  const onColorContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowMenu(false);
+    setColorMenuPosition(getPointerPosition(e));
+    setShowColorMenu((wasOpen) => !wasOpen);
   };
 
   const moveFolderToSpace = (spaceId: number) => {
@@ -262,6 +278,7 @@ export const Folder = React.memo(function Folder(p: {
         <span
           className={styles.folderIcon}
           style={{ background: folderGradientColor }}
+          onContextMenu={onColorContextMenu}
         >
           <FolderIcon />
         </span>
@@ -273,6 +290,7 @@ export const Folder = React.memo(function Folder(p: {
           setLocalTitle={setLocalTitle}
           onSaveTitle={saveFolderTitle}
           search={p.search}
+          onClick={onMainMenuClick}
           onDoubleClick={() => setEditing(true)}
         />
         {p.folder.archived ? (
@@ -299,10 +317,7 @@ export const Folder = React.memo(function Folder(p: {
               className={cn(styles.menuButton, {
                 [styles.menuButtonVisible]: showMenu,
               })}
-              onClick={(event) => {
-                setMenuPosition(getPointerPosition(event));
-                setShowMenu(!showMenu);
-              }}
+              onClick={onMainMenuClick}
               onMouseDown={(event) => event.stopPropagation()}
               title="Folder actions"
               aria-label="Folder actions"
@@ -318,50 +333,6 @@ export const Folder = React.memo(function Folder(p: {
             className="dropdown-menu--folder dropdown-menu--context"
             absPosition={menuPosition}
           >
-            <div className="dropdown-menu__colors-row">
-              <PresetColor
-                color={PRESET_COLORS[0]}
-                onClick={setColorConfirmed}
-                currentColor={folderColor}
-              />
-              <PresetColor
-                color={PRESET_COLORS[1]}
-                onClick={setColorConfirmed}
-                currentColor={folderColor}
-              />
-              <PresetColor
-                color={PRESET_COLORS[2]}
-                onClick={setColorConfirmed}
-                currentColor={folderColor}
-              />
-              <PresetColor
-                color={PRESET_COLORS[3]}
-                onClick={setColorConfirmed}
-                currentColor={folderColor}
-              />
-
-              <PresetColor
-                color={PRESET_COLORS[4]}
-                onClick={setColorConfirmed}
-                currentColor={folderColor}
-              />
-              <PresetColor
-                color={PRESET_COLORS[5]}
-                onClick={setColorConfirmed}
-                currentColor={folderColor}
-              />
-              <PresetColor
-                color={PRESET_COLORS[6]}
-                onClick={setColorConfirmed}
-                currentColor={folderColor}
-              />
-              <CustomColorInput
-                onChange={setColorLocally}
-                onBlur={setColorConfirmed}
-                currentColor={folderColor}
-              />
-            </div>
-            <div className="dropdown-menu__separator" />
             <button
               className="dropdown-menu__button focusable"
               onClick={onAddBookmark}
@@ -439,19 +410,65 @@ export const Folder = React.memo(function Folder(p: {
             </button>
           </DropdownMenu>
         ) : null}
+        {showColorMenu ? (
+          <DropdownMenu
+            onClose={() => {
+              setShowColorMenu(false);
+              setLocalColor(undefined);
+            }}
+            className="dropdown-menu--folder dropdown-menu--context"
+            absPosition={colorMenuPosition}
+          >
+            <div className="dropdown-menu__colors-row">
+              <PresetColor
+                color={PRESET_COLORS[0]}
+                onClick={setColorConfirmed}
+                currentColor={folderColor}
+              />
+              <PresetColor
+                color={PRESET_COLORS[1]}
+                onClick={setColorConfirmed}
+                currentColor={folderColor}
+              />
+              <PresetColor
+                color={PRESET_COLORS[2]}
+                onClick={setColorConfirmed}
+                currentColor={folderColor}
+              />
+              <PresetColor
+                color={PRESET_COLORS[3]}
+                onClick={setColorConfirmed}
+                currentColor={folderColor}
+              />
+              <PresetColor
+                color={PRESET_COLORS[4]}
+                onClick={setColorConfirmed}
+                currentColor={folderColor}
+              />
+              <PresetColor
+                color={PRESET_COLORS[5]}
+                onClick={setColorConfirmed}
+                currentColor={folderColor}
+              />
+              <PresetColor
+                color={PRESET_COLORS[6]}
+                onClick={setColorConfirmed}
+                currentColor={folderColor}
+              />
+              <CustomColorInput
+                onChange={setColorLocally}
+                onBlur={setColorConfirmed}
+                currentColor={folderColor}
+              />
+            </div>
+          </DropdownMenu>
+        ) : null}
       </h2>
 
       {folderItems.length === 0 &&
       !folderIsEmptyDuringSearch &&
       !p.folder.collapsed ? (
         <div className={styles.emptyTip}>
-          <span className={styles.emptyIcon}>
-            <FolderIcon />
-          </span>
-          <span className={styles.emptyTitle}>No bookmarks yet</span>
-          <span className={styles.emptyText}>
-            Drag a tab here or add it manually
-          </span>
           <button
             type="button"
             className={styles.emptyAction}

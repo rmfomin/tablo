@@ -16,6 +16,7 @@ import FolderOpenAllIcon from "./img/folder-open-all.svg";
 import CollapseAllIcon from "./img/collapse-all.svg";
 import ExpandAllIcon from "./img/expand-all.svg";
 import HelpIcon from "./img/help.svg";
+import CloseTabIcon from "./img/close-tab.svg";
 
 const icons = {
   copy: CopyIcon,
@@ -35,6 +36,7 @@ const icons = {
   collapseAll: CollapseAllIcon,
   expandAll: ExpandAllIcon,
   help: HelpIcon,
+  closeTab: CloseTabIcon,
 };
 
 export type DropdownMenuIconName = keyof typeof icons;

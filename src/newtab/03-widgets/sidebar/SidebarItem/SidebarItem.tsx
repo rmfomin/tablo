@@ -193,6 +193,7 @@ export const TabOrRecentItem = (p: {
                 className="dropdown-menu__button dropdown-menu__button--dander focusable"
                 onClick={onMenuCloseClicked}
               >
+                <DropdownMenuIcon name="closeTab" />
                 Close tab
               </button>
             </>

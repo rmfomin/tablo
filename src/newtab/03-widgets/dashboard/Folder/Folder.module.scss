@@ -177,51 +177,18 @@
 
 .emptyTip {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 7px;
   padding: 0;
-  color: var(--second-text-color);
-  text-align: center;
 }
 
 .emptyTip + .items:empty {
   display: none;
 }
 
-.emptyIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  margin-bottom: 2px;
-  border-radius: 10px;
-  background-color: var(--colors-gray-200);
-  color: var(--icon-color);
-
-  svg {
-    width: 16px;
-    height: 16px;
-  }
-}
-
-.emptyTitle {
-  color: var(--main-text-color);
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.emptyText {
-  font-size: 11px;
-  line-height: 1.45;
-}
-
 .emptyAction {
   appearance: none;
   height: 28px;
-  margin-top: 3px;
   padding: 0 11px;
   border: none;
   border-radius: 10px;

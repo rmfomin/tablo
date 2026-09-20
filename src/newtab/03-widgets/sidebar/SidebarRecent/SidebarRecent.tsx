@@ -148,9 +148,6 @@ export const SidebarRecent = React.memo(
               spaces={p.spaces}
               scrollContainerRef={scrollContainerRef}
             />
-            <div className="sidebar-message">
-              <span>History is limited by 2 month</span>
-            </div>
           </div>
         ) : null}
       </div>
