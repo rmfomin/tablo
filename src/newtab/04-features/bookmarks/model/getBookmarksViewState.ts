@@ -39,13 +39,12 @@ export function getBookmarksViewState(
           );
     }
   } else {
-    const searchValueLC = appState.search.toLowerCase();
     appState.spaces.forEach((space) => {
       space.folders.forEach((folder) => {
         if (
           isContainsSearch(
             folder,
-            searchValueLC,
+            appState.search,
             searchFilters,
             searchFilterMode,
           ) ||
@@ -53,7 +52,7 @@ export function getBookmarksViewState(
             if (
               isContainsSearch(
                 item,
-                searchValueLC,
+                appState.search,
                 searchFilters,
                 searchFilterMode,
               )
@@ -65,7 +64,7 @@ export function getBookmarksViewState(
               return item.groupItems.some((groupItem) =>
                 isContainsSearch(
                   groupItem,
-                  searchValueLC,
+                  appState.search,
                   searchFilters,
                   searchFilterMode,
                 ),

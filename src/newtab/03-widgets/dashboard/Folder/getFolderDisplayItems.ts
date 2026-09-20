@@ -53,12 +53,11 @@ export function getVisibleFolderDisplayItems(
     return displayItems;
   }
 
-  const searchLC = search.toLowerCase();
   const result: FolderDisplayItem[] = [];
 
   displayItems.forEach((item) => {
     if (item.type === "bookmark") {
-      if (isContainsSearch(item.item, searchLC, filters, filterMode)) {
+      if (isContainsSearch(item.item, search, filters, filterMode)) {
         result.push(item);
       }
       return;
@@ -66,12 +65,12 @@ export function getVisibleFolderDisplayItems(
 
     const groupMatched = isContainsSearch(
       item.group,
-      searchLC,
+      search,
       filters,
       filterMode,
     );
     const matchedItems = item.group.groupItems.filter((groupItem) =>
-      isContainsSearch(groupItem, searchLC, filters, filterMode),
+      isContainsSearch(groupItem, search, filters, filterMode),
     );
 
     if (!groupMatched && matchedItems.length === 0) {

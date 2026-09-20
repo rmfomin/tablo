@@ -1,3 +1,5 @@
+import { getKeyboardLayoutSearchVariants } from "@/newtab/06-shared/lib/search/keyboardLayout";
+
 export type SearchFilter = {
   id: string;
   title: string;
@@ -16,7 +18,6 @@ export function filterTabsBySearch<T extends SearchableTab>(
   filters: SearchFilter[] = [],
   filterMode: SearchFilterMode = "or",
 ): T[] {
-  const searchValueLC = searchValue.toLowerCase();
   return list.filter((item) => {
     if (!hasSearch(searchValue, filters)) {
       return canDisplayTabInSidebar(item);
@@ -24,7 +25,7 @@ export function filterTabsBySearch<T extends SearchableTab>(
 
     return (
       canDisplayTabInSidebar(item) &&
-      isContainsSearch(item, searchValueLC, filters, filterMode)
+      isContainsSearch(item, searchValue, filters, filterMode)
     );
   });
 }
@@ -48,9 +49,8 @@ export function filterItemsBySearch<T extends SearchableItem>(
     return list;
   }
 
-  const searchValueLC = searchValue.toLowerCase();
   return list.filter((item) =>
-    isContainsSearch(item, searchValueLC, filters, filterMode),
+    isContainsSearch(item, searchValue, filters, filterMode),
   );
 }
 
@@ -61,12 +61,18 @@ export function isContainsSearch<T extends SearchableItem>(
   filterMode: SearchFilterMode = "or",
 ): boolean {
   const enabledFilters = enabledSearchFilterRegexes(filters);
-  const textSearchActive = searchValue !== "";
+  const searchValues = getKeyboardLayoutSearchVariants(searchValue).filter(
+    Boolean,
+  );
+  const textSearchActive = searchValues.length > 0;
   const filterSearchActive = enabledFilters.length > 0;
+  const title = item.title?.toLocaleLowerCase();
+  const url = item.url?.toLocaleLowerCase();
   const textMatches = Boolean(
     textSearchActive &&
-      (item.title?.toLowerCase().includes(searchValue) ||
-        item.url?.toLowerCase().includes(searchValue)),
+      searchValues.some(
+        (value) => title?.includes(value) || url?.includes(value),
+      ),
   );
   const filterMatches = enabledFilters.some((regex) => {
     regex.lastIndex = 0;

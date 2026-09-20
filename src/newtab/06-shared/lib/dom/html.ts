@@ -1,8 +1,17 @@
 import type React from "react";
+import { getKeyboardLayoutSearchVariants } from "@/newtab/06-shared/lib/search/keyboardLayout";
 
 export function hlSearch(str: string, search: string): { __html: string } {
   if (search) {
-    const searchRE = new RegExp(escapeRegex(search), "i");
+    const searchValue = getKeyboardLayoutSearchVariants(search).find((value) =>
+      str.toLocaleLowerCase().includes(value),
+    );
+
+    if (!searchValue) {
+      return { __html: sanitizeHTML(str) };
+    }
+
+    const searchRE = new RegExp(escapeRegex(searchValue), "i");
     return {
       __html: sanitizeHTML(
         str.replace(searchRE, (match) => `<span class="searched">${match}</span>`),
