@@ -281,34 +281,36 @@ export const Folder = React.memo(function Folder(p: {
         {bookmarksCount > 0 ? (
           <span className={styles.bookmarksCount}>{bookmarksCount}</span>
         ) : null}
-        <button
-          className={cn(styles.collapseToggle, {
-            [styles.collapseToggleCollapsed]: p.folder.collapsed,
-          })}
-          onClick={onToggleCollapsed}
-          onMouseDown={(event) => event.stopPropagation()}
-          title={p.folder.collapsed ? "Expand folder" : "Collapse folder"}
-          aria-label={p.folder.collapsed ? "Expand folder" : "Collapse folder"}
-        >
-          <FolderChevronIcon />
-        </button>
-        {p.folder.id !== p.itemInEdit ? (
+        <div className={styles.controls}>
           <button
-            type="button"
-            className={cn(styles.menuButton, {
-              [styles.menuButtonVisible]: showMenu,
+            className={cn(styles.collapseToggle, {
+              [styles.collapseToggleCollapsed]: p.folder.collapsed,
             })}
-            onClick={(event) => {
-              setMenuPosition(getPointerPosition(event));
-              setShowMenu(!showMenu);
-            }}
+            onClick={onToggleCollapsed}
             onMouseDown={(event) => event.stopPropagation()}
-            title="Folder actions"
-            aria-label="Folder actions"
+            title={p.folder.collapsed ? "Expand folder" : "Collapse folder"}
+            aria-label={p.folder.collapsed ? "Expand folder" : "Collapse folder"}
           >
-            <MenuIcon />
+            <FolderChevronIcon />
           </button>
-        ) : null}
+          {p.folder.id !== p.itemInEdit ? (
+            <button
+              type="button"
+              className={cn(styles.menuButton, {
+                [styles.menuButtonVisible]: showMenu,
+              })}
+              onClick={(event) => {
+                setMenuPosition(getPointerPosition(event));
+                setShowMenu(!showMenu);
+              }}
+              onMouseDown={(event) => event.stopPropagation()}
+              title="Folder actions"
+              aria-label="Folder actions"
+            >
+              <MenuIcon />
+            </button>
+          ) : null}
+        </div>
 
         {showMenu ? (
           <DropdownMenu

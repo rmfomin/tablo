@@ -137,6 +137,13 @@
   transform: rotate(-90deg);
 }
 
+.controls {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 0;
+}
+
 .menuButton {
   opacity: 0.45;
   transition: opacity 0.12s ease, background-color 0.12s ease;

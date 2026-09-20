@@ -61,10 +61,6 @@
     background-color: var(--colors-gray-200);
   }
 
-  &.withCloseButton {
-    padding-right: 46px;
-  }
-
   img[src=""] {
     outline-offset: -1px;
     visibility: visible;
@@ -73,11 +69,7 @@
   }
 
   &.opened::before {
-    background-color: color-mix(
-      in srgb,
-      var(--colors-blue-200) 55%,
-      transparent 45%
-    );
+    background-color: var(--colors-blue-200);
   }
 
   &[data-selected="true"]::before {
@@ -152,53 +144,4 @@
 
 .notUsed {
   color: salmon;
-}
-
-.actions {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  transform: translateY(-50%);
-}
-
-.closeButton {
-  width: 28px;
-  min-width: 28px;
-  height: 28px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: 7px;
-  padding: 0;
-  appearance: none;
-  background-color: transparent;
-  color: var(--second-text-color);
-
-  &:hover {
-    background-color: var(--button-hover-background-color);
-    color: var(--main-text-color);
-  }
-
-  svg {
-    pointer-events: none;
-  }
-}
-
-.closeButton {
-  opacity: 0.6;
-
-  &:hover {
-    opacity: 1;
-  }
-}
-
-.closeButton svg {
-  width: 10px;
-  height: 10px;
-  flex-shrink: 0;
 }

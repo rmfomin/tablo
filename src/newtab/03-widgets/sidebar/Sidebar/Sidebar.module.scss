@@ -82,7 +82,7 @@
 }
 
 .tabsCount {
-  justify-self: start;
+  justify-self: end;
   min-width: 20px;
   height: 18px;
   padding: 0 6px;
@@ -99,7 +99,7 @@
 .headerActions {
   display: flex;
   align-items: center;
-  justify-self: end;
+  justify-self: start;
 }
 
 .actionWrap {

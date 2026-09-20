@@ -1,7 +1,6 @@
 import {
   extractHostname,
   findTabsByURL,
-  removeTabs,
   type BrowserTab,
 } from "@/newtab/06-shared/api/chrome/tabs";
 import React, { useEffect, useState } from "react";
@@ -11,7 +10,6 @@ import { EditableTitle } from "@/newtab/03-widgets/ui/EditableTitle/EditableTitl
 import { useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import cn from "clsx";
-import IconClose from "./icons/close.svg";
 import { FolderItemMenu } from "@/newtab/03-widgets/dashboard/FolderItemMenu/FolderItemMenu";
 import { getBrokenImgSVG, loadFaviconUrl } from "@/newtab/06-shared/api/chrome/favicons";
 import { RecentItem } from "@/newtab/06-shared/api/chrome/history";
@@ -72,14 +70,6 @@ export const FolderItem = React.memo(
       e.preventDefault();
     }
 
-    function onCloseTab(e: React.MouseEvent) {
-      e.preventDefault();
-      e.stopPropagation();
-      const tabs = findTabsByURL(p.item.url, p.tabs);
-      const tabIds = tabs.filter((t) => t.id).map((t) => t.id!);
-      removeTabs(tabIds);
-    }
-
     function handleImageError(e: React.SyntheticEvent) {
       const imgElement = e.target as HTMLImageElement;
       imgElement.src = getBrokenImgSVG();
@@ -112,7 +102,6 @@ export const FolderItem = React.memo(
           className={cn("draggable-item", styles.inner, {
             [styles.section]: p.item.isSection,
             [styles.opened]: folderItemOpened,
-            [styles.withCloseButton]: folderItemOpened,
           })}
           onDragStart={(e) => {
             e.preventDefault();
@@ -146,19 +135,6 @@ export const FolderItem = React.memo(
             ) : null}
           </span>
         </a>
-        {folderItemOpened ? (
-          <span className={styles.actions}>
-            <button
-              className={cn(styles.closeButton, "stop-dad-propagation")}
-              tabIndex={2}
-              title="Close tab"
-              onClick={onCloseTab}
-              onMouseDown={(e) => e.stopPropagation()}
-            >
-              <IconClose></IconClose>
-            </button>
-          </span>
-        ) : null}
       </div>
     );
   },

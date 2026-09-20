@@ -247,11 +247,11 @@ export function Sidebar() {
 
           <section className={styles.tabsSection} aria-label="Open tabs">
             <div className={styles.header}>
-              <span className={styles.tabsCount}>{openTabsCount}</span>
-              <span className={styles.headerText}>Opened</span>
               <div className={styles.headerActions}>
                 <StashButton tabs={tabs} />
               </div>
+              <span className={styles.headerText}>Opened</span>
+              <span className={styles.tabsCount}>{openTabsCount}</span>
             </div>
 
             <div className={styles.content}>
