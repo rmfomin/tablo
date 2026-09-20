@@ -107,33 +107,6 @@
   white-space: nowrap;
 }
 
-.newItemIcon {
-  position: absolute;
-  top: 5px;
-  right: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background-color: var(--icon-background-color);
-  color: var(--icon-color);
-
-  svg {
-    width: 15px;
-    height: 15px;
-    fill: currentColor;
-  }
-}
-
-.newItem {
-  &:hover .newItemIcon {
-    background-color: var(--accent-color);
-    color: var(--on-accent-color);
-  }
-}
-
 .deleteButton {
   appearance: none;
   position: absolute;

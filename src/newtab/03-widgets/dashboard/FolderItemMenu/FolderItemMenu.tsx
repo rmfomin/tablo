@@ -146,7 +146,6 @@ export const FolderItemMenu = React.memo(
               <DropdownMenuIcon name="openAll" />
               Open all
             </button>
-            <div className="dropdown-menu__separator" />
             {p.hiddenFeatureIsEnabled ? (
               selectedItems.some((item) => item.archived) ? (
                 <button
@@ -276,7 +275,6 @@ export const FolderItemMenu = React.memo(
                   <DropdownMenuIcon name="bookmarkCopy" />
                   Copy URL
                 </button>
-                <div className="dropdown-menu__separator" />
                 {p.hiddenFeatureIsEnabled ? (
                   p.item.archived ? (
                     <button

@@ -82,7 +82,7 @@
   top: 0;
   left: 0;
   width: 36px;
-  height: 24px;
+  height: 28px;
   border-radius: 999px;
   background-color: var(--accent-color);
   pointer-events: none;
@@ -104,12 +104,12 @@
   cursor: pointer;
   font-size: 13px;
   line-height: 17px;
-  height: 24px;
+  height: 28px;
   min-width: 36px;
 
   &.active {
     background-color: transparent;
-    color: var(--icon-color);
+    color: var(--on-accent-color);
   }
 
   &:hover:not(.active) {

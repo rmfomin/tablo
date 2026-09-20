@@ -174,7 +174,6 @@ export const TabOrRecentItem = (p: {
             <DropdownMenuIcon name="copy" />
             Copy url
           </button>
-          <div className="dropdown-menu__separator" />
           <DropdownSubMenu
             menuId={1}
             title={"Save to"}

@@ -22,7 +22,6 @@ export function SpacesList() {
   const spaces = useDashboardStore((state) => state.spaces);
   const currentSpaceId = useDashboardStore((state) => state.currentSpaceId);
   const setCurrentSpace = useDashboardStore((state) => state.selectSpace);
-  const createSpace = useDashboardStore((state) => state.createSpace);
   const updateSpace = useDashboardStore((state) => state.updateSpace);
   const deleteDashboardSpace = useDashboardStore((state) => state.deleteSpace);
   const itemInEdit = useUiStore((state) => state.itemInEdit);
@@ -234,13 +233,6 @@ export function SpacesList() {
     }
   };
 
-  const onCreateSpace = () => {
-    const spaceId = Date.now() + Math.round(Math.random() * 10_000_000);
-    createSpace({ id: spaceId, title: "New space" });
-    setCurrentSpace(spaceId);
-    setEditingSpaceId(spaceId);
-  };
-
   return (
     <section className={styles.root} aria-label="Spaces">
       <div className={styles.spacesScroller}>
@@ -314,7 +306,6 @@ export function SpacesList() {
                     <DropdownMenuIcon name="rename" />
                     Rename space
                   </button>
-                  <div className="dropdown-menu__separator" />
                   <button
                     className="dropdown-menu__button focusable"
                     onClick={() => onExportSpace(space)}
@@ -342,21 +333,6 @@ export function SpacesList() {
               ) : null}
             </div>
           ))}
-          <button
-            type="button"
-            className={cn(styles.item, styles.newItem)}
-            aria-label="Create new space"
-            title="Create new space"
-            onMouseDown={(event) => event.stopPropagation()}
-            onClick={onCreateSpace}
-          >
-            <span className={styles.newItemIcon} aria-hidden="true">
-              <svg viewBox="0 0 15 15" focusable="false">
-                <path d="M6.875 6.875V4.286h1.25v2.589h2.589v1.25H8.125v2.589h-1.25V8.125H4.286v-1.25Z" />
-              </svg>
-            </span>
-            <span className={styles.itemTitle}>New space</span>
-          </button>
         </div>
 
         {scrollbarState.isVisible ? (

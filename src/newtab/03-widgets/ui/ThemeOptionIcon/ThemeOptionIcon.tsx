@@ -9,6 +9,7 @@ const iconStyle: React.CSSProperties = {
   width: 18,
   height: 18,
   fill: "none",
+  color: "inherit",
   stroke: "currentColor",
   strokeLinecap: "round",
   strokeLinejoin: "round",

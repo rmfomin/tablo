@@ -1,5 +1,7 @@
 export const DEFAULT_FOLDER_COLOR = "#f0f0f0";
 export const EMPTY_FOLDER_COLOR = "transparent";
+export const FOLDER_ICON_DARK_COLOR = "#303030";
+export const FOLDER_ICON_LIGHT_COLOR = "#f1f1f1";
 
 export const colors = [
   "#82E9DE",

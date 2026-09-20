@@ -1,7 +1,12 @@
 import { createTab, updateTab, removeTabs, getCurrentTab, queryTabs, getCurrentWindow, focusWindow, type BrowserTab } from "@/newtab/06-shared/api/chrome/tabs";
 import React, { useEffect, useState } from "react";
 import { FolderV3, SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
-import { colors, DEFAULT_FOLDER_COLOR } from "@/newtab/06-shared/lib/color/palette";
+import {
+  colors,
+  DEFAULT_FOLDER_COLOR,
+  FOLDER_ICON_DARK_COLOR,
+  FOLDER_ICON_LIGHT_COLOR,
+} from "@/newtab/06-shared/lib/color/palette";
 import { scrollElementIntoView } from "@/newtab/06-shared/lib/dom/scroll";
 import {
   SearchFilter,
@@ -232,6 +237,10 @@ export const Folder = React.memo(function Folder(p: {
   color2.setSaturation(color2.value.s + 0.1);
   color2.value.h = color2.value.h + 0.05;
   const folderGradientColor = `linear-gradient(45deg, ${color.getRGBA()}, ${color2.getRGBA()})`;
+  const folderIconColor =
+    Color.calculateContrastColor(color.getNumber()) === 0x000000
+      ? FOLDER_ICON_DARK_COLOR
+      : FOLDER_ICON_LIGHT_COLOR;
 
   const onMainMenuClick = (e: React.MouseEvent) => {
     setShowColorMenu(false);
@@ -279,7 +288,7 @@ export const Folder = React.memo(function Folder(p: {
       >
         <span
           className={styles.folderIcon}
-          style={{ background: folderGradientColor }}
+          style={{ background: folderGradientColor, color: folderIconColor }}
           onContextMenu={onColorContextMenu}
         >
           <FolderIcon />

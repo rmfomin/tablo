@@ -25,8 +25,8 @@ import { useChromeRuntimeStore } from "@/newtab/01-app/model/chrome-runtime/chro
 import IconSave from "./icons/save.svg";
 import ToggleLeftIcon from "@/newtab/06-shared/ui/DropdownMenu/img/toggle-left.svg";
 import ToggleRightIcon from "@/newtab/06-shared/ui/DropdownMenu/img/toggle-right.svg";
-import IconPanelRightClose from "./icons/panel-right-close.svg";
-import IconPanelRightOpen from "./icons/panel-right-open.svg";
+import IconPanelRightClose from "./icons/corner-down-right.svg";
+import IconPanelRightOpen from "./icons/corner-down-left.svg";
 import { SpacesList } from "@/newtab/03-widgets/spaces-list/SpacesList/SpacesList";
 import { TopBar } from "@/newtab/03-widgets/top-bar/TopBar/TopBar";
 
@@ -235,6 +235,7 @@ export function Sidebar() {
       ) : (
         <>
           <div className={styles.toolbarRow}>
+            <TopBar />
             <button
               id="toggle-sidebar-btn"
               className={styles.collapseButton}
@@ -244,7 +245,6 @@ export function Sidebar() {
             >
               <IconPanelRightClose />
             </button>
-            <TopBar />
           </div>
           <section className={styles.spacesSection}>
             <SpacesList />

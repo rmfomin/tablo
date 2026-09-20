@@ -150,7 +150,6 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
               <DropdownMenuIcon name="groupRename" />
               Rename
             </button>
-            <div className="dropdown-menu__separator" />
             <button
               className="dropdown-menu__button focusable"
               onClick={onOpenAllTabs}
