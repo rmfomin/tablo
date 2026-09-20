@@ -218,7 +218,6 @@ export const Folder = React.memo(function Folder(p: {
     folderItems.length === 0;
 
   const folderClassName = cn(styles.root, {
-    [styles.twoColumn]: p.folder.twoColumn,
     [styles.empty]: folderIsEmptyDuringSearch,
   });
   const folderColor = localColor ?? p.folder.color;

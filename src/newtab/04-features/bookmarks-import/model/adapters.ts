@@ -82,8 +82,7 @@ function isFolderV3Input(value: unknown): value is FolderV3Input {
     Array.isArray(value.items) &&
     value.items.every(isItemV3Input) &&
     isOptionalString(value, "color") &&
-    isOptionalBoolean(value, "collapsed") &&
-    isOptionalBoolean(value, "twoColumn")
+    isOptionalBoolean(value, "collapsed")
   );
 }
 
@@ -168,7 +167,6 @@ function normalizeFolderV3(folder: FolderV3Input): FolderV3 {
   };
   if (typeof source.color === "string") normalized.color = source.color;
   if (typeof source.collapsed === "boolean") normalized.collapsed = source.collapsed;
-  if (typeof source.twoColumn === "boolean") normalized.twoColumn = source.twoColumn;
   if (typeof source.archived === "boolean") normalized.archived = source.archived;
   return normalized;
 }

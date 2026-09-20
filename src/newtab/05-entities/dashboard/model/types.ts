@@ -59,7 +59,6 @@ export interface FolderV3 {
   items: ItemV3[];
   color?: string;
   collapsed?: boolean;
-  twoColumn?: boolean;
   archived?: boolean;
 }
 

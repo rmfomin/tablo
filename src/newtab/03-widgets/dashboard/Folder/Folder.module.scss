@@ -154,17 +154,6 @@
   padding: 0;
 }
 
-.twoColumn {
-  grid-column: span 2;
-}
-
-.twoColumn .items {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-auto-flow: row;
-  column-gap: 8px;
-}
-
 .dragHandle {
   cursor: grab;
 }
