@@ -46,6 +46,7 @@ export function Sidebar() {
   const search = useUiStore((state) => state.search);
   const searchFilters = useUiStore((state) => state.searchFilters);
   const searchFilterMode = useUiStore((state) => state.searchFilterMode);
+  const showRecent = useUiStore((state) => state.showRecent);
   const sidebarCollapsedValue = useUiStore((state) => state.sidebarCollapsed);
   const setSidebarCollapsed = useUiStore((state) => state.setSidebarCollapsed);
   const setItemInEdit = useUiStore((state) => state.setItemInEdit);
@@ -201,6 +202,10 @@ export function Sidebar() {
   const openTabsCount = tabs.filter(
     (tab) => !tab.pinned && !isTabloTab(tab)
   ).length;
+  const recentListVisible =
+    showRecent ||
+    search.length > 0 ||
+    searchFilters.some((filter) => filter.enabled);
 
   return (
     <div
@@ -245,36 +250,41 @@ export function Sidebar() {
             <SpacesList />
           </section>
 
-          <section className={styles.tabsSection} aria-label="Open tabs">
-            <div className={styles.header}>
-              <div className={styles.headerActions}>
-                <StashButton tabs={tabs} />
+          <div
+            className={styles.listsArea}
+            data-recent-visible={recentListVisible || undefined}
+          >
+            <section className={styles.tabsSection} aria-label="Open tabs">
+              <div className={styles.header}>
+                <div className={styles.headerActions}>
+                  <StashButton tabs={tabs} />
+                </div>
+                <span className={styles.headerText}>Opened</span>
+                <span className={styles.tabsCount}>{openTabsCount}</span>
               </div>
-              <span className={styles.headerText}>Opened</span>
-              <span className={styles.tabsCount}>{openTabsCount}</span>
-            </div>
 
-            <div className={styles.content}>
-              <SidebarOpenTabs
-                tabs={tabs}
-                spaces={spaces}
-                search={search}
-                searchFilters={searchFilters}
-                searchFilterMode={searchFilterMode}
-                lastActiveTabIds={lastActiveTabIds}
-                currentWindowId={currentWindowId}
-                sidebarCollapsed={false}
-              />
-            </div>
-          </section>
-          <SidebarRecent
-            search={search}
-            searchFilters={searchFilters}
-            searchFilterMode={searchFilterMode}
-            recentItems={recentItems}
-            spaces={spaces}
-            sidebarCollapsed={false}
-          />
+              <div className={styles.content}>
+                <SidebarOpenTabs
+                  tabs={tabs}
+                  spaces={spaces}
+                  search={search}
+                  searchFilters={searchFilters}
+                  searchFilterMode={searchFilterMode}
+                  lastActiveTabIds={lastActiveTabIds}
+                  currentWindowId={currentWindowId}
+                  sidebarCollapsed={false}
+                />
+              </div>
+            </section>
+            <SidebarRecent
+              search={search}
+              searchFilters={searchFilters}
+              searchFilterMode={searchFilterMode}
+              recentItems={recentItems}
+              spaces={spaces}
+              sidebarCollapsed={false}
+            />
+          </div>
         </>
       )}
     </div>

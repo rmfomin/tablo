@@ -1,19 +1,14 @@
 .recentList {
+  display: flex;
   flex: 1;
+  flex-direction: column;
   min-height: 0;
   width: 100%;
-  padding: 12px;
+  padding: 12px 12px 0;
   border: 1px dashed var(--colors-gray-400);
-  border-radius: var(--container-border-radius) var(--container-border-radius) 0 0;
+  border-radius: var(--container-border-radius);
   box-sizing: border-box;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior-y: contain;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    width: 0;
-  }
+  overflow: hidden;
 
   :global(.sidebar-message) {
     padding: 20px 8px;
@@ -21,10 +16,18 @@
   }
 }
 
+.recentContent {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+}
+
 .recentListCollapsed {
   flex: 0 0 auto;
+  padding-bottom: 12px;
   border-radius: var(--container-border-radius);
-  overflow-y: hidden;
 }
 
 .header {

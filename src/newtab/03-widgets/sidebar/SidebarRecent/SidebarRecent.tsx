@@ -115,7 +115,6 @@ export const SidebarRecent = React.memo(
 
     return (
       <div
-        ref={scrollContainerRef}
         className={cn(styles.recentList, {
           [styles.recentListCollapsed]: !showItems,
         })}
@@ -142,7 +141,7 @@ export const SidebarRecent = React.memo(
         </div>
 
         {showItems ? (
-          <>
+          <div className={styles.recentContent} ref={scrollContainerRef}>
             <RecentList
               items={itemsFilteredBySearchAndFilter}
               search={p.search}
@@ -152,7 +151,7 @@ export const SidebarRecent = React.memo(
             <div className="sidebar-message">
               <span>History is limited by 2 month</span>
             </div>
-          </>
+          </div>
         ) : null}
       </div>
     );
