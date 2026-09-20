@@ -67,12 +67,100 @@
   overflow: hidden;
 }
 
-.collapsedHeader {
+.collapsedControls,
+.collapsedSpaces,
+.collapsedTabs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.collapsedControls {
+  flex-shrink: 0;
+}
+
+.collapsedSpaces {
+  flex-shrink: 0;
+  gap: 4px;
+  margin-top: var(--container-gap);
+}
+
+.collapsedTabs {
+  justify-content: flex-start;
+  flex: 1 1 auto;
+  gap: 4px;
+  min-height: 0;
+  margin-top: var(--container-gap);
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+
+  &::before {
+    content: "";
+    flex-shrink: 0;
+    width: 24px;
+    height: 1px;
+    margin-bottom: calc(var(--container-gap) - 4px);
+    background-color: var(--border-color);
+  }
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.collapsedSpaceButton,
+.collapsedTabButton {
+  appearance: none;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
   height: 36px;
-  min-height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--main-text-color);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--hover-color);
+  }
+}
+
+.collapsedSpaceButton {
+  font-family: var(--title-font-family);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.collapsedSpaceButtonActive {
+  background-color: var(--accent-color);
+  color: var(--on-accent-color);
+
+  &:hover {
+    background-color: var(--accent-color);
+  }
+}
+
+.collapsedTabButton {
+  img {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+  }
+}
+
+.collapsedTabButtonActive {
+  background-color: color-mix(
+    in srgb,
+    var(--accent-color) 14%,
+    transparent
+  );
 }
 
 .header {
@@ -193,11 +281,6 @@
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior-y: contain;
-}
-
-.collapsedSettings {
-  display: flex;
-  justify-content: center;
 }
 
 .stashTitle {

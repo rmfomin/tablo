@@ -38,9 +38,12 @@ import { SidebarRecent } from "@/newtab/03-widgets/sidebar/SidebarRecent/Sidebar
 import { bindDADItemEffect } from "@/newtab/04-features/dragging";
 import { RecentItem } from "@/newtab/06-shared/api/chrome/history";
 import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
+import { getBrokenImgSVG } from "@/newtab/06-shared/api/chrome/favicons";
 
 export function Sidebar() {
   const spaces = useDashboardStore((state) => state.spaces);
+  const currentSpaceId = useDashboardStore((state) => state.currentSpaceId);
+  const selectSpace = useDashboardStore((state) => state.selectSpace);
   const createFolder = useDashboardStore((state) => state.createFolder);
   const createFolderItem = useDashboardStore((state) => state.createFolderItem);
   const search = useUiStore((state) => state.search);
@@ -199,9 +202,22 @@ export function Sidebar() {
     setSidebarCollapsed(!sidebarCollapsedValue);
   }
 
-  const openTabsCount = tabs.filter(
-    (tab) => !tab.pinned && !isTabloTab(tab)
-  ).length;
+  function onCollapsedTabClick(tab: BrowserTab) {
+    if (tab.id === undefined) {
+      return;
+    }
+    updateTab(tab.id, { active: true });
+    focusWindow(tab.windowId);
+  }
+
+  function onCollapsedFaviconError(
+    event: React.SyntheticEvent<HTMLImageElement>,
+  ) {
+    event.currentTarget.src = getBrokenImgSVG();
+  }
+
+  const openTabs = tabs.filter((tab) => !tab.pinned && !isTabloTab(tab));
+  const openTabsCount = openTabs.length;
   const recentListVisible =
     showRecent ||
     search.length > 0 ||
@@ -217,7 +233,7 @@ export function Sidebar() {
     >
       {sidebarCollapsed ? (
         <>
-          <div className={styles.collapsedHeader}>
+          <div className={styles.collapsedControls}>
             <button
               id="toggle-sidebar-btn"
               className={styles.collapseButton}
@@ -227,9 +243,50 @@ export function Sidebar() {
             >
               <IconPanelRightOpen />
             </button>
-          </div>
-          <div className={styles.collapsedSettings}>
             <TopBar />
+          </div>
+
+          <div className={styles.collapsedSpaces} aria-label="Spaces">
+            {spaces.map((space) => (
+              <button
+                key={space.id}
+                type="button"
+                className={cn(styles.collapsedSpaceButton, {
+                  [styles.collapsedSpaceButtonActive]:
+                    space.id === currentSpaceId,
+                })}
+                title={space.title || "Untitled space"}
+                aria-label={space.title || "Untitled space"}
+                aria-pressed={space.id === currentSpaceId}
+                onClick={() => selectSpace(space.id)}
+              >
+                {(space.title || "Untitled").trim().charAt(0).toUpperCase()}
+              </button>
+            ))}
+          </div>
+
+          <div className={styles.collapsedTabs} aria-label="Open tabs">
+            {openTabs.map((tab) => (
+              <button
+                key={tab.id ?? `${tab.windowId}-${tab.index}`}
+                type="button"
+                className={cn(styles.collapsedTabButton, {
+                  [styles.collapsedTabButtonActive]:
+                    tab.id === lastActiveTabIds[1],
+                })}
+                title={tab.title || tab.url || "Open tab"}
+                aria-label={tab.title || tab.url || "Open tab"}
+                aria-pressed={tab.id === lastActiveTabIds[1]}
+                onClick={() => onCollapsedTabClick(tab)}
+              >
+                <img
+                  src={tab.favIconUrl || getBrokenImgSVG()}
+                  alt=""
+                  draggable={false}
+                  onError={onCollapsedFaviconError}
+                />
+              </button>
+            ))}
           </div>
         </>
       ) : (
