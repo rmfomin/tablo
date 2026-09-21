@@ -16,7 +16,7 @@
   overflow-y: auto;
   box-sizing: border-box;
   background-color: var(--surface-color);
-  border-radius: 8px;
+  border-radius: 15px;
   padding: 8px;
   z-index: 10;
   display: flex;
@@ -43,7 +43,7 @@
   left: calc(100% + 4px);
   top: 0;
   background-color: var(--surface-color);
-  border-radius: 8px;
+  border-radius: 15px;
   padding: 8px;
   min-width: 100px;
   max-width: 180px;
@@ -159,7 +159,7 @@ label.input-label {
     box-sizing: border-box;
     width: 100%;
     min-width: 0;
-    border-radius: 6px;
+    border-radius: 10px;
     border: 1px solid var(--border-color);
     padding: 0 8px;
     font-size: 13px;
@@ -191,6 +191,17 @@ label.input-label + label.input-label {
 
 .dropdown-menu--context label.input-label textarea {
   display: block;
+}
+
+.dropdown-menu--context label.input-label {
+  box-sizing: border-box;
+  width: calc(100% - 10px);
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.dropdown-menu--context > label.input-label:first-child {
+  margin-top: 5px;
 }
 
 .dropdown-menu--context label.input-label + label.input-label {
@@ -366,7 +377,7 @@ label.input-label + label.input-label {
 .dropdown-menu--context .dropdown-menu__button:hover,
 .sub-menu .dropdown-menu__button:hover {
   background-color: var(--hover-color);
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
 .dropdown-menu__button:active,

@@ -56,7 +56,7 @@
   aspect-ratio: 8 / 5;
   padding: 6px;
   border: 0;
-  border-radius: 5px;
+  border-radius: 10px;
   background-color: var(--space-card-color);
   box-sizing: border-box;
   color: var(--main-text-color);
@@ -97,6 +97,10 @@
   &:hover {
     background-color: var(--accent-color);
   }
+}
+
+.menuOpen {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-color) 35%, transparent);
 }
 
 .itemTitle {

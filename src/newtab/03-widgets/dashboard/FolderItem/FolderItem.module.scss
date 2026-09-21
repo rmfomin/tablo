@@ -33,6 +33,25 @@
   }
 }
 
+.selected {
+  border-radius: 10px;
+
+  .inner::before {
+    border-radius: 10px;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    box-sizing: border-box;
+    border: 2px solid color-mix(in srgb, var(--accent-color) 35%, transparent);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+}
+
 .inner {
   position: relative;
   isolation: isolate;

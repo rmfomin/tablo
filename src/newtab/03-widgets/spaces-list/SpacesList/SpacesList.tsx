@@ -250,6 +250,7 @@ export function SpacesList() {
               key={space.id}
               className={cn(styles.item, {
                 [styles.active]: space.id === currentSpaceId,
+                [styles.menuOpen]: menuSpaceId === space.id,
               })}
               data-role={DOM_ROLE.spaceItem}
               data-position={space.position}
