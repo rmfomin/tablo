@@ -216,7 +216,15 @@
 .groupUrls {
   display: flex;
   flex-direction: column;
-  margin-top: 6px;
+  margin-top: 10px;
+}
+
+.groupUrls :global(.input-label) + :global(.input-label) {
+  margin-top: 10px;
+}
+
+.groupOptionsMenu .groupUrls + :global(.dropdown-menu__separator) {
+  margin-top: 10px;
 }
 
 @media (max-width: 1100px) {
