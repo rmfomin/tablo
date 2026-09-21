@@ -61,7 +61,7 @@ export type MoveFolderItemsInput = {
 
 export type SpacePatch = Pick<
   Partial<SpaceV3>,
-  "title" | "position" | "folders"
+  "title" | "position" | "folders" | "quickGroups"
 >;
 
 export type FolderItemPatch = Pick<

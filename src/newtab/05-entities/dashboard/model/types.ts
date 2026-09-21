@@ -13,6 +13,23 @@ export type ColorTheme = "light" | "system" | "dark";
 
 export type ItemTypeV3 = "bookmark" | "group";
 
+export type QuickGroupColor =
+  | "grey"
+  | "blue"
+  | "red"
+  | "yellow"
+  | "green"
+  | "pink"
+  | "purple"
+  | "cyan"
+  | "orange";
+
+export interface QuickGroupV3 {
+  title: string;
+  color: QuickGroupColor;
+  urls: string[];
+}
+
 export type BackupBrandMarker =
   | {
       isTablo: true;
@@ -49,6 +66,7 @@ export interface SpaceV3 {
   objectType: "space";
   title: string;
   folders: FolderV3[];
+  quickGroups?: QuickGroupV3[];
 }
 
 export interface FolderV3 {
@@ -107,6 +125,7 @@ export type FolderV3Input = Omit<FolderV3, "items"> & {
 
 export type SpaceV3Input = Omit<SpaceV3, "folders"> & {
   folders: FolderV3Input[];
+  quickGroups?: QuickGroupV3[];
 };
 
 export type DataBackupV3Input = BackupBrandMarker & {

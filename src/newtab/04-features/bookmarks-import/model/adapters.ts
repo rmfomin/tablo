@@ -10,6 +10,7 @@ import {
   GroupV3Input,
   ItemV3,
   ItemV3Input,
+  QuickGroupV3,
   SpaceV3,
   SpaceV3Input,
 } from "@/newtab/05-entities/dashboard/model/types";
@@ -34,6 +35,25 @@ function isOptionalBoolean(value: UnknownRecord, key: string): boolean {
 
 function isOptionalString(value: UnknownRecord, key: string): boolean {
   return value[key] === undefined || typeof value[key] === "string";
+}
+
+function isQuickGroupV3Input(value: unknown): value is QuickGroupV3 {
+  if (!isRecord(value)) return false;
+
+  return (
+    typeof value.title === "string" &&
+    typeof value.color === "string" &&
+    ["grey", "blue", "red", "yellow", "green", "pink", "purple", "cyan", "orange"].includes(value.color) &&
+    Array.isArray(value.urls) &&
+    value.urls.every((url) => typeof url === "string")
+  );
+}
+
+function isOptionalQuickGroups(value: UnknownRecord): boolean {
+  return (
+    value.quickGroups === undefined ||
+    (Array.isArray(value.quickGroups) && value.quickGroups.every(isQuickGroupV3Input))
+  );
 }
 
 function hasLocalBase(value: UnknownRecord): boolean {
@@ -92,7 +112,8 @@ export function isSpaceV3Input(value: unknown): value is SpaceV3Input {
     hasLocalBase(value) &&
     value.objectType === "space" &&
     Array.isArray(value.folders) &&
-    value.folders.every(isFolderV3Input)
+    value.folders.every(isFolderV3Input) &&
+    isOptionalQuickGroups(value)
   );
 }
 
@@ -171,14 +192,31 @@ function normalizeFolderV3(folder: FolderV3Input): FolderV3 {
   return normalized;
 }
 
-function normalizeSpaceV3(space: SpaceV3Input): SpaceV3 {
+function normalizeQuickGroupV3(group: QuickGroupV3): QuickGroupV3 {
   return {
+    title: group.title,
+    color: group.color,
+    urls: [...group.urls],
+  };
+}
+
+function normalizeSpaceV3(space: SpaceV3Input): SpaceV3 {
+  const source = space as unknown as UnknownRecord;
+  const normalized: SpaceV3 = {
     id: space.id,
     position: space.position,
     objectType: "space",
     title: space.title,
     folders: sortByPosition(space.folders.map(normalizeFolderV3)),
   };
+
+  if (Array.isArray(source.quickGroups)) {
+    normalized.quickGroups = source.quickGroups.map((group) =>
+      normalizeQuickGroupV3(group as QuickGroupV3),
+    );
+  }
+
+  return normalized;
 }
 
 function normalizeBackupBrandMarker(data: DataBackupV3Input): BackupBrandMarker {

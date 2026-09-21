@@ -49,6 +49,176 @@
   }
 }
 
+.actions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.groupActions {
+  display: inline-flex;
+  align-items: center;
+}
+
+.addGroupButton {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--container-border-radius);
+  background: transparent;
+  color: var(--main-text-color);
+  cursor: pointer;
+
+  &:hover,
+  &:active {
+    background: var(--hover-color);
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+    color: currentColor;
+  }
+}
+
+.groupButton {
+  display: inline-flex;
+  align-items: stretch;
+  overflow: hidden;
+  border-radius: var(--container-border-radius);
+  background: var(--surface-color);
+  color: var(--main-text-color);
+
+  &:hover {
+    background: var(--hover-color);
+  }
+}
+
+.groupButtonActive {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-color) 35%, transparent);
+}
+
+.groupTitleButton,
+.groupSettingsButton {
+  appearance: none;
+  box-sizing: border-box;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.groupTitleButton {
+  height: 36px;
+  min-height: 36px;
+  padding: 5px 16px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 17px;
+  white-space: nowrap;
+}
+
+.groupSettingsButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  min-height: 20px;
+  margin-right: 8px;
+  padding: 0;
+  border-radius: 50%;
+
+  &:hover,
+  &[aria-expanded="true"] {
+    background: var(--accent-color);
+    color: var(--on-accent-color);
+  }
+
+  svg {
+    width: 14px;
+    height: 14px;
+    padding: 3px;
+    border-radius: 50%;
+    background: var(--icon-background-color);
+    box-sizing: content-box;
+    color: var(--icon-color);
+  }
+
+  &:hover svg,
+  &[aria-expanded="true"] svg {
+    background: color-mix(
+      in srgb,
+      var(--on-accent-color) 20%,
+      transparent
+    );
+    color: var(--on-accent-color);
+  }
+}
+
+.groupOptionsMenu :global(.input-label) {
+  width: 100%;
+
+  textarea {
+    display: block;
+  }
+}
+
+.groupColorOptions {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  margin-bottom: 12px;
+}
+
+.groupColorOption {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 3px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+
+  span {
+    display: block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+  }
+
+  &:hover {
+    background: var(--hover-color);
+  }
+}
+
+.groupColorOptionSelected {
+  outline: 2px solid var(--accent-color);
+  outline-offset: -2px;
+}
+
+.groupUrls {
+  display: flex;
+  flex-direction: column;
+  margin-top: 6px;
+}
+
 @media (max-width: 1100px) {
   .folderGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

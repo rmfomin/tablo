@@ -10,6 +10,123 @@ export function createTab(properties: chrome.tabs.CreateProperties): void {
   chrome.tabs.create(properties);
 }
 
+export type TabGroupColor =
+  | "grey"
+  | "blue"
+  | "red"
+  | "yellow"
+  | "green"
+  | "pink"
+  | "purple"
+  | "cyan"
+  | "orange";
+
+type ChromeWithTabGroups = {
+  tabs: {
+    create(
+      properties: chrome.tabs.CreateProperties,
+      callback: (tab: chrome.tabs.Tab) => void,
+    ): void;
+    group(
+      options: { tabIds: number[] },
+      callback: (groupId: number) => void,
+    ): void;
+  };
+  tabGroups: {
+    update(
+      groupId: number,
+      properties: { title?: string; color?: TabGroupColor },
+      callback: (group: unknown) => void,
+    ): void;
+  };
+};
+
+function getChromeRuntimeError(): Error | undefined {
+  const message = chrome.runtime.lastError?.message;
+  return message ? new Error(message) : undefined;
+}
+
+function createTabWithCallback(
+  chromeWithTabGroups: ChromeWithTabGroups,
+  url: string,
+): Promise<chrome.tabs.Tab> {
+  return new Promise((resolve, reject) => {
+    chromeWithTabGroups.tabs.create({ url, active: false }, (tab) => {
+      const error = getChromeRuntimeError();
+      if (error) {
+        reject(error);
+      } else {
+        resolve(tab);
+      }
+    });
+  });
+}
+
+function groupTabsWithCallback(
+  chromeWithTabGroups: ChromeWithTabGroups,
+  tabIds: number[],
+): Promise<number> {
+  return new Promise((resolve, reject) => {
+    chromeWithTabGroups.tabs.group({ tabIds }, (groupId) => {
+      const error = getChromeRuntimeError();
+      if (error) {
+        reject(error);
+      } else {
+        resolve(groupId);
+      }
+    });
+  });
+}
+
+function updateTabGroupWithCallback(
+  chromeWithTabGroups: ChromeWithTabGroups,
+  groupId: number,
+  title: string,
+  color: TabGroupColor,
+): Promise<void> {
+  const updateProperties: { title?: string; color: TabGroupColor } = { color };
+  const trimmedTitle = title.trim();
+  if (trimmedTitle) {
+    updateProperties.title = trimmedTitle;
+  }
+
+  return new Promise((resolve, reject) => {
+    chromeWithTabGroups.tabGroups.update(
+      groupId,
+      updateProperties,
+      () => {
+        const error = getChromeRuntimeError();
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      },
+    );
+  });
+}
+
+export async function createTabGroup(
+  urls: string[],
+  title: string,
+  color: TabGroupColor = "blue",
+): Promise<void> {
+  const chromeWithTabGroups = chrome as unknown as ChromeWithTabGroups;
+  const tabs = await Promise.all(
+    urls.map((url) => createTabWithCallback(chromeWithTabGroups, url)),
+  );
+  const tabIds = tabs.flatMap((tab) =>
+    tab.id === undefined ? [] : [tab.id],
+  );
+
+  if (tabIds.length === 0) {
+    throw new Error("Chrome did not return IDs for the created tabs");
+  }
+
+  const groupId = await groupTabsWithCallback(chromeWithTabGroups, tabIds);
+  await updateTabGroupWithCallback(chromeWithTabGroups, groupId, title, color);
+}
+
 export function updateTab(
   tabId: number,
   properties: chrome.tabs.UpdateProperties,

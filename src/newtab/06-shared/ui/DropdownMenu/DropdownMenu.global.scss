@@ -386,8 +386,9 @@ label.input-label + label.input-label {
 .dropdown-menu__colors-row {
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-wrap: nowrap;
-  margin-left: 4px;
+  margin-left: 0;
   margin-top: 4px;
   margin-bottom: 4px;
 }

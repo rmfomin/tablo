@@ -22,5 +22,5 @@
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },
-  "permissions": ["bookmarks", "storage", "history", "tabs"]
+  "permissions": ["bookmarks", "storage", "history", "tabs", "tabGroups"]
 }
