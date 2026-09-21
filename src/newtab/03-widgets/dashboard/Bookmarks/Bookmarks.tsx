@@ -129,7 +129,7 @@ export function Bookmarks() {
     (space) => space.id === currentSpaceId,
   )?.quickGroups;
   const tabGroupConfigs =
-    persistedTabGroupConfigs ?? [createTabGroupConfig()];
+    persistedTabGroupConfigs ?? [];
 
   async function openTabGroup(config: TabGroupConfig) {
     const urls = config.urls.map((url) => url.trim()).filter(Boolean);

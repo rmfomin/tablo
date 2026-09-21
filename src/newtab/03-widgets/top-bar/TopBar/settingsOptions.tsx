@@ -284,7 +284,10 @@ export const SettingsOptions = ({
           title: space.title,
           position: space.position,
         });
-        updateSpace(space.id, { folders: space.folders });
+        updateSpace(space.id, {
+          folders: space.folders,
+          quickGroups: space.quickGroups ?? [],
+        });
         setCurrentSpace(space.id);
         showNotification({ message: "Space has been imported" });
       },
