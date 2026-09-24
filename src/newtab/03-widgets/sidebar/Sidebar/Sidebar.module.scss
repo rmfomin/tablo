@@ -67,6 +67,15 @@
   overflow: hidden;
 }
 
+.tabsSectionEmpty {
+  gap: 0;
+
+  .header {
+    height: 44px;
+    min-height: 44px;
+  }
+}
+
 .collapsedControls,
 .collapsedSpaces,
 .collapsedTabs {

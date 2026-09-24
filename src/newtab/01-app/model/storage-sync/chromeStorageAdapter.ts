@@ -12,6 +12,7 @@ const storageKeys = [
   "showArchived",
   "showNotUsed",
   "hiddenFeatureIsEnabled",
+  "useSearchResultsPopup",
   "version",
 ] as const;
 
@@ -85,6 +86,7 @@ export function normalizePersistedState(value: StorageRecord): PersistedNewtabSt
     showArchived: value.showArchived === true,
     showNotUsed: value.showNotUsed === true,
     hiddenFeatureIsEnabled: value.hiddenFeatureIsEnabled === true,
+    useSearchResultsPopup: value.useSearchResultsPopup !== false,
   };
 }
 

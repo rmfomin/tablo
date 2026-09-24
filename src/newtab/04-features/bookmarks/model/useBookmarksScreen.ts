@@ -43,6 +43,7 @@ function bookmarksUiSelector(state: UiStore) {
     sidebarCollapsed: state.sidebarCollapsed,
     openBookmarksInNewTab: state.openBookmarksInNewTab,
     hiddenFeatureIsEnabled: state.hiddenFeatureIsEnabled,
+    useSearchResultsPopup: state.useSearchResultsPopup,
   };
 }
 
@@ -99,6 +100,7 @@ export function useBookmarksScreen(): {
         itemInEdit: ui.itemInEdit,
         sidebarCollapsed: ui.sidebarCollapsed,
         hiddenFeatureIsEnabled: ui.hiddenFeatureIsEnabled,
+        useSearchResultsPopup: ui.useSearchResultsPopup,
       },
       runtime,
     },

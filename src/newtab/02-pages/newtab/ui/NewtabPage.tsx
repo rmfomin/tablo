@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import cn from "clsx";
 import { Bookmarks } from "@/newtab/03-widgets/dashboard/Bookmarks/Bookmarks";
 import { Sidebar } from "@/newtab/03-widgets/sidebar/Sidebar/Sidebar";
@@ -21,6 +21,7 @@ export function NewtabPage({
 }: NewtabPageProps) {
   const [searchOpen, setSearchOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchPanelRef = useRef<HTMLDivElement>(null);
   const setSearch = useUiStore((state) => state.setSearch);
 
   const openSearch = useCallback(() => {
@@ -36,6 +37,27 @@ export function NewtabPage({
     setSearch("");
   }, [setSearch]);
 
+  useEffect(() => {
+    if (!searchOpen) {
+      return undefined;
+    }
+
+    function onOutsideClick(event: MouseEvent) {
+      if (!searchPanelRef.current?.contains(event.target as Node)) {
+        closeSearch();
+      }
+    }
+
+    const listenerTimerId = window.setTimeout(() => {
+      document.addEventListener("click", onOutsideClick);
+    }, 0);
+
+    return () => {
+      window.clearTimeout(listenerTimerId);
+      document.removeEventListener("click", onOutsideClick);
+    };
+  }, [closeSearch, searchOpen]);
+
   return (
     <div className={cn("app", { "collapsible-sidebar": sidebarCollapsed })}>
       <Notification />
@@ -43,8 +65,12 @@ export function NewtabPage({
       {page === "default" ? (
         <>
           {searchOpen ? (
-            <div className={styles.searchPanel}>
-              <SearchInput inputRef={searchInputRef} onEscape={closeSearch} />
+            <div ref={searchPanelRef} className={styles.searchPanel}>
+              <SearchInput
+                inputRef={searchInputRef}
+                onEscape={closeSearch}
+                onResultOpen={closeSearch}
+              />
             </div>
           ) : null}
           <div className={styles.workspace}>

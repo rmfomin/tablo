@@ -22,9 +22,11 @@ export type UiPreferences = {
   showArchived: boolean;
   showNotUsed: boolean;
   hiddenFeatureIsEnabled: boolean;
+  useSearchResultsPopup?: boolean;
 };
 
-export type UiState = UiPreferences & {
+export type UiState = Omit<UiPreferences, "useSearchResultsPopup"> & {
+  useSearchResultsPopup: boolean;
   search: string;
   searchFilters: SearchFilter[];
   searchFilterMode: SearchFilterMode;
@@ -54,6 +56,7 @@ export type UiActions = {
   setShowArchived(showArchived: boolean): void;
   setShowNotUsed(showNotUsed: boolean): void;
   setHiddenFeatureIsEnabled(hiddenFeatureIsEnabled: boolean): void;
+  setUseSearchResultsPopup(useSearchResultsPopup: boolean): void;
   hydratePreferences(preferences: UiPreferences): void;
 };
 
@@ -67,10 +70,12 @@ export const defaultUiPreferences: UiPreferences = {
   showArchived: false,
   showNotUsed: false,
   hiddenFeatureIsEnabled: false,
+  useSearchResultsPopup: true,
 };
 
 const defaultUiState: UiState = {
   ...defaultUiPreferences,
+  useSearchResultsPopup: true,
   search: "",
   searchFilters: [],
   searchFilterMode: "or",
@@ -112,6 +117,8 @@ function createUiSlice(initialState: Partial<UiState>): StateCreator<UiStore> {
     setShowNotUsed: (showNotUsed) => set({ showNotUsed }),
     setHiddenFeatureIsEnabled: (hiddenFeatureIsEnabled) =>
       set({ hiddenFeatureIsEnabled }),
+    setUseSearchResultsPopup: (useSearchResultsPopup) =>
+      set({ useSearchResultsPopup }),
 
     hydratePreferences: (preferences) => set(preferences),
   });

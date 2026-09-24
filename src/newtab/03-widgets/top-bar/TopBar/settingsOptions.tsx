@@ -203,6 +203,12 @@ export const SettingsOptions = ({
   const setOpenBookmarksInNewTab = useUiStore(
     (state) => state.setOpenBookmarksInNewTab
   );
+  const useSearchResultsPopup = useUiStore(
+    (state) => state.useSearchResultsPopup,
+  );
+  const setUseSearchResultsPopup = useUiStore(
+    (state) => state.setUseSearchResultsPopup,
+  );
   const hiddenFeatureIsEnabled = useUiStore(
     (state) => state.hiddenFeatureIsEnabled
   );
@@ -243,6 +249,10 @@ export const SettingsOptions = ({
 
   function onToggleOpenInTheNewTab() {
     setOpenBookmarksInNewTab(!openBookmarksInNewTab);
+  }
+
+  function onToggleSearchResultsPopup() {
+    setUseSearchResultsPopup(!useSearchResultsPopup);
   }
 
   function onImportClick(e: any) {
@@ -329,6 +339,12 @@ export const SettingsOptions = ({
       title:
         "You can also open bookmarks on the new tab with pressed CMD or CTRL",
       text: "Open bookmarks on the same tab",
+    },
+    {
+      onToggle: onToggleSearchResultsPopup,
+      value: useSearchResultsPopup,
+      title: "Show search results in a popup under the search field",
+      text: "Use this search",
     },
     {
       separator: true,

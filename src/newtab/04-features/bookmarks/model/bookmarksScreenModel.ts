@@ -1,7 +1,11 @@
 import { createTab, updateTab, removeTabs, getCurrentTab, queryTabs, getCurrentWindow, focusWindow, type BrowserTab } from "@/newtab/06-shared/api/chrome/tabs";
 import type { FolderV3, SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
 import type { RecentItem } from "@/newtab/06-shared/api/chrome/history";
-import type { SearchFilter, SearchFilterMode } from "@/newtab/04-features/bookmark-search/model/filters";
+import {
+  hasSearch,
+  type SearchFilter,
+  type SearchFilterMode,
+} from "@/newtab/04-features/bookmark-search/model/filters";
 import { getBookmarksViewState } from "./getBookmarksViewState";
 
 
@@ -19,6 +23,7 @@ export type BookmarksScreenSnapshot = {
     itemInEdit: number | undefined;
     sidebarCollapsed: boolean;
     hiddenFeatureIsEnabled: boolean;
+    useSearchResultsPopup?: boolean;
   };
   runtime: {
     tabs: BrowserTab[];
@@ -57,16 +62,18 @@ export function buildBookmarksScreenModel(
   commands: BookmarksScreenCommands,
 ): BookmarksScreenModel {
   const { dashboard, ui, runtime } = snapshot;
+  const search = ui.useSearchResultsPopup ? "" : ui.search;
+  const searchFilters = ui.useSearchResultsPopup ? [] : ui.searchFilters;
+  const searchActive = hasSearch(search, searchFilters);
   const { folders } = getBookmarksViewState({
     spaces: dashboard.spaces,
     currentSpaceId: dashboard.currentSpaceId,
-    search: ui.search,
-    searchFilters: ui.searchFilters,
+    search,
+    searchFilters,
     searchFilterMode: ui.searchFilterMode,
     showArchived: ui.showArchived,
   });
-  const showNewFolderPlaceholder =
-    ui.search === "" && !ui.searchFilters.some((filter) => filter.enabled);
+  const showNewFolderPlaceholder = !searchActive;
 
   return {
     folders,
@@ -76,15 +83,15 @@ export function buildBookmarksScreenModel(
       recentItems: runtime.recentItems,
       showNotUsed: ui.showNotUsed,
       showArchived: ui.showArchived,
-      search: ui.search,
-      searchFilters: ui.searchFilters,
+      search,
+      searchFilters,
       searchFilterMode: ui.searchFilterMode,
       itemInEdit: ui.itemInEdit,
       hiddenFeatureIsEnabled: ui.hiddenFeatureIsEnabled,
     },
     sidebarCollapsed: ui.sidebarCollapsed,
     showNewFolderPlaceholder,
-    showNoBookmarksFound: !showNewFolderPlaceholder && folders.length === 0,
+    showNoBookmarksFound: searchActive && folders.length === 0,
     commands,
   };
 }

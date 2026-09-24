@@ -1,0 +1,124 @@
+.root {
+  position: relative;
+  width: 100%;
+  max-height: min(60vh, 520px);
+  padding: 8px 8px 0;
+  background: var(--surface-color);
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.sectionTitle {
+  margin: 8px 8px 4px;
+  color: var(--secondary-text-color);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  text-transform: uppercase;
+}
+
+.spaceTitle {
+  display: flex;
+  align-items: center;
+  margin: 8px 8px 4px;
+  color: var(--main-text-color);
+  font-family: var(--title-font-family);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: normal;
+  line-height: 24px;
+}
+
+.spaceTitleIcon {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+}
+
+.recentSection {
+  opacity: 0.5;
+}
+
+.result {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 52px;
+  padding: 8px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--main-text-color);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--hover-color);
+    outline: none;
+  }
+}
+
+.favicon,
+.faviconPlaceholder {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border-radius: 4px;
+}
+
+.faviconPlaceholder {
+  background: var(--gray-200);
+}
+
+.resultText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  gap: 2px;
+}
+
+.resultTitle,
+.resultMeta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resultTitle {
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.resultMeta {
+  display: flex;
+  align-items: center;
+  color: var(--secondary-text-color);
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.resultMeta > span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.folderIcon {
+  flex: 0 0 auto;
+  width: 11px;
+  height: 11px;
+  margin-right: 4px;
+}
+
+.empty {
+  margin: 16px 8px;
+  color: var(--secondary-text-color);
+  font-size: 13px;
+  text-align: center;
+}

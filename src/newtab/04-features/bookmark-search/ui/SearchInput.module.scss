@@ -11,10 +11,6 @@
   border-radius: 999px;
   background-color: var(--surface-color);
 
-  &:focus-within {
-    outline: 2px solid var(--accent-color);
-  }
-
   :global(input.search) {
     height: 48px;
     padding: 0 48px 0 16px;
@@ -24,6 +20,14 @@
     box-sizing: border-box;
     font-size: 14px;
     outline: none;
+  }
+}
+
+.searchWrapperWithResults {
+  border-radius: 24px 24px 0 0;
+
+  :global(input.search) {
+    border-radius: 24px 24px 0 0;
   }
 }
 

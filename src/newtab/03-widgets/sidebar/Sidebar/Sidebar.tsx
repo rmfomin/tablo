@@ -29,6 +29,7 @@ import IconPanelRightClose from "./icons/corner-down-right.svg";
 import IconPanelRightOpen from "./icons/corner-down-left.svg";
 import { SpacesList } from "@/newtab/03-widgets/spaces-list/SpacesList/SpacesList";
 import { TopBar } from "@/newtab/03-widgets/top-bar/TopBar/TopBar";
+import { filterTabsBySearch } from "@/newtab/04-features/bookmark-search/model/filters";
 
 import {
   convertTabOrRecentToItem,
@@ -49,6 +50,9 @@ export function Sidebar() {
   const search = useUiStore((state) => state.search);
   const searchFilters = useUiStore((state) => state.searchFilters);
   const searchFilterMode = useUiStore((state) => state.searchFilterMode);
+  const useSearchResultsPopup = useUiStore(
+    (state) => state.useSearchResultsPopup,
+  );
   const showRecent = useUiStore((state) => state.showRecent);
   const sidebarCollapsedValue = useUiStore((state) => state.sidebarCollapsed);
   const setSidebarCollapsed = useUiStore((state) => state.setSidebarCollapsed);
@@ -67,6 +71,8 @@ export function Sidebar() {
     (state) => state.currentWindowId
   );
   const sidebarCollapsed = sidebarCollapsedValue;
+  const sidebarSearch = useSearchResultsPopup ? "" : search;
+  const sidebarSearchFilters = useSearchResultsPopup ? [] : searchFilters;
 
   const dragCleanupRef = useRef<() => void>();
 
@@ -218,10 +224,17 @@ export function Sidebar() {
 
   const openTabs = tabs.filter((tab) => !tab.pinned && !isTabloTab(tab));
   const openTabsCount = openTabs.length;
+  const openedListEmpty =
+    filterTabsBySearch(
+      tabs,
+      sidebarSearch,
+      sidebarSearchFilters,
+      searchFilterMode,
+    ).length === 0;
   const recentListVisible =
     showRecent ||
-    search.length > 0 ||
-    searchFilters.some((filter) => filter.enabled);
+    sidebarSearch.length > 0 ||
+    sidebarSearchFilters.some((filter) => filter.enabled);
 
   return (
     <div
@@ -311,7 +324,12 @@ export function Sidebar() {
             className={styles.listsArea}
             data-recent-visible={recentListVisible || undefined}
           >
-            <section className={styles.tabsSection} aria-label="Open tabs">
+            <section
+              className={cn(styles.tabsSection, {
+                [styles.tabsSectionEmpty]: openedListEmpty,
+              })}
+              aria-label="Open tabs"
+            >
               <div className={styles.header}>
                 <div className={styles.headerActions}>
                   <StashButton tabs={tabs} />
@@ -324,8 +342,8 @@ export function Sidebar() {
                 <SidebarOpenTabs
                   tabs={tabs}
                   spaces={spaces}
-                  search={search}
-                  searchFilters={searchFilters}
+                  search={sidebarSearch}
+                  searchFilters={sidebarSearchFilters}
                   searchFilterMode={searchFilterMode}
                   lastActiveTabIds={lastActiveTabIds}
                   currentWindowId={currentWindowId}
@@ -334,8 +352,8 @@ export function Sidebar() {
               </div>
             </section>
             <SidebarRecent
-              search={search}
-              searchFilters={searchFilters}
+              search={sidebarSearch}
+              searchFilters={sidebarSearchFilters}
               searchFilterMode={searchFilterMode}
               recentItems={recentItems}
               spaces={spaces}

@@ -245,95 +245,110 @@ export function SpacesList() {
           {spaces.length === 0 ? (
             <span className={styles.empty}>No spaces</span>
           ) : null}
-          {spaces.map((space) => (
-            <div
-              key={space.id}
-              className={cn(styles.item, {
-                [styles.active]: space.id === currentSpaceId,
-                [styles.menuOpen]: menuSpaceId === space.id,
-              })}
-              data-role={DOM_ROLE.spaceItem}
-              data-position={space.position}
-              data-space-id={space.id}
-              role="button"
-              tabIndex={0}
-              aria-label={space.title || "untitled"}
-              aria-pressed={space.id === currentSpaceId}
-              onClick={() => setCurrentSpace(space.id)}
-              onKeyDown={(event) => {
-                if (event.target !== event.currentTarget) return;
-                if (event.key === "Enter" || event.key === " ") {
+          {spaces.map((space) => {
+            const bookmarksCount = collectBookmarksV3([space]).length;
+
+            return (
+              <div
+                key={space.id}
+                className={cn(styles.item, {
+                  [styles.active]: space.id === currentSpaceId,
+                  [styles.menuOpen]: menuSpaceId === space.id,
+                })}
+                data-role={DOM_ROLE.spaceItem}
+                data-position={space.position}
+                data-space-id={space.id}
+                role="button"
+                tabIndex={0}
+                aria-label={space.title || "untitled"}
+                aria-pressed={space.id === currentSpaceId}
+                onClick={() => setCurrentSpace(space.id)}
+                onKeyDown={(event) => {
+                  if (event.target !== event.currentTarget) return;
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    setCurrentSpace(space.id);
+                  }
+                }}
+                onDoubleClick={() => setEditingSpaceId(space.id)}
+                onContextMenu={(event) => {
                   event.preventDefault();
-                  setCurrentSpace(space.id);
-                }
-              }}
-              onDoubleClick={() => setEditingSpaceId(space.id)}
-              onContextMenu={(event) => {
-                event.preventDefault();
-                setMenuPosition(getPointerPosition(event));
-                setMenuSpaceId((currentId) =>
-                  currentId === space.id ? -1 : space.id,
-                );
-              }}
-            >
-              <SimpleEditableTitle
-                className={styles.itemTitle}
-                inEdit={space.id === itemInEdit}
-                value={space.title || "untitled"}
-                onSave={(title) => onSaveNewSpaceTitle(space.id, title)}
-                onUnmount={() => setEditingSpaceId(undefined)}
-              />
-              {space.id === itemInEdit && spaces.length > 1 ? (
-                <button
-                  type="button"
-                  className={styles.deleteButton}
-                  data-role={DOM_ROLE.spaceDelete}
-                  title="Delete space"
-                  onMouseDown={() => deleteSpace(space)}
-                >
-                  ×
-                </button>
-              ) : null}
-              {menuSpaceId === space.id ? (
-                <DropdownMenu
-                  onClose={() => setMenuSpaceId(-1)}
-                  className="dropdown-menu--folder dropdown-menu--context"
-                  absPosition={menuPosition}
-                >
-                  <button
-                    className="dropdown-menu__button focusable"
-                    onClick={() => onRenameSpace(space.id)}
+                  setMenuPosition(getPointerPosition(event));
+                  setMenuSpaceId((currentId) =>
+                    currentId === space.id ? -1 : space.id,
+                  );
+                }}
+              >
+                {space.id !== itemInEdit ? (
+                  <span
+                    className={styles.bookmarksCount}
+                    title={`${bookmarksCount} bookmarks`}
+                    aria-label={`${bookmarksCount} bookmarks`}
                   >
-                    <DropdownMenuIcon name="rename" />
-                    Rename space
-                  </button>
+                    {bookmarksCount}
+                  </span>
+                ) : null}
+                <div className={styles.itemLabel}>
+                  <SimpleEditableTitle
+                    className={styles.itemTitle}
+                    inEdit={space.id === itemInEdit}
+                    value={space.title || "untitled"}
+                    onSave={(title) => onSaveNewSpaceTitle(space.id, title)}
+                    onUnmount={() => setEditingSpaceId(undefined)}
+                  />
+                </div>
+                {space.id === itemInEdit && spaces.length > 1 ? (
                   <button
-                    className="dropdown-menu__button focusable"
-                    onClick={() => onExportSpace(space)}
+                    type="button"
+                    className={styles.deleteButton}
+                    data-role={DOM_ROLE.spaceDelete}
+                    title="Delete space"
+                    onMouseDown={() => deleteSpace(space)}
                   >
-                    <IconExportSpace
-                      className="dropdown-menu__icon"
-                      aria-hidden="true"
-                      focusable="false"
-                    />
-                    Export space
+                    ×
                   </button>
-                  {spaces.length > 1 ? (
-                    <>
-                      <div className="dropdown-menu__separator" />
-                      <button
-                        className="dropdown-menu__button dropdown-menu__button--dander focusable"
-                        onClick={() => deleteSpace(space)}
-                      >
-                        <DropdownMenuIcon name="remove" />
-                        Delete space
-                      </button>
-                    </>
-                  ) : null}
-                </DropdownMenu>
-              ) : null}
-            </div>
-          ))}
+                ) : null}
+                {menuSpaceId === space.id ? (
+                  <DropdownMenu
+                    onClose={() => setMenuSpaceId(-1)}
+                    className="dropdown-menu--folder dropdown-menu--context"
+                    absPosition={menuPosition}
+                  >
+                    <button
+                      className="dropdown-menu__button focusable"
+                      onClick={() => onRenameSpace(space.id)}
+                    >
+                      <DropdownMenuIcon name="rename" />
+                      Rename space
+                    </button>
+                    <button
+                      className="dropdown-menu__button focusable"
+                      onClick={() => onExportSpace(space)}
+                    >
+                      <IconExportSpace
+                        className="dropdown-menu__icon"
+                        aria-hidden="true"
+                        focusable="false"
+                      />
+                      Export space
+                    </button>
+                    {spaces.length > 1 ? (
+                      <>
+                        <div className="dropdown-menu__separator" />
+                        <button
+                          className="dropdown-menu__button dropdown-menu__button--dander focusable"
+                          onClick={() => deleteSpace(space)}
+                        >
+                          <DropdownMenuIcon name="remove" />
+                          Delete space
+                        </button>
+                      </>
+                    ) : null}
+                  </DropdownMenu>
+                ) : null}
+              </div>
+            );
+          })}
         </div>
 
         {scrollbarState.isVisible ? (
