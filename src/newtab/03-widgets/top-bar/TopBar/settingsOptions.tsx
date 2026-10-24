@@ -41,7 +41,6 @@ type OnClickOption = {
   hidden?: boolean;
   isFile?: boolean;
   accept?: string;
-  onFileInputClick?: () => void;
   icon?: React.ReactNode;
   dangerStyle?: boolean;
 };
@@ -257,6 +256,7 @@ export const SettingsOptions = ({
       },
       (message, isError) => showNotification({ message, isError }),
     );
+    onClose();
   }
 
   function onAddSpace() {
@@ -366,7 +366,6 @@ export const SettingsOptions = ({
     },
     {
       onClick: (e) => onImportClick(e),
-      onFileInputClick: onClose,
       title: "Open exported Tablo JSON file",
       text: "Import from JSON",
       isFile: true,
@@ -527,7 +526,6 @@ export const Options = (props: {
                   type="file"
                   accept={option.accept ?? ".json"}
                   className="hidden-file-input"
-                  onClick={option.onFileInputClick}
                   onChange={option.onClick}
                   tabIndex={-1}
                 />

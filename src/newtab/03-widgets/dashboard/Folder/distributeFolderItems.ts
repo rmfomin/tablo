@@ -24,7 +24,12 @@ export function distributeFolderItems(
 ): FolderColumn[] {
   const count = Number.isFinite(columnCount) ? Math.max(1, Math.floor(columnCount)) : 1;
   const headerHeight = Math.max(0, Math.ceil(measurements.folderHeaderHeight));
-  type Atom = { item?: BookmarkItemV3; group?: GroupV3; height: number };
+  type Atom = {
+    item?: BookmarkItemV3;
+    group?: GroupV3;
+    groupItemIndex?: number;
+    height: number;
+  };
   const atoms: Atom[] = [];
   const groupItems = new Map<number, BookmarkItemV3[]>();
   const groupHeight = (group: GroupV3) =>
@@ -40,7 +45,14 @@ export function distributeFolderItems(
       if (item.items.length === 0) {
         atoms.push({ group: item.group, height: item.group.collapsed ? 0 : 18 });
       } else {
-        item.items.forEach((child) => atoms.push({ item: child, group: item.group, height: itemHeight(child) }));
+        item.items.forEach((child, groupItemIndex) =>
+          atoms.push({
+            item: child,
+            group: item.group,
+            groupItemIndex,
+            height: itemHeight(child),
+          }),
+        );
       }
     }
   });
@@ -57,7 +69,15 @@ export function distributeFolderItems(
         atom.group && column.atoms.at(-1)?.group?.id !== atom.group.id
           ? groupHeight(atom.group) : 0
       );
-      if (column.height + cost() > limit && index < count - 1) {
+      const remainingGroupItems = atom.group && atom.groupItemIndex !== undefined
+        ? groupItems.get(atom.group.id)!.length - atom.groupItemIndex
+        : 0;
+      const isShortGroupTail = remainingGroupItems > 0 && remainingGroupItems <= 2;
+      if (
+        column.height + cost() > limit &&
+        index < count - 1 &&
+        !isShortGroupTail
+      ) {
         column = columns[++index];
       }
       column.height += cost();

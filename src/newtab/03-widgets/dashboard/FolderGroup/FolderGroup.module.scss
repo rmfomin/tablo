@@ -1,12 +1,32 @@
 .root {
+  --group-content-inset-left: 12px;
+  --group-highlight-outset: 8px;
+
   position: relative;
+  isolation: isolate;
   min-width: 0;
   margin-top: 10px;
-  padding-left: 12px;
-  border-radius: 12px;
+  padding-left: var(--group-content-inset-left);
+  border-radius: var(--container-border-radius);
   background: transparent;
   box-sizing: border-box;
   transition: background-color 0.16s ease, outline-color 0.16s ease;
+
+  &::before {
+    position: absolute;
+    z-index: -1;
+    inset: -4px calc(var(--group-highlight-outset) * -1) -2px;
+    border-radius: var(--container-border-radius);
+    background: color-mix(
+      in srgb,
+      var(--background-color) 92%,
+      var(--main-text-color)
+    );
+    content: "";
+    opacity: 0.28;
+    pointer-events: none;
+    transition: opacity 0.16s ease;
+  }
 
   &[data-drop-target="true"] {
     outline: 2px solid var(--accent-color);
@@ -14,8 +34,9 @@
   }
 
   &[data-selected="true"] {
-    outline: 1px solid var(--selection-accent-color);
-    background: color-mix(in srgb, var(--selection-accent-color) 12%, transparent 88%);
+    &::before {
+      opacity: 1;
+    }
   }
 }
 
@@ -105,8 +126,16 @@
   padding: 0;
   min-height: 18px;
   --folder-item-background-left: calc(
-    (var(--container-padding) + 12px) * -1
+    (var(--group-content-inset-left) + var(--group-highlight-outset)) * -1
   );
+  --folder-item-background-right: calc(var(--group-highlight-outset) * -1);
+}
+
+.items > :last-child :global(a)::before,
+.items > :last-child :global(a)::after {
+  bottom: -4px;
+  border-bottom-left-radius: var(--container-border-radius);
+  border-bottom-right-radius: var(--container-border-radius);
 }
 
 .continued {
