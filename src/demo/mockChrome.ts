@@ -1,9 +1,9 @@
-import { demoBookmarkTree, demoHistory, demoSpaces, demoTabs } from "./fixture";
+import { demoBookmarkTree, demoHistory, demoSettings, demoSpaces, demoTabs } from "./fixture";
 
 export const demoStorageKey = "tablo-demo-state";
 const storageDataKey = "tablo-demo-chrome-storage";
 const currentWindowId = 1;
-const demoFixtureVersion = 2;
+const demoFixtureVersion = 3;
 
 type Listener<Args extends unknown[]> = (...args: Args) => void;
 
@@ -18,12 +18,11 @@ function event<Args extends unknown[]>() {
 
 function initialState() {
   return {
+    ...demoSettings,
     demoFixtureVersion,
     version: 3,
     spaces: demoSpaces,
     currentSpaceId: demoSpaces[0].id,
-    colorTheme: "system",
-    openBookmarksInNewTab: true,
   };
 }
 

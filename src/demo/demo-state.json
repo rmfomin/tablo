@@ -1,0 +1,1038 @@
+{
+  "isTablo": true,
+  "version": 3,
+  "spaces": [
+    {
+      "id": 100,
+      "position": "1024",
+      "objectType": "space",
+      "title": "Работа",
+      "folders": [
+        {
+          "id": 1000,
+          "position": "1024",
+          "objectType": "folder",
+          "title": "Старт дня",
+          "items": [
+            {
+              "id": 1001,
+              "position": "1025024",
+              "title": "Почта",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://mail.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23ea4335%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EG%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1002,
+              "position": "1026048",
+              "title": "Календарь",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://calendar.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%234285f4%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EC%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1003,
+              "position": "1027072",
+              "title": "Задачи на день",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://linear.app/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%235e6ad2%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EL%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1792871623940,
+              "position": "VQ6",
+              "title": "Google Drive",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://drive.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%234285f4%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ED%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1792871347947,
+              "position": "h2M",
+              "title": "GitHub: pull requests",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://github.com/pulls",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%2324292f%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EG%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1792869543862,
+              "position": "qA8",
+              "title": "Slack",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://slack.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23611f69%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ES%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1792869983989,
+              "position": "sTA",
+              "title": "MDN Web Docs",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://developer.mozilla.org/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23343a40%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EM%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1792876628511,
+              "position": "ts:",
+              "title": "React",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://react.dev/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23087ea4%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ER%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1792876188150,
+              "position": "uw;",
+              "title": "Linear",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://linear.app/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%235e6ad2%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EL%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1792869608111,
+              "position": "v>2",
+              "title": "Notion",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.notion.so/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23222222%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EN%3C%2Ftext%3E%3C%2Fsvg%3E"
+            }
+          ],
+          "color": "#dce9ff",
+          "columnSpan": 2
+        },
+        {
+          "id": 1900,
+          "position": "10240",
+          "objectType": "folder",
+          "title": "Релиз",
+          "items": [
+            {
+              "id": 1901,
+              "position": "1946624",
+              "title": "Список изменений",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://keepachangelog.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%233b82f6%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EK%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1902,
+              "position": "1947648",
+              "title": "Проверки перед выпуском",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://github.com/rmfomin/tablo/actions",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%2324292f%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EA%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1903,
+              "position": "1948672",
+              "title": "Управление версиями",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://semver.org/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%233c873a%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ES%3C%2Ftext%3E%3C%2Fsvg%3E"
+            }
+          ],
+          "color": "#e1f5eb",
+          "columnSpan": 1
+        },
+        {
+          "id": 1100,
+          "position": "2048",
+          "objectType": "folder",
+          "title": "Tablo",
+          "items": [
+            {
+              "id": 1101,
+              "position": "1127424",
+              "title": "Исходный код",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://github.com/rmfomin/tablo",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%2324292f%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EG%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1102,
+              "position": "1128448",
+              "title": "Issues проекта",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://github.com/rmfomin/tablo/issues",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%2324292f%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EI%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1103,
+              "position": "1129472",
+              "title": "Действия CI",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://github.com/rmfomin/tablo/actions",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%2324292f%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EA%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1190,
+              "position": "1218560",
+              "title": "Документация",
+              "type": "group",
+              "objectType": "group",
+              "groupItems": [
+                {
+                  "id": 1104,
+                  "position": "1130496",
+                  "title": "React",
+                  "type": "bookmark",
+                  "objectType": "bookmark",
+                  "url": "https://react.dev/",
+                  "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23087ea4%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ER%3C%2Ftext%3E%3C%2Fsvg%3E"
+                },
+                {
+                  "id": 1105,
+                  "position": "1131520",
+                  "title": "TypeScript",
+                  "type": "bookmark",
+                  "objectType": "bookmark",
+                  "url": "https://www.typescriptlang.org/",
+                  "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%233178c6%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ET%3C%2Ftext%3E%3C%2Fsvg%3E"
+                }
+              ]
+            }
+          ],
+          "columnSpan": 1
+        },
+        {
+          "id": 1200,
+          "position": "3072",
+          "objectType": "folder",
+          "title": "Разработка",
+          "items": [
+            {
+              "id": 1290,
+              "position": "1320960",
+              "title": "Frontend",
+              "type": "group",
+              "objectType": "group",
+              "groupItems": [
+                {
+                  "id": 1201,
+                  "position": "1229824",
+                  "title": "React Docs",
+                  "type": "bookmark",
+                  "objectType": "bookmark",
+                  "url": "https://react.dev/",
+                  "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23087ea4%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ER%3C%2Ftext%3E%3C%2Fsvg%3E"
+                },
+                {
+                  "id": 1202,
+                  "position": "1230848",
+                  "title": "Vite",
+                  "type": "bookmark",
+                  "objectType": "bookmark",
+                  "url": "https://vite.dev/",
+                  "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23646cff%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EV%3C%2Ftext%3E%3C%2Fsvg%3E"
+                },
+                {
+                  "id": 1203,
+                  "position": "1231872",
+                  "title": "MDN",
+                  "type": "bookmark",
+                  "objectType": "bookmark",
+                  "url": "https://developer.mozilla.org/",
+                  "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23343a40%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EM%3C%2Ftext%3E%3C%2Fsvg%3E"
+                }
+              ]
+            },
+            {
+              "id": 1291,
+              "position": "1321984",
+              "title": "Backend",
+              "type": "group",
+              "objectType": "group",
+              "groupItems": [
+                {
+                  "id": 1204,
+                  "position": "1232896",
+                  "title": "Node.js",
+                  "type": "bookmark",
+                  "objectType": "bookmark",
+                  "url": "https://nodejs.org/",
+                  "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%2343853d%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EN%3C%2Ftext%3E%3C%2Fsvg%3E"
+                },
+                {
+                  "id": 1205,
+                  "position": "1233920",
+                  "title": "PostgreSQL",
+                  "type": "bookmark",
+                  "objectType": "bookmark",
+                  "url": "https://www.postgresql.org/docs/",
+                  "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23336791%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EP%3C%2Ftext%3E%3C%2Fsvg%3E"
+                }
+              ]
+            }
+          ],
+          "columnSpan": 1
+        },
+        {
+          "id": 1300,
+          "position": "4096",
+          "objectType": "folder",
+          "title": "Документы и заметки",
+          "items": [
+            {
+              "id": 1301,
+              "position": "1332224",
+              "title": "План проекта",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://docs.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%234285f4%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ED%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1302,
+              "position": "1333248",
+              "title": "База знаний",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.notion.so/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23222222%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EN%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1303,
+              "position": "1334272",
+              "title": "Технические заметки",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://keep.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23fbbc04%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EK%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1304,
+              "position": "1335296",
+              "title": "Доска команды",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://miro.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23ffd02f%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EM%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1305,
+              "position": "1336320",
+              "title": "Словарь API",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://swagger.io/tools/swagger-ui/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%2385ea2d%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ES%3C%2Ftext%3E%3C%2Fsvg%3E"
+            }
+          ],
+          "color": "#eee7ff",
+          "columnSpan": 1
+        },
+        {
+          "id": 1400,
+          "position": "5120",
+          "objectType": "folder",
+          "title": "Команда",
+          "items": [
+            {
+              "id": 1401,
+              "position": "1434624",
+              "title": "Slack",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://slack.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23611f69%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ES%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1402,
+              "position": "1435648",
+              "title": "Видеовстречи",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://meet.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%2300897b%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EM%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1403,
+              "position": "1436672",
+              "title": "Контакты",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://contacts.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%234285f4%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EC%3C%2Ftext%3E%3C%2Fsvg%3E"
+            }
+          ],
+          "columnSpan": 1
+        },
+        {
+          "id": 1500,
+          "position": "6144",
+          "objectType": "folder",
+          "title": "Дизайн",
+          "items": [
+            {
+              "id": 1501,
+              "position": "1537024",
+              "title": "Figma",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.figma.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%238057d7%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EF%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1792873206973,
+              "position": "1537U4<",
+              "title": "rmfomin/tablo · GitHub",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://github.com/rmfomin/tablo",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%2324292f%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EG%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1502,
+              "position": "1538048",
+              "title": "Иконки Lucide",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://lucide.dev/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23f56565%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EL%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1503,
+              "position": "1539072",
+              "title": "Unsplash",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://unsplash.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23111111%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EU%3C%2Ftext%3E%3C%2Fsvg%3E"
+            }
+          ],
+          "color": "#ffe8dc",
+          "columnSpan": 1
+        },
+        {
+          "id": 1600,
+          "position": "7168",
+          "objectType": "folder",
+          "title": "Проверка качества",
+          "items": [
+            {
+              "id": 1601,
+              "position": "1639424",
+              "title": "Поддержка браузеров",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://caniuse.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23e34f26%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EC%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1602,
+              "position": "1640448",
+              "title": "Доступность",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.w3.org/WAI/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23005a9c%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EW%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1690,
+              "position": "1730560",
+              "title": "Веб-стандарты",
+              "type": "group",
+              "objectType": "group",
+              "groupItems": [
+                {
+                  "id": 1603,
+                  "position": "1641472",
+                  "title": "Web.dev",
+                  "type": "bookmark",
+                  "objectType": "bookmark",
+                  "url": "https://web.dev/",
+                  "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%234285f4%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EW%3C%2Ftext%3E%3C%2Fsvg%3E"
+                },
+                {
+                  "id": 1604,
+                  "position": "1642496",
+                  "title": "WHATWG",
+                  "type": "bookmark",
+                  "objectType": "bookmark",
+                  "url": "https://whatwg.org/",
+                  "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23333333%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EW%3C%2Ftext%3E%3C%2Fsvg%3E"
+                }
+              ]
+            }
+          ],
+          "columnSpan": 1
+        },
+        {
+          "id": 1700,
+          "position": "8192",
+          "objectType": "folder",
+          "title": "Аналитика",
+          "items": [
+            {
+              "id": 1701,
+              "position": "1741824",
+              "title": "Google Analytics",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://analytics.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23f9ab00%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EA%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1702,
+              "position": "1742848",
+              "title": "Search Console",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://search.google.com/search-console/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23458cf5%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ES%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1703,
+              "position": "1743872",
+              "title": "Отчёт по продукту",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://lookerstudio.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%234285f4%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EL%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1704,
+              "position": "1744896",
+              "title": "Метрики релиза",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://github.com/rmfomin/tablo/actions",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%2324292f%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EA%3C%2Ftext%3E%3C%2Fsvg%3E"
+            }
+          ],
+          "columnSpan": 1
+        },
+        {
+          "id": 1800,
+          "position": "9216",
+          "objectType": "folder",
+          "title": "Обучение",
+          "items": [
+            {
+              "id": 1801,
+              "position": "1844224",
+              "title": "CSS Tricks",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://css-tricks.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23e44d26%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EC%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1802,
+              "position": "1845248",
+              "title": "Frontend Mentor",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.frontendmentor.io/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%233f54a3%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EF%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 1803,
+              "position": "1846272",
+              "title": "JavaScript.info",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://javascript.info/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23f0db4f%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EJ%3C%2Ftext%3E%3C%2Fsvg%3E"
+            }
+          ],
+          "columnSpan": 1
+        }
+      ],
+      "quickGroups": [
+        {
+          "title": "Основные сайты",
+          "color": "blue",
+          "urls": [
+            "https://mail.google.com/",
+            "https://calendar.google.com/",
+            "https://github.com/rmfomin/tablo",
+            "https://linear.app/"
+          ]
+        },
+        {
+          "title": "Инструменты команды",
+          "color": "purple",
+          "urls": [
+            "https://slack.com/",
+            "https://www.figma.com/",
+            "https://www.notion.so/"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 200,
+      "position": "2048",
+      "objectType": "space",
+      "title": "Личное",
+      "folders": [
+        {
+          "id": 3000,
+          "position": "1024",
+          "objectType": "folder",
+          "title": "На каждый день",
+          "items": [
+            {
+              "id": 3001,
+              "position": "3073024",
+              "title": "Почта",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://mail.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23ea4335%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EG%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3002,
+              "position": "3074048",
+              "title": "Календарь",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://calendar.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%234285f4%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EC%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3003,
+              "position": "3075072",
+              "title": "Карты",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://maps.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%2334a853%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EM%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3004,
+              "position": "3076096",
+              "title": "Google Drive",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://drive.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%234285f4%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ED%3C%2Ftext%3E%3C%2Fsvg%3E"
+            }
+          ],
+          "color": "#fff1d6",
+          "columnSpan": 3
+        },
+        {
+          "id": 3900,
+          "position": "10240",
+          "objectType": "folder",
+          "title": "Учёба",
+          "items": [
+            {
+              "id": 3901,
+              "position": "3994624",
+              "title": "Coursera",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.coursera.org/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%230056d2%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EC%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3902,
+              "position": "3995648",
+              "title": "Khan Academy",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.khanacademy.org/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%2314bf96%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EK%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3903,
+              "position": "3996672",
+              "title": "Словарь",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.merriam-webster.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23224b8f%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EM%3C%2Ftext%3E%3C%2Fsvg%3E"
+            }
+          ],
+          "columnSpan": 1
+        },
+        {
+          "id": 3100,
+          "position": "2048",
+          "objectType": "folder",
+          "title": "Читать",
+          "items": [
+            {
+              "id": 3101,
+              "position": "3175424",
+              "title": "Wikipedia",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.wikipedia.org/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23555555%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EW%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3102,
+              "position": "3176448",
+              "title": "Habr",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://habr.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23629fbc%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EH%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3103,
+              "position": "3177472",
+              "title": "Научные статьи",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://scholar.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%234285f4%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ES%3C%2Ftext%3E%3C%2Fsvg%3E"
+            }
+          ],
+          "columnSpan": 1
+        },
+        {
+          "id": 3200,
+          "position": "3072",
+          "objectType": "folder",
+          "title": "Дом и быт",
+          "items": [
+            {
+              "id": 3201,
+              "position": "3277824",
+              "title": "Рецепты",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.bbcgoodfood.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23bb1919%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EB%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3202,
+              "position": "3278848",
+              "title": "Погода",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://weather.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%231688f2%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EW%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3203,
+              "position": "3279872",
+              "title": "Доставка",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.ubereats.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%2306c167%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EU%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3204,
+              "position": "3280896",
+              "title": "Покупки",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.ikea.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%230058a3%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EI%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3205,
+              "position": "3281920",
+              "title": "Домашние заметки",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://keep.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23fbbc04%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EK%3C%2Ftext%3E%3C%2Fsvg%3E"
+            }
+          ],
+          "color": "#e7f4e4",
+          "columnSpan": 3
+        },
+        {
+          "id": 3300,
+          "position": "4096",
+          "objectType": "folder",
+          "title": "Путешествия",
+          "items": [
+            {
+              "id": 3301,
+              "position": "3380224",
+              "title": "Карты",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://maps.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%2334a853%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EM%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3302,
+              "position": "3381248",
+              "title": "Билеты",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.skyscanner.net/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%230770e3%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ES%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3390,
+              "position": "3471360",
+              "title": "План поездки",
+              "type": "group",
+              "objectType": "group",
+              "groupItems": [
+                {
+                  "id": 3303,
+                  "position": "3382272",
+                  "title": "Жильё",
+                  "type": "bookmark",
+                  "objectType": "bookmark",
+                  "url": "https://www.airbnb.com/",
+                  "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23ff5a5f%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EA%3C%2Ftext%3E%3C%2Fsvg%3E"
+                },
+                {
+                  "id": 3304,
+                  "position": "3383296",
+                  "title": "Места рядом",
+                  "type": "bookmark",
+                  "objectType": "bookmark",
+                  "url": "https://www.tripadvisor.com/",
+                  "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%2334e0a1%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ET%3C%2Ftext%3E%3C%2Fsvg%3E"
+                }
+              ]
+            }
+          ],
+          "columnSpan": 1
+        },
+        {
+          "id": 3400,
+          "position": "5120",
+          "objectType": "folder",
+          "title": "Фотографии",
+          "items": [
+            {
+              "id": 3401,
+              "position": "3482624",
+              "title": "Google Photos",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://photos.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%234285f4%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EP%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3402,
+              "position": "3483648",
+              "title": "Unsplash",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://unsplash.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23111111%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EU%3C%2Ftext%3E%3C%2Fsvg%3E"
+            }
+          ],
+          "columnSpan": 1
+        },
+        {
+          "id": 3500,
+          "position": "6144",
+          "objectType": "folder",
+          "title": "Музыка и видео",
+          "items": [
+            {
+              "id": 3501,
+              "position": "3585024",
+              "title": "YouTube",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.youtube.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23ff0000%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EY%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3502,
+              "position": "3586048",
+              "title": "Spotify",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://open.spotify.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%231db954%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ES%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3503,
+              "position": "3587072",
+              "title": "Кино на вечер",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.imdb.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23f5c518%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EI%3C%2Ftext%3E%3C%2Fsvg%3E"
+            }
+          ],
+          "columnSpan": 1
+        },
+        {
+          "id": 3600,
+          "position": "7168",
+          "objectType": "folder",
+          "title": "Финансы",
+          "items": [
+            {
+              "id": 3601,
+              "position": "3687424",
+              "title": "Бюджет",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://sheets.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%230f9d58%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ES%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3602,
+              "position": "3688448",
+              "title": "Курсы валют",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.xe.com/currencyconverter/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%232c9fdb%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EX%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3603,
+              "position": "3689472",
+              "title": "Налоги и документы",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://drive.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%234285f4%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ED%3C%2Ftext%3E%3C%2Fsvg%3E"
+            }
+          ],
+          "columnSpan": 1
+        },
+        {
+          "id": 3700,
+          "position": "8192",
+          "objectType": "folder",
+          "title": "Здоровье",
+          "items": [
+            {
+              "id": 3701,
+              "position": "3789824",
+              "title": "Тренировки",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.nike.com/ntc-app",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23111111%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EN%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3702,
+              "position": "3790848",
+              "title": "Прогулки",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://maps.google.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%2334a853%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EM%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3703,
+              "position": "3791872",
+              "title": "Полезные привычки",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://todoist.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23e44332%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3ET%3C%2Ftext%3E%3C%2Fsvg%3E"
+            }
+          ],
+          "columnSpan": 1
+        },
+        {
+          "id": 3800,
+          "position": "9216",
+          "objectType": "folder",
+          "title": "Идеи и вдохновение",
+          "items": [
+            {
+              "id": 3801,
+              "position": "3892224",
+              "title": "Awwwards",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.awwwards.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23111111%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EA%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3802,
+              "position": "3893248",
+              "title": "Pinterest",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.pinterest.com/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23e60023%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EP%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3803,
+              "position": "3894272",
+              "title": "Behance",
+              "type": "bookmark",
+              "objectType": "bookmark",
+              "url": "https://www.behance.net/",
+              "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%231769ff%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EB%3C%2Ftext%3E%3C%2Fsvg%3E"
+            },
+            {
+              "id": 3890,
+              "position": "3983360",
+              "title": "Цвета и шрифты",
+              "type": "group",
+              "objectType": "group",
+              "groupItems": [
+                {
+                  "id": 3804,
+                  "position": "3895296",
+                  "title": "Google Fonts",
+                  "type": "bookmark",
+                  "objectType": "bookmark",
+                  "url": "https://fonts.google.com/",
+                  "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%234285f4%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EF%3C%2Ftext%3E%3C%2Fsvg%3E"
+                },
+                {
+                  "id": 3805,
+                  "position": "3896320",
+                  "title": "Coolors",
+                  "type": "bookmark",
+                  "objectType": "bookmark",
+                  "url": "https://coolors.co/",
+                  "favIconUrl": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%23fb8500%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%22%20font-size%3D%2219%22%20fill%3D%22white%22%3EC%3C%2Ftext%3E%3C%2Fsvg%3E"
+                }
+              ]
+            }
+          ],
+          "color": "#f5e4f3",
+          "columnSpan": 1
+        }
+      ],
+      "quickGroups": [
+        {
+          "title": "На каждый день",
+          "color": "green",
+          "urls": [
+            "https://mail.google.com/",
+            "https://maps.google.com/",
+            "https://drive.google.com/"
+          ]
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "version": 1,
+    "values": {
+      "sidebarCollapsed": false,
+      "openBookmarksInNewTab": true,
+      "colorTheme": "system",
+      "showRecent": false,
+      "showNotUsed": false,
+      "useSearchResultsPopup": true,
+      "showGroupBackground": true,
+      "backupReminderEnabled": false,
+      "backupReminderIntervalDays": 30
+    }
+  }
+}
