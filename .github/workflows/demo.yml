@@ -47,8 +47,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/configure-pages@v6
-        with:
-          enablement: true
       - name: Deploy demo to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5

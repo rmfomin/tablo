@@ -19,6 +19,8 @@ Tablo — расширение для Chrome, которое заменяет с
 
 После публикации через GitHub Actions демо доступно по адресу [rmfomin.github.io/tablo](https://rmfomin.github.io/tablo/). Для локальной сборки выполните `npm run build:demo`; готовая отдельная версия появится в `demo-dist` и не изменяет сборку расширения в `dist`. Pull request получает сборку демо как Actions artifact.
 
+Перед первым деплоем в настройках репозитория откройте **Settings → Pages** и установите **Source → GitHub Actions**. Workflow не включает Pages самостоятельно: GitHub не разрешает `GITHUB_TOKEN` создавать Pages-сайт.
+
 ## Требования
 
 - Google Chrome или другой браузер на базе Chromium.
