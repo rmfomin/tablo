@@ -9,6 +9,7 @@ import {
   PlainListRecord,
 } from "@/newtab/06-shared/api/chrome/bookmarks";
 import { RecentItem } from "@/newtab/06-shared/api/chrome/history";
+import { Modal } from "@/newtab/06-shared/ui/Modal/Modal";
 
 const recordToTitle = (rec: PlainListRecord) => {
   const res = rec.breadcrumbs.map((r) => r.title).join(" / ");
@@ -165,36 +166,15 @@ const BookmarkList = (p: {
   };
 
   return (
-    <>
-      {selectedBookmarksCount > 0 ? (
-        <button className="btn__setting primary" onClick={onImport}>
-          Import {selectedBookmarksCount} selected bookmarks
-        </button>
-      ) : (
-        <button className="btn__setting primary" disabled={true}>
-          Select some bookmarks to import
-        </button>
-      )}
-      <button
-        className="btn__setting"
-        style={{ marginLeft: "8px" }}
-        onClick={onSelectAll}
-      >
-        Select all bookmarks
-      </button>
-      {p.onBack && (
-        <button
-          className="btn__setting borderless"
-          style={{ marginLeft: "8px" }}
-          onClick={p.onBack}
-        >
-          Go back
-        </button>
-      )}
+    <div className="bookmark-import-modal">
+      <header className="bookmark-import-header">
+        <h2>Importing browser bookmarks</h2>
+        <p>Select the bookmarks you'd like to import</p>
+      </header>
 
-      <div className="importing-bookmarks-list">
+      <div className="importing-bookmarks-list" role="list">
         {records.map((rec, recIndex) => (
-          <div key={rec.folder.id}>
+          <div key={rec.folder.id} role="listitem">
             <label className="folder-title" title={rec.folder.url}>
               <input
                 type="checkbox"
@@ -244,7 +224,7 @@ const BookmarkList = (p: {
           </div>
         ))}
       </div>
-      <p style={{ paddingBottom: "80px", paddingTop: "40px" }}>
+      <div className="bookmark-import-actions">
         {selectedBookmarksCount > 0 ? (
           <button className="btn__setting primary" onClick={onImport}>
             Import {selectedBookmarksCount} selected bookmarks
@@ -256,34 +236,26 @@ const BookmarkList = (p: {
         )}
         <button
           className="btn__setting"
-          style={{ marginLeft: "8px" }}
           onClick={onImportAll}
         >
           Import all
         </button>
         <button
           className="btn__setting"
-          style={{ marginLeft: "8px" }}
           onClick={onImportRecent}
         >
           Import recent only
         </button>
-        <button
-          className="btn__setting"
-          style={{ marginLeft: "8px" }}
-          onClick={onSelectAll}
-        >
+        <button className="btn__setting" onClick={onSelectAll}>
           Select all bookmarks
         </button>
-        <button
-          className="btn__setting"
-          style={{ marginLeft: "8px" }}
-          onClick={p.onClose}
-        >
-          Skip
-        </button>
-      </p>
-    </>
+        {p.onBack && (
+          <button className="btn__setting borderless" onClick={p.onBack}>
+            Go back
+          </button>
+        )}
+      </div>
+    </div>
   );
 };
 
@@ -293,19 +265,15 @@ export function BookmarkImporter(p: {
   onBack?: () => void;
 }) {
   return (
-    <div className="importing-bookmarks-screen">
-      {!p.onBack && (
-        <div onClick={p.onClose} className="importing-bookmarks__close">
-          ⨉
-        </div>
-      )}
-      <h1>Importing browser bookmarks 📦</h1>
-      <h2>Select the bookmarks you'd like to import</h2>
+    <Modal
+      className="modal-app modal-bookmark-import"
+      onClose={p.onClose}
+    >
       <BookmarkList
         recentItems={p.recentItems}
         onClose={p.onClose}
         onBack={p.onBack}
       />
-    </div>
+    </Modal>
   );
 }

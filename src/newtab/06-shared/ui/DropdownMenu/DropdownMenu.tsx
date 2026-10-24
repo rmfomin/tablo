@@ -67,6 +67,11 @@ export const DropdownSubMenu = ({
   const submenuRef = useRef<HTMLDivElement>(null);
 
   const onClick = () => {
+    if (menuId === currentMenuId) {
+      setCurrentMenuId(-1);
+      return;
+    }
+
     setCurrentMenuId(menuId);
 
     requestAnimationFrame(() => {
