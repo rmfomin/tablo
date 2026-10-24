@@ -11,6 +11,13 @@ export type DashboardState = {
   currentSpaceId: number;
 };
 
+export type BookmarkFaviconUpdate = {
+  itemId: number;
+  bookmarkUrl: string;
+  previousFavIconUrl: string;
+  favIconUrl: string;
+};
+
 export type FolderPatch = Pick<
   Partial<FolderV3>,
   "title" | "color" | "collapsed" | "position" | "columnSpan"

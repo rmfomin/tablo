@@ -12,6 +12,7 @@ import type {
   SpaceV3,
 } from "@/newtab/05-entities/dashboard/model/types";
 import type {
+  BookmarkFaviconUpdate,
   CreateFolderInput,
   CreateFolderItemInput,
   CreateFolderItemsInput,
@@ -24,6 +25,34 @@ import type {
   MoveSpaceInput,
   SpacePatch,
 } from "@/newtab/01-app/model/dashboard/types";
+
+export function updateBookmarkFavicons(state: DashboardState, updates: BookmarkFaviconUpdate[]) {
+  if (!updates.length) return { state, updatedCount: 0 };
+  const byId = new Map(updates.map((update) => [update.itemId, update]));
+  let updatedCount = 0;
+  function updateBookmark(item: BookmarkItemV3): BookmarkItemV3 {
+    const update = byId.get(item.id);
+    if (!update || item.isSection || item.url !== update.bookmarkUrl ||
+      item.favIconUrl !== update.previousFavIconUrl || item.favIconUrl === update.favIconUrl) return item;
+    updatedCount++;
+    return { ...item, favIconUrl: update.favIconUrl };
+  }
+  const spaces = state.spaces.map((space) => {
+    const beforeSpace = updatedCount;
+    const folders = space.folders.map((folder) => {
+      const beforeFolder = updatedCount;
+      const items = folder.items.map((item) => {
+        if (item.type === "bookmark") return updateBookmark(item);
+        const beforeGroup = updatedCount;
+        const groupItems = item.groupItems.map(updateBookmark);
+        return updatedCount === beforeGroup ? item : { ...item, groupItems };
+      });
+      return updatedCount === beforeFolder ? folder : { ...folder, items };
+    });
+    return updatedCount === beforeSpace ? space : { ...space, folders };
+  });
+  return { state: updatedCount ? { ...state, spaces } : state, updatedCount };
+}
 
 export function selectSpace(
   state: DashboardState,

@@ -11,7 +11,7 @@ import { useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStor
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import cn from "clsx";
 import { FolderItemMenu } from "@/newtab/03-widgets/dashboard/FolderItemMenu/FolderItemMenu";
-import { getBrokenImgSVG, getChromeFaviconUrl, loadFaviconUrl } from "@/newtab/06-shared/api/chrome/favicons";
+import { getBrokenImgSVG, loadFaviconUrl } from "@/newtab/06-shared/api/chrome/favicons";
 import { RecentItem } from "@/newtab/06-shared/api/chrome/history";
 import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
 import { getPointerPosition } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
@@ -30,6 +30,7 @@ export const FolderItem = React.memo(
     search: string;
   }) => {
     const updateFolderItem = useDashboardStore((state) => state.updateFolderItem);
+    const updateBookmarkFavicons = useDashboardStore((state) => state.updateBookmarkFavicons);
     const setItemInEdit = useUiStore((state) => state.setItemInEdit);
     const isSelected = useUiStore((state) =>
       state.selectedItemIds.includes(p.item.id),
@@ -38,7 +39,7 @@ export const FolderItem = React.memo(
     const hasSelectedItems = useUiStore(
       (state) => state.selectedItemIds.length > 0,
     );
-    const faviconRefreshId = useUiStore((state) => state.faviconRefreshId);
+    const faviconRefreshVersion = useUiStore((state) => state.faviconRefreshVersions[p.item.id] ?? 0);
     const searchNavigationTargetId = useUiStore((state) => state.searchNavigationTargetId);
     const [showMenu, setShowMenu] = useState<boolean>(false);
     const [menuPosition, setMenuPosition] = useState<Point>();
@@ -55,8 +56,13 @@ export const FolderItem = React.memo(
         updateFolderItem(p.item.id, { title: newTitle, url: newUrl ?? p.item.url });
 
         if (urlChanged) {
-          loadFaviconUrl(newUrl).then((faviconUrl) => {
-            updateFolderItem(p.item.id, { favIconUrl: faviconUrl });
+          loadFaviconUrl(newUrl, p.tabs).then((faviconUrl) => {
+            if (faviconUrl) updateBookmarkFavicons([{
+              itemId: p.item.id,
+              bookmarkUrl: newUrl,
+              previousFavIconUrl: p.item.favIconUrl,
+              favIconUrl: faviconUrl,
+            }]);
           });
         }
       }
@@ -77,7 +83,8 @@ export const FolderItem = React.memo(
 
     function handleImageError(e: React.SyntheticEvent) {
       const imgElement = e.target as HTMLImageElement;
-      imgElement.src = getBrokenImgSVG();
+      const fallback = getBrokenImgSVG();
+      if (imgElement.src !== fallback) imgElement.src = fallback;
     }
 
     const folderItemOpened = findTabsByURL(p.item.url, p.tabs).length !== 0;
@@ -118,11 +125,8 @@ export const FolderItem = React.memo(
           onContextMenu={onContextMenu}
         >
           <img
-            src={
-              p.item.favIconUrl.includes("/_favicon/") && faviconRefreshId > 0
-                ? getChromeFaviconUrl(p.item.url, 32, faviconRefreshId)
-                : p.item.favIconUrl
-            }
+            key={faviconRefreshVersion}
+            src={p.item.favIconUrl}
             alt=""
             onError={handleImageError}
           />

@@ -15,11 +15,10 @@ import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { useChromeRuntimeStore } from "@/newtab/01-app/model/chrome-runtime/chromeRuntimeStore";
 import { importFromJsonWithCallbacks } from "@/newtab/04-features/bookmarks-import/model/dashboardImportExport";
 import { onExportJson } from "@/newtab/04-features/bookmarks-export/model/dashboardExport";
-import { loadFaviconUrl } from "@/newtab/06-shared/api/chrome/favicons";
+import { reloadCurrentSpaceFavicons } from "@/newtab/04-features/favicons/model/favicons";
 import { ShortcutsModal } from "@/newtab/03-widgets/ui/ShortcutsModal/ShortcutsModal";
-import type { BookmarkItemV3, ColorTheme } from "@/newtab/05-entities/dashboard/model/types";
+import type { ColorTheme } from "@/newtab/05-entities/dashboard/model/types";
 import cn from "clsx";
-import { collectBookmarksV3 } from "@/newtab/05-entities/dashboard/model/traversal";
 import { ThemeOptionIcon } from "@/newtab/03-widgets/ui/ThemeOptionIcon/ThemeOptionIcon";
 import { DropdownSubMenu } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
 import { importSpaceFromJsonWithCallback } from "@/newtab/04-features/bookmarks-import/model/dashboardImportExport";
@@ -41,6 +40,7 @@ type OnClickOption = {
   title: string;
   text: string;
   hidden?: boolean;
+  disabled?: boolean;
   isFile?: boolean;
   accept?: string;
   icon?: React.ReactNode;
@@ -79,11 +79,7 @@ const themeOptions: Array<{ value: ColorTheme; text: string }> = [
 ];
 
 export const HelpOptions = () => {
-  const spaces = useDashboardStore((state) => state.spaces);
-  const currentSpaceId = useDashboardStore((state) => state.currentSpaceId);
-  const updateFolderItem = useDashboardStore((state) => state.updateFolderItem);
-  const showNotification = useUiStore((state) => state.showNotification);
-  const refreshFavicons = useUiStore((state) => state.refreshFavicons);
+  const faviconRefreshInProgress = useUiStore((state) => state.faviconRefreshInProgress);
   // const [isJoinBetaModalOpen, setJoinBetaModalOpen] = useState(false);
   const [isShortcutsModalOpen, setShortcutsModalOpen] = useState(false);
 
@@ -96,38 +92,6 @@ export const HelpOptions = () => {
 
   function showShortcutsModal() {
     setShortcutsModalOpen(true);
-  }
-
-  function invalidateFavicon(folderItem: BookmarkItemV3): Promise<void> {
-    if (folderItem.url) {
-      return loadFaviconUrl(folderItem.url).then((newFaviconUrl) => {
-        if (newFaviconUrl !== folderItem.favIconUrl) {
-          updateFolderItem(folderItem.id, { favIconUrl: newFaviconUrl });
-        }
-      });
-    } else {
-      return Promise.resolve();
-    }
-  }
-
-  function minTimeoutPromise() {
-    return new Promise((resolve) => setTimeout(resolve, 500));
-  }
-
-  function invalidateBrokenIcons() {
-    const promises: Promise<unknown>[] = [minTimeoutPromise()];
-    const currentSpace = spaces.find((space) => space.id === currentSpaceId);
-    if (currentSpace) {
-      promises.push(
-        ...collectBookmarksV3([currentSpace]).map(invalidateFavicon)
-      );
-    }
-
-    showNotification({ message: "updating...", isLoading: true });
-    Promise.all(promises).then(() => {
-      refreshFavicons();
-      showNotification({ message: "Favicons are updated" });
-    });
   }
 
   const settingsOptions: OptionsConfig = [
@@ -144,10 +108,11 @@ export const HelpOptions = () => {
       ),
     },
     {
-      onClick: invalidateBrokenIcons,
+      onClick: () => { void reloadCurrentSpaceFavicons(); },
+      disabled: faviconRefreshInProgress,
       title:
         "Sometimes favicons are not showing, this option may help to fix it. Applied only for bookmarks in the current space.",
-      text: "Reload favicons",
+      text: faviconRefreshInProgress ? "Reloading favicons…" : "Reload favicons",
       icon: (
         <IconReload
           className="dropdown-menu__icon"
@@ -583,6 +548,7 @@ export const Options = (props: {
                   "dropdown-menu__button--with-icon": option.icon,
                 })}
                 onClick={option.onClick}
+                disabled={option.disabled}
                 title={option.title}
               >
                 {option.icon}

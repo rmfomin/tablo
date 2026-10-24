@@ -10,6 +10,8 @@ import {
 } from "@/newtab/01-app/model/chrome-runtime/controller";
 import { tryLoadMoreHistory } from "@/newtab/06-shared/api/chrome/history";
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
+import { dashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
+import { createFaviconSyncController } from "@/newtab/04-features/favicons/model/favicons";
 
 let notificationTimeout: number | undefined;
 
@@ -26,6 +28,8 @@ export function App() {
   const hideNotification = useUiStore((state) => state.hideNotification);
 
   useEffect(() => {
+    const faviconController = createFaviconSyncController(dashboardStore, chromeRuntimeStore);
+    faviconController.start();
     const controller = createChromeRuntimeController(
       chromeRuntimeStore,
       createBrowserChromeRuntimeAdapter(),
@@ -47,6 +51,7 @@ export function App() {
     broadcast.addEventListener("message", onMessage);
 
     return () => {
+      faviconController.stop();
       controller.stop();
       window.clearTimeout(preloadTimer);
       broadcast.removeEventListener("message", onMessage);

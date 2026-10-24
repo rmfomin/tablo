@@ -16,9 +16,11 @@ import {
   selectSpace,
   updateFolder,
   updateFolderItem,
+  updateBookmarkFavicons,
   updateSpace,
 } from "@/newtab/01-app/model/dashboard/domain";
 import type {
+  BookmarkFaviconUpdate,
   DashboardState,
   CreateFolderInput,
   CreateFolderItemInput,
@@ -47,6 +49,7 @@ export type DashboardActions = {
   convertFolderGroupToFolder(groupId: number): void;
   deleteFolderItems(itemIds: number[]): void;
   updateFolderItem(itemId: number, patch: FolderItemPatch): void;
+  updateBookmarkFavicons(updates: BookmarkFaviconUpdate[]): number;
   selectSpace(spaceId: number): void;
   updateFolder(folderId: number, patch: FolderPatch): void;
   moveFolder(input: MoveFolderInput): void;
@@ -88,6 +91,15 @@ function createDashboardSlice(
     convertFolderGroupToFolder: (groupId) => set((state) => applyWithUndo(state, convertFolderGroupToFolder(state, groupId))),
     deleteFolderItems: (itemIds) => set((state) => applyWithUndo(state, deleteFolderItems(state, itemIds))),
     updateFolderItem: (itemId, patch) => set((state) => applyWithUndo(state, updateFolderItem(state, itemId, patch))),
+    updateBookmarkFavicons: (updates) => {
+      let updatedCount = 0;
+      set((state) => {
+        const result = updateBookmarkFavicons(state, updates);
+        updatedCount = result.updatedCount;
+        return result.state;
+      });
+      return updatedCount;
+    },
     selectSpace: (spaceId) => {
       set((state) => selectSpace(state, spaceId));
     },

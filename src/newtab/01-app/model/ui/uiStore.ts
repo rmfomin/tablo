@@ -47,7 +47,8 @@ export type UiState = Omit<
   notification: NotificationState;
   page: "default" | "import";
   sidebarHovered: boolean;
-  faviconRefreshId: number;
+  faviconRefreshVersions: Record<number, number>;
+  faviconRefreshInProgress: boolean;
   searchNavigationTargetId: number | undefined;
   backupReminderEnabled: boolean;
   backupReminderIntervalDays: number;
@@ -74,7 +75,8 @@ export type UiActions = {
   setShowNotUsed(showNotUsed: boolean): void;
   setUseSearchResultsPopup(useSearchResultsPopup: boolean): void;
   setShowGroupBackground(showGroupBackground: boolean): void;
-  refreshFavicons(): void;
+  refreshFavicons(itemIds: number[]): void;
+  setFaviconRefreshInProgress(inProgress: boolean): void;
   setSearchNavigationTargetId(itemId: number | undefined): void;
   setBackupReminderEnabled(enabled: boolean): void;
   setBackupReminderIntervalDays(days: number): void;
@@ -113,7 +115,8 @@ const defaultUiState: UiState = {
   notification: { visible: false, message: "" },
   page: "default",
   sidebarHovered: false,
-  faviconRefreshId: 0,
+  faviconRefreshVersions: {},
+  faviconRefreshInProgress: false,
   searchNavigationTargetId: undefined,
 };
 
@@ -149,7 +152,12 @@ function createUiSlice(initialState: Partial<UiState>): StateCreator<UiStore> {
       set({ useSearchResultsPopup }),
     setShowGroupBackground: (showGroupBackground) =>
       set({ showGroupBackground }),
-    refreshFavicons: () => set((state) => ({ faviconRefreshId: state.faviconRefreshId + 1 })),
+    refreshFavicons: (itemIds) => set((state) => {
+      const faviconRefreshVersions = { ...state.faviconRefreshVersions };
+      for (const id of itemIds) faviconRefreshVersions[id] = (faviconRefreshVersions[id] ?? 0) + 1;
+      return { faviconRefreshVersions };
+    }),
+    setFaviconRefreshInProgress: (faviconRefreshInProgress) => set({ faviconRefreshInProgress }),
     setSearchNavigationTargetId: (searchNavigationTargetId) =>
       set({ searchNavigationTargetId }),
     setBackupReminderEnabled: (backupReminderEnabled) => set((state) => {
