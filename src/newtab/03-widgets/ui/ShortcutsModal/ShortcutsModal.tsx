@@ -13,26 +13,38 @@ export const ShortcutsModal = ({
     <Modal onClose={() => setOpen(false)}>
       <div className="modal-no-override">
         <h2>Keyboard shortcuts</h2>
-        <p>
-          <span className="hotkey">TAB</span> to focus on Search input when open
-          Tablo
-        </p>
-        {/* <p>
-          <span className="hotkey">Arrow keys</span> navigate bookmarks
-        </p> */}
-        <p>
-          <span className="hotkey">{cmdOrCtrl}&thinsp;+&thinsp;click</span> open
-          bookmark in new Tab
-        </p>
-        {/* <p>
-          <span className="hotkey">CTRL + 1..9</span> open Space by index
-        </p> */}
-        {/* <p>
-          <span className="hotkey">DEL</span> delete selected items
-        </p> */}
-        <p>
-          <span className="hotkey">{cmdOrCtrl}&thinsp;+&thinsp;Z</span> undo
-        </p>
+        <table className="shortcuts-table">
+          <tbody>
+            <tr>
+              <th scope="row"><span className="hotkey">{cmdOrCtrl}&thinsp;+&thinsp;F</span></th>
+              <td>Open search</td>
+            </tr>
+            <tr>
+              <th scope="row"><span className="hotkey">↓</span></th>
+              <td>Open search when the page has focus</td>
+            </tr>
+            <tr>
+              <th scope="row"><span className="hotkey">↑ / ↓</span></th>
+              <td>Navigate search results</td>
+            </tr>
+            <tr>
+              <th scope="row"><span className="hotkey">Esc</span></th>
+              <td>Open or close search</td>
+            </tr>
+            <tr>
+              <th scope="row"><span className="hotkey">{cmdOrCtrl}&thinsp;+&thinsp;click</span></th>
+              <td>Open bookmark in a new tab</td>
+            </tr>
+            <tr>
+              <th scope="row"><span className="hotkey">Delete / Backspace</span></th>
+              <td>Delete selected items</td>
+            </tr>
+            <tr>
+              <th scope="row"><span className="hotkey">{cmdOrCtrl}&thinsp;+&thinsp;Z</span></th>
+              <td>Undo</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </Modal>
   );

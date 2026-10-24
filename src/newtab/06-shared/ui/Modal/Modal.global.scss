@@ -45,11 +45,27 @@
   }
 
   .hotkey {
-    margin-right: 6px;
     display: inline-block;
     font-weight: 100;
-    width: 112px;
-    text-align: right;
+    text-align: left;
+  }
+
+  .shortcuts-table {
+    border-collapse: collapse;
+    width: 100%;
+
+    th,
+    td {
+      padding: 5px 12px 5px 0;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      min-width: 142px;
+      font-weight: 400;
+      white-space: nowrap;
+    }
   }
 
   h2 {

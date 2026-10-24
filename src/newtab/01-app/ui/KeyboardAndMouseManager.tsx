@@ -17,8 +17,6 @@ export const KeyboardAndMouseManager = React.memo((p: {
     (state) => state.deleteFolderItems
   );
   const undo = useDashboardStore((state) => state.undo);
-  const setCurrentSpace = useDashboardStore((state) => state.selectSpace);
-  const spaces = useDashboardStore((state) => state.spaces);
   const showNotification = useUiStore((state) => state.showNotification);
   useEffect(() => {
     const focusSearch = () => {
@@ -88,21 +86,9 @@ export const KeyboardAndMouseManager = React.memo((p: {
         return;
       }
 
-      if (document.activeElement === document.body) {
-        if (e.code === "ArrowDown") {
-          focusSearch();
-          return;
-        }
-
-        if (e.code.startsWith("Digit")) {
-          if (e.ctrlKey || e.altKey) {
-            const spaceIndex = parseInt(e.code.at(5) ?? "", 10);
-            if (spaceIndex > 0 && spaceIndex < 10) {
-              setCurrentSpace(spaces[spaceIndex - 1]?.id ?? -1);
-              return;
-            }
-          }
-        }
+      if (document.activeElement === document.body && e.code === "ArrowDown") {
+        focusSearch();
+        return;
       }
     };
     document.addEventListener("keydown", onKeyDown);
@@ -116,8 +102,6 @@ export const KeyboardAndMouseManager = React.memo((p: {
     p.onCloseSearch,
     deleteFolderItems,
     undo,
-    setCurrentSpace,
-    spaces,
     showNotification,
   ]);
   return null;

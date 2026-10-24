@@ -30,6 +30,7 @@ import FolderChevronIcon from "./icons/folder-chevron.svg";
 import FolderIcon from "./icons/folder.svg";
 import { getSpacesList } from "@/newtab/04-features/move-to-folder/ui/moveToHelpers";
 import { DropdownMenuIcon } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenuIcon";
+import BookmarkNewIcon from "@/newtab/06-shared/ui/DropdownMenu/img/bookmark-new.svg";
 
 import {
   createNewFolderItem,
@@ -532,7 +533,8 @@ export const Folder = React.memo(function Folder(p: {
               onClick={onAddBookmark}
               onMouseDown={(event) => event.stopPropagation()}
             >
-              + Add bookmark
+              <BookmarkNewIcon className={styles.emptyActionIcon} />
+              New bookmark
             </button>
           </div>
         ) : null}

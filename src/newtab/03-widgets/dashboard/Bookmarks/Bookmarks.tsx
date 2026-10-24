@@ -33,7 +33,7 @@ import { DropdownMenuIcon } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMen
 import type { Point } from "@/newtab/06-shared/lib/math";
 import type { QuickGroupV3 } from "@/newtab/05-entities/dashboard/model/types";
 import WrenchIcon from "./wrench.svg";
-import ActivityIcon from "./activity.svg";
+import FolderKanbanIcon from "./folder-kanban.svg";
 import { startQuickGroupUrlDrag } from "./startQuickGroupUrlDrag";
 
 const TAB_GROUP_COLORS: Array<{
@@ -502,7 +502,7 @@ export function Bookmarks() {
             aria-label="Add group"
             onClick={addTabGroup}
           >
-            <ActivityIcon />
+            <FolderKanbanIcon />
           </button>
           {tabGroupConfigs.map((config, groupIndex) => {
             const buttonTitle = getTabGroupTitle(config);

@@ -16,6 +16,7 @@ import { TabOrRecentItem } from "@/newtab/03-widgets/sidebar/SidebarItem/Sidebar
 import { SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
 import EyeIcon from "./icons/eye.svg";
 import EyeOffIcon from "./icons/eye-off.svg";
+import SearchIcon from "./icons/search.svg";
 import styles from "./SidebarRecent.module.scss";
 
 const PAGE_SIZE = 100;
@@ -96,21 +97,50 @@ export const SidebarRecent = React.memo(
     sidebarCollapsed: boolean;
   }) => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const searchInputRef = useRef<HTMLInputElement>(null);
+    const searchContentRef = useRef<HTMLDivElement>(null);
+    const [recentSearchOpen, setRecentSearchOpen] = useState(false);
+    const [recentSearch, setRecentSearch] = useState("");
     const showRecent = useUiStore((state) => state.showRecent);
     const setShowRecent = useUiStore((state) => state.setShowRecent);
     const showItems =
       showRecent ||
+      recentSearchOpen ||
       p.search.length > 0 ||
       p.searchFilters.some((filter) => filter.enabled);
-    const itemsFilteredBySearch = filterRecentItemsBySearch(
+
+    const closeRecentSearch = useCallback(() => {
+      setRecentSearchOpen(false);
+      setRecentSearch("");
+    }, []);
+
+    useEffect(() => {
+      if (!recentSearchOpen) return undefined;
+
+      searchInputRef.current?.focus();
+      const onOutsideMouseDown = (event: MouseEvent) => {
+        if (!searchContentRef.current?.contains(event.target as Node)) {
+          closeRecentSearch();
+        }
+      };
+      document.addEventListener("mousedown", onOutsideMouseDown);
+      return () => {
+        document.removeEventListener("mousedown", onOutsideMouseDown);
+      };
+    }, [closeRecentSearch, recentSearchOpen]);
+
+    const globallyFilteredRecentItems = filterRecentItemsBySearch(
       p.recentItems,
       p.search,
       p.searchFilters,
       p.searchFilterMode,
     );
+    const recentItemsFilteredByLocalSearch = recentSearchOpen
+      ? filterRecentItemsBySearch(globallyFilteredRecentItems, recentSearch)
+      : globallyFilteredRecentItems;
 
     const itemsFilteredBySearchAndFilter = getBaseFilteredRecentItems(
-      itemsFilteredBySearch,
+      recentItemsFilteredByLocalSearch,
     );
 
     return (
@@ -122,29 +152,69 @@ export const SidebarRecent = React.memo(
         <div
           className={cn(styles.header, {
             [styles.collapsedHeader]: p.sidebarCollapsed,
+            [styles.searching]: recentSearchOpen,
           })}
         >
-          <div className={styles.innerHeader}>
-            <span className={styles.headerText}>Recent</span>
+          <div className={styles.innerHeader} ref={searchContentRef}>
+            {recentSearchOpen ? (
+              <input
+                ref={searchInputRef}
+                type="text"
+                className={styles.searchInput}
+                aria-label="Search recent items"
+                placeholder="Search recent items"
+                value={recentSearch}
+                onChange={(event) => setRecentSearch(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Escape") {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    closeRecentSearch();
+                  }
+                }}
+                onMouseDown={(event) => event.stopPropagation()}
+              />
+            ) : (
+              <span className={styles.headerText}>Recent</span>
+            )}
           </div>
           <button
             type="button"
-            className={styles.visibilityToggle}
-            aria-label={showRecent ? "Hide recent items" : "Show recent items"}
-            aria-pressed={showRecent}
-            title={showRecent ? "Hide recent items" : "Show recent items"}
+            className={styles.searchToggle}
+            aria-label={recentSearchOpen ? "Close recent search" : "Search recent items"}
+            aria-expanded={recentSearchOpen}
+            title={recentSearchOpen ? "Close recent search" : "Search recent items"}
             onMouseDown={(event) => event.stopPropagation()}
-            onClick={() => setShowRecent(!showRecent)}
+            onClick={() => {
+              if (recentSearchOpen) {
+                closeRecentSearch();
+              } else {
+                setRecentSearchOpen(true);
+              }
+            }}
           >
-            {showRecent ? <EyeIcon /> : <EyeOffIcon />}
+            <SearchIcon />
           </button>
+          {!recentSearchOpen ? (
+            <button
+              type="button"
+              className={styles.visibilityToggle}
+              aria-label={showRecent ? "Hide recent items" : "Show recent items"}
+              aria-pressed={showRecent}
+              title={showRecent ? "Hide recent items" : "Show recent items"}
+              onMouseDown={(event) => event.stopPropagation()}
+              onClick={() => setShowRecent(!showRecent)}
+            >
+              {showRecent ? <EyeIcon /> : <EyeOffIcon />}
+            </button>
+          ) : null}
         </div>
 
         {showItems ? (
           <div className={styles.recentContent} ref={scrollContainerRef}>
             <RecentList
               items={itemsFilteredBySearchAndFilter}
-              search={p.search}
+              search={recentSearchOpen ? recentSearch : p.search}
               spaces={p.spaces}
               scrollContainerRef={scrollContainerRef}
             />

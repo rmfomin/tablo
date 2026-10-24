@@ -344,7 +344,7 @@ export const SettingsOptions = ({
       onToggle: onToggleSearchResultsPopup,
       value: useSearchResultsPopup,
       title: "Show search results in a popup under the search field",
-      text: "Use this search",
+      text: "Show search popup",
     },
     {
       separator: true,

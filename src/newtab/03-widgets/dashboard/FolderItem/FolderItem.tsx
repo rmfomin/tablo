@@ -35,6 +35,7 @@ export const FolderItem = React.memo(
     const isSelected = useUiStore((state) =>
       state.selectedItemIds.includes(p.item.id),
     );
+    const setSelectedItemIds = useUiStore((state) => state.setSelectedItemIds);
     const hasSelectedItems = useUiStore(
       (state) => state.selectedItemIds.length > 0,
     );
@@ -65,6 +66,9 @@ export const FolderItem = React.memo(
     }
 
     function onContextMenu(e: React.MouseEvent) {
+      if (!isSelected) {
+        setSelectedItemIds([p.item.id]);
+      }
       setMenuPosition(getPointerPosition(e));
       setShowMenu((wasOpen) => !wasOpen);
       e.preventDefault();
@@ -82,7 +86,6 @@ export const FolderItem = React.memo(
       <div
         className={cn(styles.root, {
           [styles.section]: p.item.isSection,
-          [styles.selected]: showMenu,
           [styles.archived]: p.item.archived,
         })}
       >

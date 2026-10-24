@@ -2,6 +2,7 @@ import React from "react";
 import cn from "clsx";
 import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
 import styles from "./Folder.module.scss";
+import FolderPlusIcon from "./icons/folder-plus.svg";
 
 type NewFolderPlaceholderProps = {
   onCreate: () => void;
@@ -21,10 +22,11 @@ export function NewFolderPlaceholder({
       <button
         type="button"
         className={styles.newFolderButton}
+        title="Add folder"
+        aria-label="Add folder"
         onClick={onCreate}
       >
-        <span className={styles.newFolderPlus}>+</span>
-        Add folder
+        <FolderPlusIcon className={styles.newFolderIcon} />
       </button>
       <div
         className={styles.newFolderDropTarget}
