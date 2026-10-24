@@ -23,30 +23,31 @@ test("balances by height with space reserved for the folder title only in the fi
   expect(columns[1].insertBeforeItemId).toBeUndefined();
 });
 
-test("splits one logical group without duplicating or losing bookmarks and exposes fragment insertion boundaries", () => {
+test("keeps a short group tail together instead of splitting it across columns", () => {
   const columns = distributeFolderItems([group([1, 2, 3, 4])], 2, {
     folderHeaderHeight: 0,
     itemHeights: new Map([1, 2, 3, 4].map((id) => [id, 50])),
     groupHeaderHeights: new Map([[100, 30]]),
   });
-  expect(columns.map((column) => column.height)).toEqual([130, 130]);
-  const first = columns[0].items[0];
-  const second = columns[1].items[0];
-  expect(first).toMatchObject({ type: "group", continuation: false, items: [{ id: 1 }, { id: 2 }], insertBeforeItemId: 3 });
-  expect(second).toMatchObject({ type: "group", continuation: true, items: [{ id: 3 }, { id: 4 }] });
-  expect(columns[0].insertBeforeItemId).toBe(100);
-  expect(second.type === "group" && second.insertBeforeItemId).toBeUndefined();
+  expect(columns.map((column) => column.height)).toEqual([230, 0]);
+  expect(columns[0].items).toMatchObject([
+    { type: "group", continuation: false, items: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }] },
+  ]);
+  expect(columns[1].items).toEqual([]);
 });
 
-test("does not leave a group title without its first bookmark at a column boundary", () => {
+test("keeps a two-bookmark group together when a column boundary would split it", () => {
   const columns = distributeFolderItems([display(1), group([2, 3])], 2, {
     folderHeaderHeight: 0,
     itemHeights: new Map([[1, 80], [2, 30], [3, 30]]),
     groupHeaderHeights: new Map([[100, 20]]),
   });
-  expect(columns[0].items).toMatchObject([{ type: "bookmark", item: { id: 1 } }]);
-  expect(columns[1].items).toMatchObject([{ type: "group", items: [{ id: 2 }, { id: 3 }] }]);
-  expect(columns.map((column) => column.height)).toEqual([80, 80]);
+  expect(columns[0].items).toMatchObject([
+    { type: "bookmark", item: { id: 1 } },
+    { type: "group", items: [{ id: 2 }, { id: 3 }] },
+  ]);
+  expect(columns[1].items).toEqual([]);
+  expect(columns.map((column) => column.height)).toEqual([160, 0]);
 });
 
 test("collapsed groups produce one header and no continuations", () => {

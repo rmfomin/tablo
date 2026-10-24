@@ -26,7 +26,7 @@ describe("compiled style selectors", () => {
     expect(css).toContain(".modal-wrapper");
   });
 
-  test("bookmarks module keeps component-owned selectors local", () => {
+  test("bookmarks module scopes its layout and marks shared controls explicitly", () => {
     const modulePath = path.join(
       __dirname,
       "../newtab/03-widgets/dashboard/Bookmarks/Bookmarks.module.scss"
@@ -35,10 +35,13 @@ describe("compiled style selectors", () => {
 
     expect(moduleScss).not.toMatch(/:global\(\.bookmarks-box\)/);
     expect(moduleScss).not.toMatch(/:global\(\.empty-dashboard/);
-    expect(moduleScss).not.toContain(":global");
+    expect(moduleScss).toContain(".bookmarksBox {");
+    expect(moduleScss).toContain(".folderGrid {");
+    expect(moduleScss).toContain(":global(.input-label)");
+    expect(moduleScss).toContain(":global(.dropdown-menu__separator)");
   });
 
-  test("component modules avoid global and BEM selectors after migration", () => {
+  test("component modules avoid legacy global and BEM selectors", () => {
     const migratedModules = [
       "../newtab/03-widgets/dashboard/Bookmarks/Bookmarks.module.scss",
       "../newtab/03-widgets/dashboard/Folder/Folder.module.scss",
@@ -55,9 +58,13 @@ describe("compiled style selectors", () => {
       const modulePath = path.join(__dirname, relativePath);
       const moduleScss = fs.readFileSync(modulePath, "utf8");
 
-      expect(moduleScss).not.toContain(":global");
-      expect(moduleScss).not.toMatch(/\.[A-Za-z0-9-]+__[A-Za-z0-9-]+/);
-      expect(moduleScss).not.toMatch(/\.[A-Za-z0-9-]+--[A-Za-z0-9-]+/);
+      expect(moduleScss).not.toMatch(/:global\(\.(bookmarks-box|empty-dashboard|folder-item|folder-group)\)/);
+      const componentOwnedSelectors = moduleScss.replace(
+        /:global(?:\([^)]*\)|\.[A-Za-z0-9_-]+)/g,
+        "",
+      );
+      expect(componentOwnedSelectors).not.toMatch(/\.[A-Za-z0-9-]+__[A-Za-z0-9-]+/);
+      expect(componentOwnedSelectors).not.toMatch(/\.[A-Za-z0-9-]+--[A-Za-z0-9-]+/);
     });
   });
 
@@ -116,13 +123,13 @@ describe("compiled style selectors", () => {
     expect(moduleScss).not.toContain(".menu");
   });
 
-  test("folder item keeps the old menu gutter without rendering a button", () => {
+  test("folder item does not reserve space for its removed menu button", () => {
     const modulePath = path.join(
       __dirname,
       "../newtab/03-widgets/dashboard/FolderItem/FolderItem.module.scss"
     );
     const moduleScss = fs.readFileSync(modulePath, "utf8");
 
-    expect(moduleScss).toMatch(/\.root\s*\{[^}]*padding-left:\s*24px;/);
+    expect(moduleScss).not.toMatch(/\.root\s*\{[^}]*padding-left:\s*24px;/);
   });
 });

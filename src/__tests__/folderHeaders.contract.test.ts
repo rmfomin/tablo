@@ -29,11 +29,9 @@ describe("folder and group header contracts", () => {
     expect(groupSource).toContain(
       'import GroupChevronIcon from "./icons/group-chevron.svg";'
     );
-    expect(folderChevron).toContain('stroke="#242424"');
+    expect(folderChevron).toContain('stroke="currentColor"');
     expect(groupChevron).toContain('stroke="currentColor"');
-    expect(groupStyles).toContain(
-      "color: var(--icon-color-group-chevron);"
-    );
+    expect(groupStyles).toContain("color: var(--secondary-text-color);");
   });
 
   test("group header styles keep the title row aligned with inner items", () => {
@@ -41,7 +39,8 @@ describe("folder and group header contracts", () => {
       "newtab/03-widgets/dashboard/FolderGroup/FolderGroup.module.scss"
     );
 
-    expect(source).toContain("padding-left: 22px;");
+    expect(source).toContain("--group-content-inset-left: 12px;");
+    expect(source).toContain("padding-left: var(--group-content-inset-left);");
   });
 
   test("group hover background is drawn with an inset pseudo element", () => {
@@ -50,8 +49,8 @@ describe("folder and group header contracts", () => {
     );
 
     expect(source).toContain("&::before");
-    expect(source).toContain("inset: 0 0 0 15px;");
-    expect(source).toContain("z-index: 0;");
+    expect(source).toContain("inset: -4px calc(var(--group-highlight-outset) * -1) -2px;");
+    expect(source).toContain("z-index: -1;");
     expect(source).toContain(".header {");
     expect(source).toContain(".items {");
   });
@@ -70,7 +69,7 @@ describe("folder and group header contracts", () => {
       /p\.folder\.id !== p\.itemInEdit \? \([\s\S]*className=\{cn\(styles\.menuButton/,
     );
     expect(source).toMatch(
-      /function setEditing\(val: boolean\) \{\s*if \(val\) \{\s*setShowMenu\(false\);\s*\}/,
+      /function setEditing\(val: boolean\) \{\s*if \(val\) \{\s*setShowMenu\(false\);\s*setShowColorMenu\(false\);\s*\}/,
     );
   });
 

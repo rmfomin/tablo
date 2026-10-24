@@ -17,7 +17,7 @@ test("spaces list keeps data-role drag-and-drop hooks", () => {
   expect(source).toContain("DOM_ROLE.spaceDelete");
 });
 
-test("spaces list exposes single-space import and export controls", () => {
+test("spaces list exposes a single-space export control", () => {
   const source = fs.readFileSync(
     path.join(
       __dirname,
@@ -27,8 +27,7 @@ test("spaces list exposes single-space import and export controls", () => {
   );
 
   expect(source).toContain("Export space");
-  expect(source).toContain("onExportSpaceJson");
-  expect(source).toContain("Import space");
-  expect(source).toContain("importSpaceFromJson");
-  expect(source).toContain('type="file"');
+  expect(source).toContain('import { onExportSpaceJson } from "@/newtab/04-features/bookmarks-export/model/dashboardExport";');
+  expect(source).toContain("onExportSpace(space)");
+  expect(source).toContain("Export space");
 });

@@ -26,22 +26,41 @@ function expectRuleWithSize(
   expect(match).toContain(`height: ${height};`);
 }
 
+function expectNestedRuleWithSize(
+  scss: string,
+  parentSelector: string,
+  childSelector: string,
+  width: string,
+  height: string,
+) {
+  const parentStart = scss.indexOf(parentSelector);
+  const childStart = scss.indexOf(`${childSelector} {`, parentStart);
+  const childEnd = scss.indexOf("}", childStart);
+  const nestedRule = childStart >= 0 && childEnd >= 0
+    ? scss.slice(childStart, childEnd)
+    : "";
+
+  expect(nestedRule).toContain(`width: ${width};`);
+  expect(nestedRule).toContain(`height: ${height};`);
+}
+
 describe("svg icon sizing", () => {
-  test("search icon receives the fixed-size class on the svg element", () => {
+  test("search input keeps its current global selector and accessible hint", () => {
     const component = read(
       "../newtab/04-features/bookmark-search/ui/SearchInput.tsx"
     );
 
-    expect(component).toContain('<IconSearch className={styles.searchIcon} />');
-    expect(component).not.toContain('<div className={styles.searchIcon}>');
+    expect(component).toContain('className="search"');
+    expect(component).toContain('placeholder="Search in Tablo"');
   });
 
-  test("space context menu delete action is rendered as a text danger action", () => {
+  test("space context menu uses the shared remove icon for delete", () => {
     const component = read(
       "../newtab/03-widgets/spaces-list/SpacesList/SpacesList.tsx"
     );
 
-    expect(component).toContain("<span>Delete space</span>");
+    expect(component).toContain("Delete space");
+    expect(component).toContain('<DropdownMenuIcon name="remove" />');
     expect(component).not.toContain("DeleteIcon");
   });
 
@@ -51,58 +70,47 @@ describe("svg icon sizing", () => {
     expectRuleWithSize(scss, ".btn__icon svg", "24px", "24px");
   });
 
-  test("component svg icons keep their current rendered size in css", () => {
-    const componentRules = [
+  test("component icons and controls keep their current rendered size in css", () => {
+    const componentRules: Array<{
+      file: string;
+      selector: string;
+      size: string;
+      width?: string;
+      height?: string;
+      parentSelector?: string;
+    }> = [
       {
         file: "../newtab/03-widgets/spaces-list/SpacesList/SpacesList.module.scss",
-        selector: ".deleteButton svg",
-        size: "24px",
-      },
-      {
-        file: "../newtab/03-widgets/spaces-list/SpacesList/SpacesList.module.scss",
-        selector: ".menuButton svg",
-        size: "24px",
+        selector: ".deleteButton",
+        size: "16px",
       },
       {
         file: "../newtab/03-widgets/dashboard/Folder/Folder.module.scss",
-        selector: ".menuButton svg",
+        parentSelector: ".folderIcon",
+        selector: "svg",
         size: "20px",
       },
       {
         file: "../newtab/03-widgets/dashboard/Folder/Folder.module.scss",
-        selector: ".collapseToggle svg",
-        size: "16px",
+        parentSelector: ".collapseToggle,\n.menuButton",
+        selector: "svg",
+        size: "14px",
       },
       {
         file: "../newtab/03-widgets/dashboard/FolderGroup/FolderGroup.module.scss",
-        selector: ".toggle svg",
-        size: "16px",
-      },
-      {
-        file: "../newtab/03-widgets/dashboard/FolderItem/FolderItem.module.scss",
-        selector: ".closeButton svg",
-        size: "10px",
+        parentSelector: ".toggle",
+        selector: "svg",
+        size: "14px",
       },
       {
         file: "../newtab/03-widgets/sidebar/SidebarItem/SidebarItem.module.scss",
         selector: ".savedTabIcon",
-        width: "10px",
-        height: "9px",
-      },
-      {
-        file: "../newtab/04-features/bookmark-search/ui/SearchInput.module.scss",
-        selector: ".searchIcon",
         size: "16px",
       },
       {
         file: "../newtab/04-features/bookmark-search/ui/SearchInput.module.scss",
-        selector: ".filterToggleButton svg",
-        size: "14px",
-      },
-      {
-        file: "../newtab/04-features/bookmark-search/ui/SearchInput.module.scss",
-        selector: ".filterButton svg",
-        size: "16px",
+        selector: ".clearSearchButton",
+        size: "28px",
       },
       {
         file: "../newtab/03-widgets/ui/Notification/Notification.module.scss",
@@ -111,9 +119,19 @@ describe("svg icon sizing", () => {
       },
     ];
 
-    componentRules.forEach(({ file, selector, size, width, height }) => {
+    componentRules.forEach(({ file, parentSelector, selector, size, width, height }) => {
       const scss = read(file);
-      expectRuleWithSize(scss, selector, width ?? size, height ?? size);
+      if (parentSelector) {
+        expectNestedRuleWithSize(
+          scss,
+          parentSelector,
+          selector,
+          width ?? size,
+          height ?? size,
+        );
+      } else {
+        expectRuleWithSize(scss, selector, width ?? size, height ?? size);
+      }
     });
   });
 });

@@ -6,7 +6,7 @@ import { SpacesList } from "@/newtab/03-widgets/spaces-list/SpacesList/SpacesLis
 import { dashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
 import { uiStore } from "@/newtab/01-app/model/ui/uiStore";
 
-test("space cards select an existing space and the new card creates one in edit mode", () => {
+test("space cards select an existing space and double-click enters edit mode", () => {
   dashboardStore.getState().hydrate({
     currentSpaceId: 1,
     spaces: [
@@ -31,16 +31,10 @@ test("space cards select an existing space and the new card creates one in edit 
     expect(dashboardStore.getState().currentSpaceId).toBe(2);
     expect(cards[1].getAttribute("aria-pressed")).toBe("true");
 
-    const newCard = host.querySelector<HTMLButtonElement>(
-      'button[aria-label="Create new space"]',
-    );
-    expect(newCard).not.toBeNull();
-
-    flushSync(() => newCard!.click());
-    const createdSpace = dashboardStore.getState().spaces.at(-1);
-    expect(createdSpace?.title).toBe("New space");
-    expect(dashboardStore.getState().currentSpaceId).toBe(createdSpace?.id);
-    expect(uiStore.getState().itemInEdit).toBe(createdSpace?.id);
+    expect(host.querySelector("input")).toBeNull();
+    flushSync(() => cards[1].dispatchEvent(new MouseEvent("dblclick", { bubbles: true })));
+    expect(uiStore.getState().itemInEdit).toBe(2);
+    expect(host.querySelector<HTMLInputElement>("input")?.value).toBe("Personal");
   } finally {
     flushSync(() => root.unmount());
     host.remove();

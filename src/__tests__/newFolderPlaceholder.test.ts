@@ -12,7 +12,8 @@ test("new folder placeholder создаёт папку по клику и сох
   expect(element.props["data-folder-new"]).toBe("true");
   expect(header.type).toBe("button");
   expect(header.props.type).toBe("button");
-  expect(React.Children.toArray(header.props.children)).toContain("Add folder");
+  expect(header.props.title).toBe("Add folder");
+  expect(header.props["aria-label"]).toBe("Add folder");
   expect(items.props["data-role"]).toBe(DOM_ROLE.folderItems);
   expect(items.props["data-folder-id"]).toBe("-1");
 
