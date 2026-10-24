@@ -121,12 +121,16 @@ export function getSelectedTargetRoots(
     return [pressedRoot];
   }
 
-  return selectedItemIds.flatMap((id) => {
+  return [...new Set(selectedItemIds)].flatMap((id) => {
     const element = root.querySelector<HTMLElement>(
       `${roleSelector(DOM_ROLE.folderItem)}[data-id="${id}"], ${roleSelector(
         DOM_ROLE.groupHeader
       )}[data-id="${id}"]`
     );
+    const group = element?.closest?.(roleSelector(DOM_ROLE.folderGroup)) as HTMLElement | null;
+    if (group && Number(group.dataset.groupId) !== id && selectedItemIds.includes(Number(group.dataset.groupId))) {
+      return [];
+    }
     return element ? [element] : [];
   });
 }
@@ -154,9 +158,9 @@ export function getOverlappedDropArea(
 ): DropArea | undefined {
   const realRectAreas = dropAreas.filter((da) => {
     return (
-      da.rect.left < e.clientX &&
+      da.rect.left <= e.clientX &&
       e.clientX < da.rect.right &&
-      da.rect.top < e.clientY &&
+      da.rect.top <= e.clientY &&
       e.clientY < da.rect.bottom
     );
   });
@@ -167,7 +171,7 @@ export function getOverlappedDropArea(
 
   const overlappedAreas = dropAreas.filter((da) => {
     return (
-      da.rect.left < e.clientX &&
+      da.rect.left <= e.clientX &&
       e.clientX < da.rect.right &&
       da.rect.top - FOLDER_TOP_OFFSET < e.clientY &&
       e.clientY < da.rect.bottom + FOLDER_BOTTOM_OFFSET
@@ -349,7 +353,7 @@ export function getPosFromElement(el: HTMLElement): Point {
 }
 
 export function getIdsFromElements(targets: HTMLElement[]): number[] {
-  return targets.map(getIdFromElement);
+  return [...new Set(targets.map(getIdFromElement))];
 }
 
 export function getIdFromElement(target: HTMLElement): number {
@@ -362,7 +366,8 @@ export function getItemIdByIndex(
 ): number | undefined {
   const children = getDropAreaChildren(currentBoxToDrop);
   if (index >= children.length) {
-    return undefined; //means paste last
+    const boundary = currentBoxToDrop.dataset?.insertBeforeId;
+    return boundary ? resolveVisibleBoundary(currentBoxToDrop, parseInt(boundary, 10)) : undefined;
   } else {
     const child = children[index];
     const item = child.querySelector(
@@ -370,8 +375,27 @@ export function getItemIdByIndex(
         DOM_ROLE.groupHeader
       )}`
     ) as HTMLElement;
-    return parseInt(item.dataset.id!, 10);
+    return parseInt(child.dataset?.groupId ?? item.dataset.id!, 10);
   }
+}
+
+function resolveVisibleBoundary(container: HTMLElement, boundaryId: number): number | undefined {
+  const folder = container.closest?.(roleSelector(DOM_ROLE.folder));
+  if (!folder) return boundaryId;
+  const selector = container.dataset.role === DOM_ROLE.groupItems
+    ? `${roleSelector(DOM_ROLE.groupItems)}[data-group-id="${container.dataset.groupId}"]`
+    : roleSelector(DOM_ROLE.folderItems);
+  let reachedBoundary = false;
+  for (const area of Array.from(folder.querySelectorAll<HTMLElement>(selector))) {
+    for (const child of Array.from(area.children) as HTMLElement[]) {
+      if (child.dataset.dadPreview === "true" || child.dataset.dadIgnore === "true") continue;
+      const item = child.querySelector<HTMLElement>(`${roleSelector(DOM_ROLE.folderItem)}, ${roleSelector(DOM_ROLE.groupHeader)}`);
+      const id = Number(child.dataset.groupId ?? item?.dataset.id);
+      if (id === boundaryId) reachedBoundary = true;
+      if (reachedBoundary && child.style.display !== "none") return id;
+    }
+  }
+  return reachedBoundary ? undefined : boundaryId;
 }
 
 export function createTabDummy(
@@ -382,7 +406,7 @@ export function createTabDummy(
   const dummy = document.createElement("div");
   targetRoots.forEach((selectedEl) => {
     const previewEl = getDragPreviewElement(selectedEl);
-    const clonedNode = previewEl.cloneNode(true) as HTMLElement;
+    const clonedNode = cloneDragElement(selectedEl, previewEl);
     clonedNode.dataset.selected = "true";
     clonedNode
       .querySelectorAll(roleSelector(DOM_ROLE.alreadySaved))
@@ -423,6 +447,37 @@ export function getDragLayoutElement(targetRoot: HTMLElement): HTMLElement {
   return targetRoot;
 }
 
+export function getDragSourceElements(targetRoots: HTMLElement[]): HTMLElement[] {
+  return [...new Set(targetRoots.flatMap((targetRoot) => {
+    if (targetRoot.dataset.role !== DOM_ROLE.groupHeader) {
+      return [getDragLayoutElement(targetRoot)];
+    }
+    const folder = targetRoot.closest(roleSelector(DOM_ROLE.folder));
+    return folder
+      ? Array.from(folder.querySelectorAll<HTMLElement>(`${roleSelector(DOM_ROLE.folderGroup)}[data-group-id="${targetRoot.dataset.groupId}"]`))
+          .filter((fragment) => !fragment.closest('[data-dad-preview="true"]'))
+      : [getDragLayoutElement(targetRoot)];
+  }))];
+}
+
+function cloneDragElement(targetRoot: HTMLElement, source: HTMLElement): HTMLElement {
+  if (targetRoot.dataset.role !== DOM_ROLE.groupHeader) {
+    return source.cloneNode(true) as HTMLElement;
+  }
+  const fragments = getDragSourceElements([targetRoot]);
+  const clone = fragments[0].cloneNode(true) as HTMLElement;
+  const items = clone.querySelector(roleSelector(DOM_ROLE.groupItems));
+  fragments.slice(1).forEach((fragment) => {
+    const fragmentItems = fragment.querySelector(roleSelector(DOM_ROLE.groupItems));
+    if (items && fragmentItems) {
+      Array.from(fragmentItems.children).forEach((item) => items.append(item.cloneNode(true)));
+    }
+  });
+  clone.style.removeProperty("display");
+  delete clone.dataset.groupFragment;
+  return clone;
+}
+
 export function setDragSourceHidden(elements: HTMLElement[]): () => void {
   const displays = new Map<HTMLElement, string>();
   elements.forEach((element) => {
@@ -446,9 +501,7 @@ export function setDragSourceHidden(elements: HTMLElement[]): () => void {
 
 export function createDropPreview(targetRoots: HTMLElement[]): HTMLElement[] {
   return targetRoots.map((targetRoot) => {
-    const preview = getDragLayoutElement(targetRoot).cloneNode(
-      true
-    ) as HTMLElement;
+    const preview = cloneDragElement(targetRoot, getDragLayoutElement(targetRoot));
     preview.style.removeProperty("display");
     preview.dataset.dadPreview = "true";
     preview.classList.add("dad-drop-preview");
@@ -529,7 +582,7 @@ export function calculateFoldersDropAreas(
   calcItemRects = false
 ): DropArea[] {
   return folderEls
-    .filter((el) => !el.closest?.('[data-dad-preview="true"]'))
+    .filter((el) => !el.closest?.('[data-dad-preview="true"], .dad-dummy, [style*="display: none"]'))
     .map((el) => ({
       objectId: getDropAreaFolderId(el as HTMLElement),
       groupId: getDropAreaGroupId(el as HTMLElement),
@@ -538,12 +591,12 @@ export function calculateFoldersDropAreas(
       rect: el.getBoundingClientRect(),
       itemRects: calcItemRects
         ? getDropAreaChildren(el as HTMLElement).map((item) => {
-            //todo support grid
-            const offsetTop = (item as HTMLElement).offsetTop;
+            const itemRect = item.getBoundingClientRect();
+            const offsetTop = itemRect.top - el.getBoundingClientRect().top;
             return {
-              thresholdY: offsetTop + item.clientHeight / 2,
+              thresholdY: offsetTop + itemRect.height / 2,
               itemTop: offsetTop,
-              itemHeight: item.clientHeight,
+              itemHeight: itemRect.height,
             };
           })
         : null!,
@@ -554,7 +607,11 @@ function getDropAreaChildren(container: HTMLElement): HTMLElement[] {
   return Array.from(
     { length: container.children.length },
     (_, index) => container.children.item(index)! as HTMLElement
-  ).filter((child) => child.dataset?.dadPreview !== "true");
+  ).filter(
+    (child) =>
+      child.dataset?.dadPreview !== "true" && child.dataset?.dadIgnore !== "true"
+      && child.style?.display !== "none"
+  );
 }
 
 export function calculateSpacesDropAreas(): DropArea[] {
@@ -577,10 +634,10 @@ export function createFolderDummy(
   const dummy = document.createElement("div");
   dummy.append(targetRoot.cloneNode(true));
   dummy.style.opacity = "0.8";
-  const itemsBoxEl = dummy.querySelector<HTMLElement>(
+  const itemsBoxEls = dummy.querySelectorAll<HTMLElement>(
     roleSelector(DOM_ROLE.folderItems)
-  )!;
-  itemsBoxEl.style.visibility = "hidden";
+  );
+  itemsBoxEls.forEach((itemsBoxEl) => { itemsBoxEl.style.visibility = "hidden"; });
 
   const rect = targetRoot.getBoundingClientRect();
   dummy.style.width = `${rect.width}px`;

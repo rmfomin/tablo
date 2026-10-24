@@ -48,10 +48,10 @@ function getChromeRuntimeError(): Error | undefined {
 
 function createTabWithCallback(
   chromeWithTabGroups: ChromeWithTabGroups,
-  url: string,
+  properties: chrome.tabs.CreateProperties,
 ): Promise<chrome.tabs.Tab> {
   return new Promise((resolve, reject) => {
-    chromeWithTabGroups.tabs.create({ url, active: false }, (tab) => {
+    chromeWithTabGroups.tabs.create(properties, (tab) => {
       const error = getChromeRuntimeError();
       if (error) {
         reject(error);
@@ -111,20 +111,51 @@ export async function createTabGroup(
   title: string,
   color: TabGroupColor = "blue",
 ): Promise<void> {
-  const chromeWithTabGroups = chrome as unknown as ChromeWithTabGroups;
-  const tabs = await Promise.all(
-    urls.map((url) => createTabWithCallback(chromeWithTabGroups, url)),
-  );
-  const tabIds = tabs.flatMap((tab) =>
-    tab.id === undefined ? [] : [tab.id],
-  );
+  if (urls.length === 0) return;
 
-  if (tabIds.length === 0) {
-    throw new Error("Chrome did not return IDs for the created tabs");
+  const currentTab = await new Promise<chrome.tabs.Tab>((resolve, reject) => {
+    chrome.tabs.getCurrent((tab) => {
+      const error = getChromeRuntimeError();
+      if (error) {
+        reject(error);
+      } else if (tab?.id === undefined) {
+        reject(new Error("Chrome did not return the current tab"));
+      } else {
+        resolve(tab);
+      }
+    });
+  });
+
+  const chromeWithTabGroups = chrome as unknown as ChromeWithTabGroups;
+  const currentTabId = currentTab.id!;
+  const tabIds = [currentTabId];
+  for (let index = 1; index < urls.length; index += 1) {
+    const tab = await createTabWithCallback(chromeWithTabGroups, {
+      url: urls[index],
+      active: false,
+      windowId: currentTab.windowId,
+      index: currentTab.index + index,
+    });
+    if (tab.id === undefined) {
+      throw new Error("Chrome did not return an ID for the created tab");
+    }
+    tabIds.push(tab.id);
   }
 
   const groupId = await groupTabsWithCallback(chromeWithTabGroups, tabIds);
   await updateTabGroupWithCallback(chromeWithTabGroups, groupId, title, color);
+
+  // Navigate last so the new-tab page stays alive until the group is ready
+  await new Promise<void>((resolve, reject) => {
+    chrome.tabs.update(currentTabId, { url: urls[0], active: true }, () => {
+      const error = getChromeRuntimeError();
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    });
+  });
 }
 
 export function updateTab(

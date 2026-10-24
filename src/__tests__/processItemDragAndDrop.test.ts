@@ -9,6 +9,7 @@ const dropArea = {
 };
 
 vi.mock("@/newtab/04-features/dragging/model/dragAndDropUtils", () => ({
+  notifyDragState: vi.fn(),
   setScrollByDummyClientY: vi.fn(),
   subscribeMouseEvents: vi.fn(
     (_event, onMove: (event: MouseEvent, mouseMoved: boolean) => void) => {
@@ -27,6 +28,7 @@ vi.mock("@/newtab/04-features/dragging/model/dragAndDrop", () => ({
   createDropPreview: vi.fn(() => [{}]),
   createTabDummy: vi.fn(() => ({ style: {} })),
   getDragLayoutElement: vi.fn((element) => element),
+  getDragSourceElements: vi.fn((elements) => elements),
   getFolderId: vi.fn(() => 10),
   getIdsFromElements: vi.fn(() => [101]),
   getItemDropAreaElements: vi.fn(() => []),
@@ -38,7 +40,7 @@ vi.mock("@/newtab/04-features/dragging/model/dragAndDrop", () => ({
   setDragSourceHidden: vi.fn(() => vi.fn()),
 }));
 
-import { placeDropPreview } from "@/newtab/04-features/dragging/model/dragAndDrop";
+import { createTabDummy, placeDropPreview } from "@/newtab/04-features/dragging/model/dragAndDrop";
 import { processItemDragAndDrop } from "@/newtab/04-features/dragging/model/processItemDragAndDrop";
 
 test("first drag movement renders preview at current cursor position", () => {
@@ -67,4 +69,8 @@ test("first drag movement renders preview at current cursor position", () => {
   onMouseMove!({ clientX: 100, clientY: 100 } as MouseEvent, true);
 
   expect(placeDropPreview).toHaveBeenCalledTimes(1);
+  expect(placeDropPreview).toHaveBeenCalledWith(dropArea.element, [{}], 0);
+  const dummy = (createTabDummy as VitestMock).mock.results[0].value;
+  expect(dummy.style.transform).toBe("translateX(100px) translateY(100px)");
+  expect(body.append).toHaveBeenCalledWith(dummy);
 });

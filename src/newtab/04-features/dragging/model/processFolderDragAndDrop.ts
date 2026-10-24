@@ -12,11 +12,11 @@ import {
   placeFolderDropIndicator,
   PConfigFolder,
   removeFolderDropIndicator,
-  setDragSourceHidden,
 } from "@/newtab/04-features/dragging/model/dragAndDrop";
 import {
   setScrollByDummyClientY,
   subscribeMouseEvents,
+  notifyDragState,
 } from "@/newtab/04-features/dragging/model/dragAndDropUtils";
 import { DOM_ROLE, roleSelector } from "@/newtab/06-shared/lib/dom/roles";
 
@@ -44,6 +44,20 @@ export function processFolderDragAndDrop(
   const clearDropIndicator = () => {
     removeFolderDropIndicator(dropIndicator);
     dropIndicator = undefined;
+  };
+  const cleanup = () => {
+    if (!dummy) return;
+    document.body.classList.remove("dragging");
+    dummy.remove();
+    dummy = undefined;
+    clearDropIndicator();
+    restoreSource();
+  };
+  const onCancel = () => {
+    if (!dummy) return;
+    cleanup();
+    config.onCancel();
+    notifyDragState(false);
   };
 
   const onViewportScrolled = () => {
@@ -112,13 +126,18 @@ export function processFolderDragAndDrop(
           unsubscribeEvents();
           return;
         }
+        notifyDragState(true);
 
         //create dummy
         dummy = createFolderDummy(targetRoot, mouseDownEvent);
         dummy.style.transform = `translateX(${e.clientX + "px"}) translateY(${
           e.clientY + "px"
         })`;
-        restoreSource = setDragSourceHidden([targetRoot]);
+        const sourceVisibility = targetRoot.style.visibility;
+        targetRoot.style.visibility = "hidden";
+        restoreSource = () => {
+          targetRoot.style.visibility = sourceVisibility;
+        };
         dropFoldersAreas = calculateFoldersDropAreas(
           folderEls.filter((folderEl) => folderEl !== targetRoot),
         );
@@ -130,10 +149,7 @@ export function processFolderDragAndDrop(
   };
   const onMouseUp = () => {
     if (dummy) {
-      document.body.classList.remove("dragging");
-      dummy.remove();
-      clearDropIndicator();
-      restoreSource();
+      cleanup();
       if (dropArea) {
         config.onDrop(
           draggingFolderId,
@@ -143,6 +159,7 @@ export function processFolderDragAndDrop(
       } else {
         config.onCancel();
       }
+      notifyDragState(false);
     }
   };
 
@@ -150,7 +167,8 @@ export function processFolderDragAndDrop(
     mouseDownEvent,
     onMouseMove,
     onMouseUp,
-    onViewportScrolled
+    onViewportScrolled,
+    onCancel
   );
   return unsubscribeEvents;
 }

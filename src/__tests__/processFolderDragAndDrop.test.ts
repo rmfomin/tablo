@@ -12,6 +12,7 @@ const dropArea = {
 };
 
 vi.mock("@/newtab/04-features/dragging/model/dragAndDropUtils", () => ({
+  notifyDragState: vi.fn(),
   setScrollByDummyClientY: vi.fn(),
   subscribeMouseEvents: vi.fn(
     (_event, onMove: (event: MouseEvent, mouseMoved: boolean) => void) => {
@@ -81,12 +82,12 @@ test("folder drag does not insert a preview into the folder layout", () => {
   expect(placeFolderDropIndicator).toHaveBeenCalledTimes(1);
 });
 
-test("folder drag recalculates target geometry after removing its source", () => {
+test("folder drag excludes its source from targets while keeping its layout space", () => {
   const body = {
     classList: { add: vi.fn(), remove: vi.fn() },
     append: vi.fn(),
   };
-  const source = { dataset: {}, style: {} } as unknown as HTMLElement;
+  const source = { dataset: {}, style: { visibility: "", display: "" } } as unknown as HTMLElement;
   const sibling = { dataset: {}, style: {} } as unknown as HTMLElement;
   (global as any).document = {
     body,
@@ -111,6 +112,7 @@ test("folder drag recalculates target geometry after removing its source", () =>
   expect((calculateFoldersDropAreas as VitestMock).mock.calls[1][0]).toEqual([
     sibling,
   ]);
+  expect(source.style).toMatchObject({ visibility: "hidden", display: "" });
 });
 
 test("stable folder target does not recreate preview on every mouse move", () => {

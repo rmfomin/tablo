@@ -4,6 +4,12 @@ body.dragging * {
   pointer-events: none;
 }
 
+body.folder-resizing,
+body.folder-resizing * {
+  cursor: ew-resize !important;
+  user-select: none;
+}
+
 body.spaces-drag-outside,
 body.spaces-drag-outside * {
   cursor: not-allowed !important;

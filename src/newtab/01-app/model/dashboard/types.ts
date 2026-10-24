@@ -13,7 +13,7 @@ export type DashboardState = {
 
 export type FolderPatch = Pick<
   Partial<FolderV3>,
-  "title" | "color" | "archived" | "collapsed" | "position"
+  "title" | "color" | "archived" | "collapsed" | "position" | "columnSpan"
 >;
 
 export type MoveFolderInput = {
@@ -34,6 +34,7 @@ export type CreateFolderInput = {
   spaceId?: number;
   title?: string;
   color?: string;
+  columnSpan?: number;
   position?: string;
   items?: FolderItemToCreate[];
 };

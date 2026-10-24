@@ -158,6 +158,17 @@ export function DropdownMenu(p: {
   closeRef.current = p.onClose;
 
   useEffect(() => {
+    let pointerStartedInsideMenu = false;
+
+    function onPointerDown(e: PointerEvent) {
+      pointerStartedInsideMenu =
+        menuRef.current?.contains(e.target as Node) ?? false;
+    }
+
+    function onPointerCancel() {
+      pointerStartedInsideMenu = false;
+    }
+
     function onOtherMenuOpened(e: Event) {
       if ((e as CustomEvent<string>).detail !== menuIdRef.current) {
         closeRef.current();
@@ -165,6 +176,14 @@ export function DropdownMenu(p: {
     }
 
     function onOutsideClick(e: MouseEvent) {
+      const startedInsideMenu = pointerStartedInsideMenu;
+      pointerStartedInsideMenu = false;
+
+      // A text selection can finish outside and click a common ancestor
+      if (e.detail > 0 && startedInsideMenu) {
+        return;
+      }
+
       // ignore submenu clicks
       const target = e.target as HTMLElement;
       if (
@@ -192,6 +211,10 @@ export function DropdownMenu(p: {
         return;
       }
 
+      if (isInputInFocus || document.activeElement?.tagName === "TEXTAREA") {
+        return;
+      }
+
       if (e.key === "ArrowDown" || e.key === "ArrowUp") {
         e.preventDefault(); // Prevent page scrolling
         const buttons = getButtons();
@@ -211,6 +234,8 @@ export function DropdownMenu(p: {
     const outsideClickListenerTimerId = window.setTimeout(() => {
       document.addEventListener("click", onOutsideClick);
     }, 0);
+    document.addEventListener("pointerdown", onPointerDown, true);
+    document.addEventListener("pointercancel", onPointerCancel, true);
     document.addEventListener(DROPDOWN_MENU_OPENED_EVENT, onOtherMenuOpened);
     document.dispatchEvent(
       new CustomEvent(DROPDOWN_MENU_OPENED_EVENT, {
@@ -222,6 +247,8 @@ export function DropdownMenu(p: {
     return () => {
       window.clearTimeout(outsideClickListenerTimerId);
       document.removeEventListener("click", onOutsideClick);
+      document.removeEventListener("pointerdown", onPointerDown, true);
+      document.removeEventListener("pointercancel", onPointerCancel, true);
       document.removeEventListener(
         DROPDOWN_MENU_OPENED_EVENT,
         onOtherMenuOpened,

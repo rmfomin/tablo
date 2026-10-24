@@ -27,10 +27,16 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
   search: string;
   itemInEdit: number | undefined;
   hiddenFeatureIsEnabled: boolean;
+  continuation?: boolean;
+  fragmentIndex?: number;
+  insertBeforeItemId?: number;
 }) {
   const updateFolderItem = useDashboardStore((state) => state.updateFolderItem);
   const deleteFolderGroup = useDashboardStore(
     (state) => state.deleteFolderGroup
+  );
+  const convertFolderGroupToFolder = useDashboardStore(
+    (state) => state.convertFolderGroupToFolder,
   );
   const setItemInEdit = useUiStore((state) => state.setItemInEdit);
   const isSelected = useUiStore((state) =>
@@ -74,7 +80,7 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
   }
 
   function onOpenAllTabs() {
-    p.items.forEach((item) => {
+    p.group.groupItems.forEach((item) => {
       if (!item.archived) {
         createTab({ url: item.url, active: false });
       }
@@ -90,6 +96,11 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
     setShowMenu(false);
   }
 
+  function onConvertToFolder() {
+    setShowMenu(false);
+    convertFolderGroupToFolder(p.group.id);
+  }
+
   function onHeaderContextMenu(e: React.MouseEvent) {
     e.preventDefault();
     setMenuPosition(getPointerPosition(e));
@@ -101,6 +112,7 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
       className={styles.root}
       data-role={DOM_ROLE.folderGroup}
       data-group-id={p.group.id}
+      data-group-fragment={p.fragmentIndex ?? 0}
       data-selected={isSelected || undefined}
     >
       <div
@@ -110,6 +122,7 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
         data-folder-id={p.folderId}
         data-group-id={p.group.id}
         data-drop-insert="end"
+        data-continuation={p.continuation || undefined}
         onClick={onHeaderClick}
         onContextMenu={onHeaderContextMenu}
         onDragStart={(e) => {
@@ -128,7 +141,7 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
         <EditableTitle
           className={styles.title}
           singleLine
-          inEdit={p.group.id === p.itemInEdit}
+          inEdit={!p.continuation && p.group.id === p.itemInEdit}
           setEditing={setEditing}
           localTitle={localTitle}
           setLocalTitle={setLocalTitle}
@@ -136,6 +149,7 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
           search={p.search}
           onDoubleClick={() => setEditing(true)}
         />
+        {p.continuation ? <span className={styles.continued}>continued</span> : null}
         <span className={styles.count}>{p.count}</span>
         {showMenu ? (
           <DropdownMenu
@@ -157,6 +171,13 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
               <DropdownMenuIcon name="openAll" />
               Open all tabs
             </button>
+            <button
+              className="dropdown-menu__button focusable"
+              onClick={onConvertToFolder}
+            >
+              <DropdownMenuIcon name="newFolder" />
+              To folder
+            </button>
             <div className="dropdown-menu__separator" />
             <button
               className="dropdown-menu__button dropdown-menu__button--dander focusable"
@@ -173,6 +194,7 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
         data-role={DOM_ROLE.groupItems}
         data-folder-id={p.folderId}
         data-group-id={p.group.id}
+        data-insert-before-id={p.insertBeforeItemId}
         style={p.group.collapsed ? { display: "none" } : undefined}
       >
         {p.items.map((item) => (

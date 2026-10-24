@@ -1,5 +1,5 @@
 import { createTab, updateTab, removeTabs, getCurrentTab, queryTabs, getCurrentWindow, focusWindow, type BrowserTab } from "@/newtab/06-shared/api/chrome/tabs";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FolderV3, SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
 import {
   colors,
@@ -36,9 +36,11 @@ import {
   createNewSection,
 } from "@/newtab/05-entities/dashboard/model/itemUtils";
 import { RecentItem } from "@/newtab/06-shared/api/chrome/history";
-import { getVisibleFolderDisplayItems } from "./getFolderDisplayItems";
+import { getVisibleFolderDisplayItems, type FolderDisplayItem } from "./getFolderDisplayItems";
 import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
 import styles from "./Folder.module.scss";
+import { useFolderColumns } from "./useFolderColumns";
+import { useFolderResize } from "./useFolderResize";
 
 export const Folder = React.memo(function Folder(p: {
   spaces: SpaceV3[];
@@ -52,7 +54,10 @@ export const Folder = React.memo(function Folder(p: {
   searchFilterMode: SearchFilterMode;
   itemInEdit: undefined | number;
   hiddenFeatureIsEnabled: boolean;
+  availableColumns?: number;
 }) {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLHeadingElement>(null);
   const deleteFolder = useDashboardStore((state) => state.deleteFolder);
   const updateFolder = useDashboardStore((state) => state.updateFolder);
   const createFolderItem = useDashboardStore((state) => state.createFolderItem);
@@ -67,6 +72,18 @@ export const Folder = React.memo(function Folder(p: {
   const [colorMenuPosition, setColorMenuPosition] = useState<Point>();
   const [localColor, setLocalColor] = useState<string | undefined>(undefined);
   const [localTitle, setLocalTitle] = useState<string>(p.folder.title);
+  const availableColumns = p.availableColumns ?? 1;
+  const resize = useFolderResize({
+    folderId: p.folder.id,
+    columnSpan: p.folder.columnSpan ?? 1,
+    availableColumns,
+    collapsed: Boolean(p.folder.collapsed),
+    rootRef,
+    onCommit: (columnSpan) => updateFolder(p.folder.id, { columnSpan }),
+  });
+  const effectiveColumns = p.folder.collapsed
+    ? 1
+    : Math.max(1, Math.min(resize.previewColumnSpan ?? p.folder.columnSpan ?? 1, availableColumns));
 
   useEffect(() => {
     setLocalTitle(p.folder.title);
@@ -201,7 +218,7 @@ export const Folder = React.memo(function Folder(p: {
     p.searchFilterMode,
     true,
   );
-  const flatFolderDisplayItems = visibleFolderDisplayItems.flatMap((item) => {
+  const flatFolderDisplayItems = countDisplayItems.flatMap((item) => {
     if (item.type === "bookmark") {
       return [item.item];
     }
@@ -225,8 +242,19 @@ export const Folder = React.memo(function Folder(p: {
     (p.search !== "" || p.searchFilters.some((filter) => filter.enabled)) &&
     folderItems.length === 0;
 
+  const displayItems = visibleFolderDisplayItems.flatMap<FolderDisplayItem>((item) => {
+    if (item.type === "bookmark") {
+      return !p.showArchived && p.search.length === 0 && item.item.archived ? [] : [item];
+    }
+    const items = item.items.filter((child) => p.showArchived || p.search.length > 0 || !child.archived);
+    if (p.search !== "" && items.length === 0) return [];
+    return [{ ...item, items }];
+  });
+  const { columns, headerHeight } = useFolderColumns(displayItems, effectiveColumns, rootRef, headerRef);
+
   const folderClassName = cn(styles.root, {
     [styles.empty]: folderIsEmptyDuringSearch,
+    [styles.resizing]: resize.isResizing,
   });
   const folderColor = localColor ?? p.folder.color;
   const color = new Color();
@@ -273,16 +301,21 @@ export const Folder = React.memo(function Folder(p: {
 
   return (
     <div
+      ref={rootRef}
       className={folderClassName}
       data-role={DOM_ROLE.folder}
       data-folder-id={p.folder.id}
+      data-column-span={effectiveColumns}
       style={{
+        gridColumn: `span ${effectiveColumns}`,
+        "--folder-column-count": effectiveColumns,
         outline: p.folder.archived
           ? "1px solid color-mix(in srgb, var(--overlay-color) 30%, transparent)"
           : "none",
-      }}
+      } as React.CSSProperties}
     >
       <h2
+        ref={headerRef}
         className={cn("draggable-folder", styles.header, styles.dragHandle)}
         onContextMenu={onHeaderContextMenu}
       >
@@ -476,28 +509,34 @@ export const Folder = React.memo(function Folder(p: {
         ) : null}
       </h2>
 
-      {folderItems.length === 0 &&
-      !folderIsEmptyDuringSearch &&
-      !p.folder.collapsed ? (
-        <div className={styles.emptyTip}>
-          <button
-            type="button"
-            className={styles.emptyAction}
-            onClick={onAddBookmark}
-            onMouseDown={(event) => event.stopPropagation()}
-          >
-            + Add bookmark
-          </button>
-        </div>
-      ) : null}
-
+      {columns.map((column, columnIndex) => (
       <div
+        key={columnIndex}
         className={styles.items}
         data-role={DOM_ROLE.folderItems}
         data-folder-id={p.folder.id}
-        style={p.folder.collapsed ? { display: "none" } : undefined}
+        data-column-index={columnIndex}
+        data-insert-before-id={column.insertBeforeItemId}
+        style={{
+          display: p.folder.collapsed ? "none" : undefined,
+          gridColumn: columnIndex + 1,
+          gridRow: 1,
+          marginTop: columnIndex === 0 ? headerHeight : 0,
+        }}
       >
-        {visibleFolderDisplayItems.map((item) => {
+        {columnIndex === 0 && folderItems.length === 0 && !folderIsEmptyDuringSearch ? (
+          <div className={styles.emptyTip} data-dad-ignore="true">
+            <button
+              type="button"
+              className={styles.emptyAction}
+              onClick={onAddBookmark}
+              onMouseDown={(event) => event.stopPropagation()}
+            >
+              + Add bookmark
+            </button>
+          </div>
+        ) : null}
+        {column.items.map((item) => {
           if (item.type === "bookmark") {
             if (!p.showArchived && p.search.length === 0 && item.item.archived) {
               return null;
@@ -543,6 +582,9 @@ export const Folder = React.memo(function Folder(p: {
               spaces={p.spaces}
               folderId={p.folder.id}
               group={item.group}
+              continuation={item.continuation}
+              fragmentIndex={columnIndex}
+              insertBeforeItemId={item.insertBeforeItemId}
               items={visibleGroupItems}
               count={groupCount}
               tabs={p.tabs}
@@ -555,6 +597,23 @@ export const Folder = React.memo(function Folder(p: {
           );
         })}
       </div>
+      ))}
+      {!p.folder.collapsed && availableColumns > 1 ? (
+        <div
+          role="separator"
+          tabIndex={0}
+          aria-label="Resize folder"
+          aria-orientation="vertical"
+          aria-valuemin={1}
+          aria-valuemax={availableColumns}
+          aria-valuenow={effectiveColumns}
+          title="Drag to change the number of columns"
+          className={styles.resizeHandle}
+          onMouseDown={resize.onMouseDown}
+          onKeyDown={resize.onKeyDown}
+        />
+      ) : null}
+      {resize.isResizing ? <span className={styles.resizeHint} role="status">{effectiveColumns} columns</span> : null}
     </div>
   );
 });

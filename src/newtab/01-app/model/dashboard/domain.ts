@@ -124,6 +124,13 @@ export function createFolder(
       insertBetween(getLast(space.folders)?.position ?? "", ""),
     items: addItemsToFolder(input.items ?? [], []),
   };
+  if (
+    typeof input.columnSpan === "number" &&
+    Number.isSafeInteger(input.columnSpan) &&
+    input.columnSpan > 0
+  ) {
+    folder.columnSpan = input.columnSpan;
+  }
   return updateSpace(state, space.id, {
     folders: sortByPosition([...space.folders, folder]),
   });
@@ -137,7 +144,17 @@ export function updateFolder(
   return updateFolderInState(
     state,
     folderId,
-    (folder) => ({ ...folder, ...patch }),
+    (folder) => {
+      const updated = { ...folder, ...patch };
+      if (
+        typeof updated.columnSpan !== "number" ||
+        !Number.isSafeInteger(updated.columnSpan) ||
+        updated.columnSpan <= 0
+      ) {
+        delete updated.columnSpan;
+      }
+      return updated;
+    },
     Boolean(patch.position),
   );
 }
@@ -281,6 +298,42 @@ export function deleteFolderGroup(
       currentFolder.items.filter((item) => item.id !== groupId),
     ),
   }));
+}
+
+export function convertFolderGroupToFolder(
+  state: DashboardState,
+  groupId: number,
+): DashboardState {
+  const sourceFolder = findFolderByItemId(state.spaces, groupId);
+  const group = sourceFolder?.items.find(
+    (item): item is GroupV3 => item.type === "group" && item.id === groupId,
+  );
+  const space = sourceFolder && findSpaceByFolderId(state.spaces, sourceFolder.id);
+  if (!sourceFolder || !group || !space) return state;
+
+  const folder: FolderV3 = {
+    id: generateLocalId(),
+    objectType: "folder",
+    title: group.title,
+    position: insertBetween(getLast([...space.folders])?.position ?? "", ""),
+    items: sortByPosition([...group.groupItems]),
+    archived: group.archived,
+    collapsed: group.collapsed,
+  };
+
+  return updateSpace(state, space.id, {
+    folders: sortByPosition([
+      ...space.folders.map((currentFolder) =>
+        currentFolder.id === sourceFolder.id
+          ? {
+              ...currentFolder,
+              items: currentFolder.items.filter((item) => item.id !== groupId),
+            }
+          : currentFolder,
+      ),
+      folder,
+    ]),
+  });
 }
 
 export function moveFolderItems(

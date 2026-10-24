@@ -1,6 +1,7 @@
 import { useStore } from "zustand";
 import { createStore, type StateCreator, type StoreApi } from "zustand/vanilla";
 import {
+  convertFolderGroupToFolder,
   createFolder,
   createFolderItem,
   createFolderItems,
@@ -43,6 +44,7 @@ export type DashboardActions = {
   createFolderItems(input: CreateFolderItemsInput): void;
   deleteFolder(folderId: number): void;
   deleteFolderGroup(groupId: number): void;
+  convertFolderGroupToFolder(groupId: number): void;
   deleteFolderItems(itemIds: number[]): void;
   updateFolderItem(itemId: number, patch: FolderItemPatch): void;
   selectSpace(spaceId: number): void;
@@ -83,6 +85,7 @@ function createDashboardSlice(
     createFolderItems: (input) => set((state) => applyWithUndo(state, createFolderItems(state, input))),
     deleteFolder: (folderId) => set((state) => applyWithUndo(state, deleteFolder(state, folderId))),
     deleteFolderGroup: (groupId) => set((state) => applyWithUndo(state, deleteFolderGroup(state, groupId))),
+    convertFolderGroupToFolder: (groupId) => set((state) => applyWithUndo(state, convertFolderGroupToFolder(state, groupId))),
     deleteFolderItems: (itemIds) => set((state) => applyWithUndo(state, deleteFolderItems(state, itemIds))),
     updateFolderItem: (itemId, patch) => set((state) => applyWithUndo(state, updateFolderItem(state, itemId, patch))),
     selectSpace: (spaceId) => {

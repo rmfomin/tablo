@@ -7,7 +7,7 @@ type NewFolderPlaceholderProps = {
   onCreate: () => void;
 };
 
-/** Пустая папка — визуальная кнопка создания и drag-and-drop цель. */
+/** Кнопка создания папки и цель для перетаскивания */
 export function NewFolderPlaceholder({
   onCreate,
 }: NewFolderPlaceholderProps) {
@@ -24,7 +24,7 @@ export function NewFolderPlaceholder({
         onClick={onCreate}
       >
         <span className={styles.newFolderPlus}>+</span>
-        New folder
+        Add folder
       </button>
       <div
         className={styles.newFolderDropTarget}

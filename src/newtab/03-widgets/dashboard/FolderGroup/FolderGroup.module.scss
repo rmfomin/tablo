@@ -100,9 +100,18 @@
 
 .items {
   position: relative;
+  display: flex;
+  flex-direction: column;
   padding: 0;
   min-height: 18px;
   --folder-item-background-left: calc(
     (var(--container-padding) + 12px) * -1
   );
+}
+
+.continued {
+  flex-shrink: 0;
+  color: var(--secondary-text-color);
+  font-size: 10px;
+  opacity: 0.7;
 }

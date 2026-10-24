@@ -187,6 +187,13 @@ function normalizeFolderV3(folder: FolderV3Input): FolderV3 {
     items: sortByPosition(folder.items.map(normalizeItemV3)),
   };
   if (typeof source.color === "string") normalized.color = source.color;
+  if (
+    typeof source.columnSpan === "number" &&
+    Number.isSafeInteger(source.columnSpan) &&
+    source.columnSpan > 0
+  ) {
+    normalized.columnSpan = source.columnSpan;
+  }
   if (typeof source.collapsed === "boolean") normalized.collapsed = source.collapsed;
   if (typeof source.archived === "boolean") normalized.archived = source.archived;
   return normalized;

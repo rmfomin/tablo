@@ -1,12 +1,14 @@
 import {
   setScrollByDummyClientY,
   subscribeMouseEvents,
+  notifyDragState,
 } from "@/newtab/04-features/dragging/model/dragAndDropUtils";
 import {
   calculateFoldersDropAreas,
   createDropPreview,
   createTabDummy,
   getDragLayoutElement,
+  getDragSourceElements,
   getFolderId,
   getIdsFromElements,
   getItemIdByIndex,
@@ -28,7 +30,7 @@ export function processItemDragAndDrop(
   targetRoots: HTMLElement[],
   dependencies: PConfigItemDependencies
 ) {
-  let originalFolderId: number;
+  let originalContainer: HTMLElement | null = null;
   let originalIndex: number;
   let dummy: undefined | HTMLElement = undefined;
   let previews: HTMLElement[] = [];
@@ -45,7 +47,26 @@ export function processItemDragAndDrop(
   let prevHighlightedGroup: HTMLElement | undefined = undefined;
   let currentDropArea: DropArea | undefined = undefined;
   let indexToDrop: number;
-  let targetFolderId: number;
+
+  const cleanup = () => {
+    if (!dummy) return;
+    document.body.classList.remove("dragging");
+    dummy.remove();
+    dummy = undefined;
+    removeDropPreview(previews);
+    previews = [];
+    restoreSource();
+    if (prevHighlightedGroup) delete prevHighlightedGroup.dataset.dropTarget;
+  };
+  const onCancel = () => {
+    const wasDragging = !!dummy;
+    cleanup();
+    if (wasDragging) {
+      config.onCancel();
+      notifyDragState(false);
+    }
+    dependencies.clearSelectedItemIds();
+  };
 
   const onViewportScrolled = () => {
     // recalculate drop areas if viewport was scrolled
@@ -84,25 +105,20 @@ export function processItemDragAndDrop(
       }
       if (curBoxToDrop && dropArea) {
         const res = getNewPlacementForItem(dropArea, e);
-        targetFolderId = dropArea.objectId;
-        const targetGroupId = dropArea.groupId;
-        const tryAddToOriginalPos =
-          !targetGroupId &&
-          targetFolderId === originalFolderId &&
-          res.index === originalIndex;
-        if (tryAddToOriginalPos) {
-          indexToDrop = originalIndex;
-        } else if (dropArea.insertAtEnd) {
+        if (dropArea.insertAtEnd) {
           indexToDrop = dropArea.itemRects.length;
         } else {
           indexToDrop = res.index;
         }
 
-        const previewContainer = dropArea.insertAtEnd
-          ? (curBoxToDrop
-              .closest(roleSelector(DOM_ROLE.folderGroup))
-              ?.querySelector(roleSelector(DOM_ROLE.groupItems)) as HTMLElement)
-          : curBoxToDrop;
+        let previewContainer = curBoxToDrop;
+        if (dropArea.insertAtEnd) {
+          const folder = curBoxToDrop.closest(roleSelector(DOM_ROLE.folder));
+          const fragments = folder?.querySelectorAll<HTMLElement>(
+            `${roleSelector(DOM_ROLE.groupItems)}[data-group-id="${dropArea.groupId}"]`
+          );
+          previewContainer = fragments?.[fragments.length - 1] ?? curBoxToDrop;
+        }
         if (previewContainer) {
           removeDropPreview(previews);
           previews = createDropPreview(targetRoots);
@@ -124,6 +140,7 @@ export function processItemDragAndDrop(
           unsubscribeEvents();
           return;
         }
+        notifyDragState(true);
         //create dummy
         dummy = createTabDummy(
           targetRoots,
@@ -135,19 +152,18 @@ export function processItemDragAndDrop(
         })`;
         document.body.classList.add("dragging");
         document.body.append(dummy);
-        if (config.isFolderItem) {
+        if (config.isFolderItem && targetRoots.length === 1) {
           // currently we support drag-and-drop of single folder only
           const targetRoot = targetRoots[0];
           // here we remember only first index from all selected elements
-          originalIndex = Array.from(
-            targetRoot.parentElement!.parentElement!.children
-          ).indexOf(targetRoot.parentElement!);
-          originalFolderId = getFolderId(
-            targetRoot.parentElement!.parentElement!
+          const layoutElement = getDragLayoutElement(targetRoot);
+          originalContainer = layoutElement.parentElement;
+          originalIndex = Array.from(originalContainer!.children).indexOf(
+            layoutElement
           );
         }
         restoreSource = setDragSourceHidden(
-          targetRoots.map(getDragLayoutElement)
+          getDragSourceElements(targetRoots)
         );
         onViewportScrolled();
         onMouseMove(e, true);
@@ -156,22 +172,16 @@ export function processItemDragAndDrop(
   };
   const onMouseUp = () => {
     if (dummy) {
-      document.body.classList.remove("dragging");
-      dummy.remove();
-      removeDropPreview(previews);
-      restoreSource();
-      if (prevHighlightedGroup) {
-        delete prevHighlightedGroup.dataset.dropTarget;
-      }
+      const insertBeforeItemId = currentDropArea?.insertAtEnd || !prevBoxToDrop
+        ? undefined
+        : getItemIdByIndex(prevBoxToDrop, indexToDrop);
+      cleanup();
       const tryAddToOriginalPos =
-        !currentDropArea?.groupId &&
-        targetFolderId === originalFolderId &&
+        currentDropArea?.element === originalContainer &&
+        !currentDropArea?.insertAtEnd &&
         indexToDrop === originalIndex;
       if (prevBoxToDrop && !tryAddToOriginalPos) {
         const folderId = getFolderId(prevBoxToDrop);
-        const insertBeforeItemId = currentDropArea?.insertAtEnd
-          ? undefined
-          : getItemIdByIndex(prevBoxToDrop, indexToDrop);
         config.onDrop(
           folderId,
           insertBeforeItemId,
@@ -181,6 +191,7 @@ export function processItemDragAndDrop(
       } else {
         config.onCancel();
       }
+      notifyDragState(false);
     } else {
       // we can click only by single element
       config.onClick(getIdsFromElements(targetRoots)[0]);
@@ -193,7 +204,8 @@ export function processItemDragAndDrop(
     mouseDownEvent,
     onMouseMove,
     onMouseUp,
-    onViewportScrolled
+    onViewportScrolled,
+    onCancel
   );
   return unsubscribeEvents;
 }

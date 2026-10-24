@@ -76,6 +76,8 @@ export interface FolderV3 {
   title: string;
   items: ItemV3[];
   color?: string;
+  /** Positive safe integer; an absent value means one column */
+  columnSpan?: number;
   collapsed?: boolean;
   archived?: boolean;
 }

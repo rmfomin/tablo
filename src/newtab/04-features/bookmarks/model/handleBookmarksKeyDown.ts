@@ -95,109 +95,66 @@ export function handleBookmarksKeyDown(
   }
 }
 
-type FolderPosition = {
-  row: number;
-  col: number;
+type VisualColumn = {
   element: HTMLElement;
-  id: number;
+  rect: DOMRect;
+  items: HTMLElement[];
 };
 
-function getFolderPositions(): FolderPosition[] {
-  const folderElements = (document.querySelectorAll(
-    `${roleSelector(
-      DOM_ROLE.folder
-    )}[data-folder-id]:not([data-folder-new="true"])`
-  ) as unknown) as HTMLElement[];
-  const results: FolderPosition[] = [];
-  let prevRes: FolderPosition | undefined;
-  let prevFolderBounds: DOMRect | undefined = undefined;
-  folderElements.forEach((f) => {
-    const bounds = f.getBoundingClientRect();
-    const res: FolderPosition = {
-      row: 0,
-      col: 0,
-      element: f,
-      id: parseInt(f.dataset.folderId || "", 10),
-    };
-    if (prevFolderBounds && prevRes) {
-      if (bounds.y !== prevFolderBounds.y) {
-        // the next row started
-        res.row = prevRes.row + 1;
-        res.col = 0;
-      } else {
-        // the next col started
-        res.row = prevRes.row;
-        res.col = prevRes.col + 1;
-      }
-    }
-    results.push(res);
-    prevRes = res;
-    prevFolderBounds = bounds;
-  });
+function isVisibleItem(item: HTMLElement): boolean {
+  if (item.closest('[data-dad-preview="true"], .dad-dummy, [hidden]')) return false;
+  for (let element: HTMLElement | null = item; element; element = element.parentElement) {
+    const style = getComputedStyle(element);
+    if (style.display === "none" || style.visibility === "hidden") return false;
+  }
+  return true;
+}
 
-  return results;
+function getVisualColumns(): VisualColumn[] {
+  return Array.from(document.querySelectorAll<HTMLElement>(roleSelector(DOM_ROLE.folderItems)))
+    .filter((element) => !element.closest('[data-folder-new="true"]'))
+    .map((element) => ({
+      element,
+      rect: element.getBoundingClientRect(),
+      items: Array.from(element.querySelectorAll<HTMLElement>(FOLDER_ITEM_SELECTOR))
+        .filter(isVisibleItem)
+        .sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top),
+    }))
+    .filter((column) => column.items.length > 0);
 }
 
 function convertItemsIntoVerticalList(): Element[] {
-  const folderPositions = getFolderPositions();
-  folderPositions.sort((a, b) => {
-    // Sort by column first
-    if (a.col !== b.col) {
-      return a.col - b.col; // Ascending order of columns (left to right)
-    }
-    // If columns are equal, sort by row
-    return a.row - b.row; // Ascending order of rows (top to bottom)
-  });
-  const resItems: Element[] = [];
-  folderPositions.forEach((folder) => {
-    resItems.push(...folder.element.querySelectorAll(FOLDER_ITEM_SELECTOR));
-  });
-  return resItems;
+  return getVisualColumns()
+    .sort((a, b) => a.rect.left - b.rect.left || a.rect.top - b.rect.top)
+    .flatMap((column) => column.items);
 }
 
 function convertItemsIntoHorizontalList(
   currentItem: HTMLElement,
-  appState: BookmarksKeyboardState
+  _appState: BookmarksKeyboardState
 ): Element[] {
-  const itemId = parseInt(currentItem.dataset.id || "", 10);
-  const currentFolder = appState.spaces
-    .flatMap((space) => space.folders)
-    .find((folder) => folder.items.some((item) => (
-      item.id === itemId || (item.type === "group" && item.groupItems.some((child) => child.id === itemId))
-    )));
-  if (!currentFolder) {
-    return [];
-  }
-  const foldersPositions = getFolderPositions();
-  const currentFoldersPos = foldersPositions.find(
-    (f) => f.id === currentFolder.id
-  );
-  if (!currentFoldersPos) {
-    return [];
-  }
-  const allFoldersInRow = foldersPositions.filter(
-    (f) => f.row === currentFoldersPos.row
-  );
-  const allItemsInCurrentFolder = Array.from(
-    currentFoldersPos.element.querySelectorAll<HTMLElement>(
-      FOLDER_ITEM_SELECTOR
-    )
-  );
-  const currentItemIndexInFolder = allItemsInCurrentFolder.findIndex(
-    (item) => item.dataset.id === currentItem.dataset.id
-  );
-  const resItems: Element[] = [];
-  allFoldersInRow.forEach((folder) => {
-    const items = Array.from(
-      folder.element.querySelectorAll<HTMLElement>(FOLDER_ITEM_SELECTOR)
-    );
-    if (items.length > currentItemIndexInFolder) {
-      resItems.push(items[currentItemIndexInFolder]);
-    } else if (items.length > 0) {
-      resItems.push(items[items.length - 1]);
-    }
+  const columns = getVisualColumns();
+  const currentColumn = columns.find((column) => column.items.includes(currentItem));
+  if (!currentColumn) return [];
+  const currentRect = currentItem.getBoundingClientRect();
+  const currentY = currentRect.top + currentRect.height / 2;
+  const itemsByPhysicalColumn = new Map<number, HTMLElement[]>();
+  columns.forEach((column) => {
+    const items = itemsByPhysicalColumn.get(column.rect.left) ?? [];
+    items.push(...column.items);
+    itemsByPhysicalColumn.set(column.rect.left, items);
   });
-  return resItems;
+  return Array.from(itemsByPhysicalColumn.entries())
+    .sort(([leftA], [leftB]) => leftA - leftB)
+    .map(([left, items]) => {
+      if (left === currentColumn.rect.left) return currentItem;
+      return items.reduce((nearest, item) => {
+        const nearestRect = nearest.getBoundingClientRect();
+        const itemRect = item.getBoundingClientRect();
+        return Math.abs(itemRect.top + itemRect.height / 2 - currentY) <
+          Math.abs(nearestRect.top + nearestRect.height / 2 - currentY) ? item : nearest;
+      });
+    });
 }
 
 let trackSearchUsedTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -207,9 +164,9 @@ export function handleSearchKeyDown(
   onClearSearch: () => void
 ) {
   if (event.code === "ArrowDown") {
-    const firstFolderItem = document.querySelector(
+    const firstFolderItem = Array.from(document.querySelectorAll<HTMLElement>(
       FOLDER_ITEM_SELECTOR
-    ) as HTMLElement;
+    )).find(isVisibleItem);
     if (firstFolderItem) {
       firstFolderItem.focus();
       event.preventDefault();

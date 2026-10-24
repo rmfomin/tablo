@@ -119,7 +119,7 @@ describe("folder and group header contracts", () => {
       /function onOpenAllTabs\(\) \{([\s\S]*?)\n  \}/
     )?.[1];
 
-    expect(openAllFunction).toContain("p.items.forEach");
+    expect(openAllFunction).toContain("p.group.groupItems.forEach");
     expect(openAllFunction).toContain("!item.archived");
     expect(openAllFunction).toContain(
       "createTab({ url: item.url, active: false })"

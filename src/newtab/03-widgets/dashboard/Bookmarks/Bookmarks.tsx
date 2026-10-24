@@ -34,6 +34,7 @@ import type { Point } from "@/newtab/06-shared/lib/math";
 import type { QuickGroupV3 } from "@/newtab/05-entities/dashboard/model/types";
 import WrenchIcon from "./wrench.svg";
 import ActivityIcon from "./activity.svg";
+import { startQuickGroupUrlDrag } from "./startQuickGroupUrlDrag";
 
 const TAB_GROUP_COLORS: Array<{
   value: TabGroupColor;
@@ -78,6 +79,26 @@ function getTabGroupTitle(config: TabGroupConfig): string {
     .filter(Boolean);
 
   return domains.join(" | ") || "New group";
+}
+
+function moveTabGroupUrl(
+  urls: string[],
+  fromIndex: number,
+  toIndex: number,
+): string[] {
+  if (fromIndex === toIndex || !urls[fromIndex]?.trim()) {
+    return urls;
+  }
+
+  const nextUrls = [...urls];
+  const [movedUrl] = nextUrls.splice(fromIndex, 1);
+  const lastIndex = nextUrls.length - 1;
+  const targetIndex =
+    lastIndex >= 0 && !nextUrls[lastIndex].trim()
+      ? Math.min(toIndex, lastIndex)
+      : toIndex;
+  nextUrls.splice(targetIndex, 0, movedUrl);
+  return nextUrls;
 }
 
 let __prevCurrentSpaceId: number | undefined = undefined;
@@ -125,6 +146,7 @@ export function Bookmarks() {
   const dragCleanupRef = useRef<() => void>();
   const [openTabGroupMenuIndex, setOpenTabGroupMenuIndex] = useState<number>();
   const [tabGroupMenuPosition, setTabGroupMenuPosition] = useState<Point>();
+  const urlDragCleanupRef = useRef<() => void>();
   const persistedTabGroupConfigs = spaces.find(
     (space) => space.id === currentSpaceId,
   )?.quickGroups;
@@ -216,8 +238,34 @@ export function Bookmarks() {
     }));
   }
 
+  function moveTabGroupUrlInConfig(
+    groupIndex: number,
+    fromIndex: number,
+    toIndex: number,
+  ) {
+    updateTabGroupConfig(groupIndex, (config) => ({
+      ...config,
+      urls: moveTabGroupUrl(config.urls, fromIndex, toIndex),
+    }));
+  }
+
+  function startUrlDrag(
+    event: React.MouseEvent<HTMLButtonElement>,
+    groupIndex: number,
+    urlIndex: number,
+  ) {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    event.stopPropagation();
+    urlDragCleanupRef.current?.();
+    urlDragCleanupRef.current = startQuickGroupUrlDrag(event, (toIndex) => {
+      moveTabGroupUrlInConfig(groupIndex, urlIndex, toIndex);
+    });
+  }
+
   const bookmarksRef = useRef<HTMLDivElement>(null);
   const folderGridRef = useRef<HTMLDivElement>(null);
+  const [availableColumns, setAvailableColumns] = useState(3);
   const { onMouseDown: onAreaSelectionMouseDown, selectionRect } =
     useAreaSelection({
       containerRef: bookmarksRef,
@@ -248,9 +296,16 @@ export function Bookmarks() {
     return () => dragCleanupRef.current?.();
   }, []);
 
+  useEffect(() => {
+    return () => urlDragCleanupRef.current?.();
+  }, [currentSpaceId, openTabGroupMenuIndex]);
+
   useLayoutEffect(() => {
     const grid = folderGridRef.current;
     if (!grid) return;
+
+    const initialColumns = Number(getComputedStyle(grid).getPropertyValue("--folder-grid-columns"));
+    if (initialColumns > 0) setAvailableColumns(initialColumns);
 
     let animationFrame: number | undefined;
     const scheduleLayout = () => {
@@ -258,12 +313,16 @@ export function Bookmarks() {
         cancelAnimationFrame(animationFrame);
       }
       animationFrame = requestAnimationFrame(() => {
+        if (document.body.classList.contains("dragging")) return;
+        const columns = Number(getComputedStyle(grid).getPropertyValue("--folder-grid-columns"));
+        if (columns > 0) setAvailableColumns(columns);
         updateMasonryLayout(grid);
       });
     };
     const resizeObserver = new ResizeObserver(scheduleLayout);
     const observeItems = () => {
       resizeObserver.disconnect();
+      resizeObserver.observe(grid);
       Array.from(grid.children).forEach((child) => {
         resizeObserver.observe(child);
       });
@@ -273,6 +332,10 @@ export function Bookmarks() {
 
     observeItems();
     mutationObserver.observe(grid, { childList: true });
+    const onDragState = (event: Event) => {
+      if (!(event as CustomEvent<boolean>).detail) scheduleLayout();
+    };
+    document.addEventListener("tablo-drag-state", onDragState);
 
     return () => {
       if (animationFrame !== undefined) {
@@ -280,6 +343,7 @@ export function Bookmarks() {
       }
       mutationObserver.disconnect();
       resizeObserver.disconnect();
+      document.removeEventListener("tablo-drag-state", onDragState);
     };
   }, []);
 
@@ -428,6 +492,9 @@ export function Bookmarks() {
           className={styles.actions}
           onMouseDown={(event) => event.stopPropagation()}
         >
+          {screen.showNewFolderPlaceholder ? (
+            <NewFolderPlaceholder onCreate={onCreateFolder} />
+          ) : null}
           <button
             type="button"
             className={styles.addGroupButton}
@@ -520,22 +587,39 @@ export function Bookmarks() {
                     </label>
                     <div className={styles.groupUrls}>
                       {config.urls.map((url, urlIndex) => (
-                        <label className="input-label" key={urlIndex}>
-                          <span className="input-label__text">URL</span>
-                          <textarea
-                            className="focusable"
-                            rows={1}
-                            aria-label={`URL ${urlIndex + 1}`}
-                            value={url}
-                            onChange={(event) =>
-                              updateTabGroupUrl(
-                                groupIndex,
-                                urlIndex,
-                                event.target.value,
-                              )
+                        <div
+                          className={styles.groupUrlRow}
+                          key={urlIndex}
+                        >
+                          <button
+                            type="button"
+                            className={styles.groupUrlDragHandle}
+                            disabled={!url.trim()}
+                            aria-label={`Move URL ${urlIndex + 1}`}
+                            title="Drag to reorder"
+                            onMouseDown={(event) =>
+                              startUrlDrag(event, groupIndex, urlIndex)
                             }
-                          />
-                        </label>
+                          >
+                            ⋮⋮
+                          </button>
+                          <label className="input-label">
+                            <span className="input-label__text">URL</span>
+                            <textarea
+                              className="focusable"
+                              rows={1}
+                              aria-label={`URL ${urlIndex + 1}`}
+                              value={url}
+                              onChange={(event) =>
+                                updateTabGroupUrl(
+                                  groupIndex,
+                                  urlIndex,
+                                  event.target.value,
+                                )
+                              }
+                            />
+                          </label>
+                        </div>
                       ))}
                     </div>
                     <div className="dropdown-menu__separator" />
@@ -555,11 +639,8 @@ export function Bookmarks() {
         </div>
         <div className={styles.folderGrid} ref={folderGridRef}>
           {folders.map((folder) => (
-            <Folder key={folder.id} folder={folder} {...folderProps} />
+            <Folder key={folder.id} folder={folder} availableColumns={availableColumns} {...folderProps} />
           ))}
-          {screen.showNewFolderPlaceholder ? (
-            <NewFolderPlaceholder onCreate={onCreateFolder} />
-          ) : null}
         </div>
 
         {selectionRect ? (
