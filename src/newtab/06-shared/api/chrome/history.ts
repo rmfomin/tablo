@@ -57,6 +57,74 @@ export type RecentItem = {
   visitCount?: number;
 };
 
+export type WeeklyHistoryItem = RecentItem & {
+  url: string;
+  title: string;
+  visitsLast7Days: number;
+  lastVisitTime: number;
+};
+
+export async function getWeeklyHistoryUsage(signal?: AbortSignal): Promise<WeeklyHistoryItem[]> {
+  const endTime = Date.now();
+  const startTime = endTime - 7 * 24 * 60 * 60 * 1000;
+  const history = await new Promise<HistoryItem[]>((resolve, reject) => {
+    chrome.history.search({ text: "", startTime, endTime, maxResults: 10000 }, (items) => {
+      const error = chrome.runtime.lastError;
+      if (error) {
+        reject(new Error(error.message ?? "Unable to load browsing history"));
+        return;
+      }
+      resolve(items);
+    });
+  });
+  const candidates = mapHistoryToRecentAndFilterIrrelevant(history).filter((item) => {
+    try {
+      const url = new URL(item.url!);
+      return url.protocol === "http:" || url.protocol === "https:";
+    } catch {
+      return false;
+    }
+  });
+  const result: WeeklyHistoryItem[] = [];
+  let nextIndex = 0;
+  let stopped = false;
+
+  async function loadVisits() {
+    while (!stopped && !signal?.aborted && nextIndex < candidates.length) {
+      const item = candidates[nextIndex++];
+      const visits = await new Promise<chrome.history.VisitItem[]>((resolve, reject) => {
+        chrome.history.getVisits({ url: item.url! }, (items) => {
+          const error = chrome.runtime.lastError;
+          if (error) {
+            reject(new Error(error.message ?? "Unable to load page visits"));
+            return;
+          }
+          resolve(items);
+        });
+      });
+      const visitTimes = visits
+        .map((visit) => visit.visitTime)
+        .filter((time): time is number => time !== undefined && time >= startTime && time <= endTime);
+      if (visitTimes.length === 0) continue;
+
+      result.push({
+        ...item,
+        url: item.url!,
+        title: item.title!,
+        visitsLast7Days: visitTimes.length,
+        lastVisitTime: visitTimes.reduce((latest, time) => Math.max(latest, time), 0),
+      });
+    }
+  }
+
+  await Promise.all(Array.from({ length: Math.min(8, candidates.length) }, () => loadVisits()))
+    .catch((error) => {
+      stopped = true;
+      throw error;
+    });
+  return result;
+}
+
 export function getFilteredRecentItems(
   historyItems: RecentItem[],
   filters: RecentFilter[],

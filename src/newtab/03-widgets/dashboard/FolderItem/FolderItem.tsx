@@ -11,7 +11,7 @@ import { useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStor
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import cn from "clsx";
 import { FolderItemMenu } from "@/newtab/03-widgets/dashboard/FolderItemMenu/FolderItemMenu";
-import { getBrokenImgSVG, loadFaviconUrl } from "@/newtab/06-shared/api/chrome/favicons";
+import { getBrokenImgSVG, getChromeFaviconUrl, loadFaviconUrl } from "@/newtab/06-shared/api/chrome/favicons";
 import { RecentItem } from "@/newtab/06-shared/api/chrome/history";
 import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
 import { getPointerPosition } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
@@ -38,6 +38,8 @@ export const FolderItem = React.memo(
     const hasSelectedItems = useUiStore(
       (state) => state.selectedItemIds.length > 0,
     );
+    const faviconRefreshId = useUiStore((state) => state.faviconRefreshId);
+    const searchNavigationTargetId = useUiStore((state) => state.searchNavigationTargetId);
     const [showMenu, setShowMenu] = useState<boolean>(false);
     const [menuPosition, setMenuPosition] = useState<Point>();
     const [localTitle, setLocalTitle] = useState<string>(p.item.title);
@@ -100,6 +102,7 @@ export const FolderItem = React.memo(
           className={cn("draggable-item", styles.inner, {
             [styles.section]: p.item.isSection,
             [styles.opened]: folderItemOpened,
+            [styles.searchTarget]: searchNavigationTargetId === p.item.id,
           })}
           onDragStart={(e) => {
             e.preventDefault();
@@ -114,7 +117,15 @@ export const FolderItem = React.memo(
           href={p.item.url}
           onContextMenu={onContextMenu}
         >
-          <img src={p.item.favIconUrl} alt="" onError={handleImageError} />
+          <img
+            src={
+              p.item.favIconUrl.includes("/_favicon/") && faviconRefreshId > 0
+                ? getChromeFaviconUrl(p.item.url, 32, faviconRefreshId)
+                : p.item.favIconUrl
+            }
+            alt=""
+            onError={handleImageError}
+          />
           <span className={styles.text}>
             <EditableTitle
               className={cn(styles.title, {

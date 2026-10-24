@@ -2,6 +2,7 @@ import { useStore } from "zustand";
 import { createStore, type StateCreator, type StoreApi } from "zustand/vanilla";
 import type { ColorTheme } from "@/newtab/05-entities/dashboard/model/types";
 import type { SearchFilter, SearchFilterMode } from "@/newtab/04-features/bookmark-search/model/filters";
+import { defaultBackupReminderIntervalDays, normalizeBackupReminderIntervalDays } from "@/newtab/04-features/backup-reminder/model/settings";
 
 export type NotificationState = {
   visible: boolean;
@@ -22,9 +23,20 @@ export type UiPreferences = {
   showNotUsed: boolean;
   useSearchResultsPopup?: boolean;
   showGroupBackground?: boolean;
+  backupReminderEnabled?: boolean;
+  backupReminderIntervalDays?: number;
+  lastBackupExportAt?: number;
+  backupReminderEnabledAt?: number;
+  backupReminderSnoozedUntil?: number;
 };
 
-export type UiState = Omit<UiPreferences, "useSearchResultsPopup" | "showGroupBackground"> & {
+export type UiState = Omit<
+  UiPreferences,
+  | "useSearchResultsPopup"
+  | "showGroupBackground"
+  | "backupReminderEnabled"
+  | "backupReminderIntervalDays"
+> & {
   useSearchResultsPopup: boolean;
   showGroupBackground: boolean;
   search: string;
@@ -35,6 +47,12 @@ export type UiState = Omit<UiPreferences, "useSearchResultsPopup" | "showGroupBa
   notification: NotificationState;
   page: "default" | "import";
   sidebarHovered: boolean;
+  faviconRefreshId: number;
+  searchNavigationTargetId: number | undefined;
+  backupReminderEnabled: boolean;
+  backupReminderIntervalDays: number;
+  backupReminderVisible: boolean;
+  backupReminderEnabledAt?: number;
 };
 
 export type UiActions = {
@@ -56,6 +74,13 @@ export type UiActions = {
   setShowNotUsed(showNotUsed: boolean): void;
   setUseSearchResultsPopup(useSearchResultsPopup: boolean): void;
   setShowGroupBackground(showGroupBackground: boolean): void;
+  refreshFavicons(): void;
+  setSearchNavigationTargetId(itemId: number | undefined): void;
+  setBackupReminderEnabled(enabled: boolean): void;
+  setBackupReminderIntervalDays(days: number): void;
+  setBackupReminderVisible(visible: boolean): void;
+  setLastBackupExportAt(timestamp: number): void;
+  setBackupReminderSnoozedUntil(timestamp: number | undefined): void;
   hydratePreferences(preferences: UiPreferences): void;
 };
 
@@ -69,12 +94,17 @@ export const defaultUiPreferences: UiPreferences = {
   showNotUsed: false,
   useSearchResultsPopup: true,
   showGroupBackground: true,
+  backupReminderEnabled: false,
+  backupReminderIntervalDays: defaultBackupReminderIntervalDays,
 };
 
 const defaultUiState: UiState = {
   ...defaultUiPreferences,
   useSearchResultsPopup: true,
   showGroupBackground: true,
+  backupReminderEnabled: false,
+  backupReminderIntervalDays: defaultBackupReminderIntervalDays,
+  backupReminderVisible: false,
   search: "",
   searchFilters: [],
   searchFilterMode: "or",
@@ -83,6 +113,8 @@ const defaultUiState: UiState = {
   notification: { visible: false, message: "" },
   page: "default",
   sidebarHovered: false,
+  faviconRefreshId: 0,
+  searchNavigationTargetId: undefined,
 };
 
 function createUiSlice(initialState: Partial<UiState>): StateCreator<UiStore> {
@@ -117,10 +149,36 @@ function createUiSlice(initialState: Partial<UiState>): StateCreator<UiStore> {
       set({ useSearchResultsPopup }),
     setShowGroupBackground: (showGroupBackground) =>
       set({ showGroupBackground }),
+    refreshFavicons: () => set((state) => ({ faviconRefreshId: state.faviconRefreshId + 1 })),
+    setSearchNavigationTargetId: (searchNavigationTargetId) =>
+      set({ searchNavigationTargetId }),
+    setBackupReminderEnabled: (backupReminderEnabled) => set((state) => {
+      let backupReminderEnabledAt = state.backupReminderEnabledAt;
+      if (!backupReminderEnabled) {
+        backupReminderEnabledAt = undefined;
+      } else if (!state.backupReminderEnabled && !state.lastBackupExportAt) {
+        backupReminderEnabledAt = Date.now();
+      }
+      return { backupReminderEnabled, backupReminderEnabledAt };
+    }),
+    setBackupReminderIntervalDays: (backupReminderIntervalDays) =>
+      set({ backupReminderIntervalDays: normalizeBackupReminderIntervalDays(backupReminderIntervalDays) }),
+    setBackupReminderVisible: (backupReminderVisible) => set({ backupReminderVisible }),
+    setLastBackupExportAt: (lastBackupExportAt) => set({
+      lastBackupExportAt,
+      backupReminderEnabledAt: undefined,
+    }),
+    setBackupReminderSnoozedUntil: (backupReminderSnoozedUntil) =>
+      set({ backupReminderSnoozedUntil }),
 
     hydratePreferences: (preferences) => set({
       ...preferences,
       showGroupBackground: preferences.showGroupBackground !== false,
+      backupReminderEnabled: preferences.backupReminderEnabled === true,
+      backupReminderIntervalDays: normalizeBackupReminderIntervalDays(preferences.backupReminderIntervalDays),
+      lastBackupExportAt: preferences.lastBackupExportAt,
+      backupReminderEnabledAt: preferences.backupReminderEnabledAt,
+      backupReminderSnoozedUntil: preferences.backupReminderSnoozedUntil,
     }),
   });
 }

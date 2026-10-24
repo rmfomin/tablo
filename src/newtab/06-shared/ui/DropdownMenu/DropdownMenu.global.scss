@@ -273,6 +273,28 @@ label.input-label + label.input-label {
   padding-left: 36px;
 }
 
+.dropdown-menu__status-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 28px;
+  margin-left: 12px;
+  padding: 0 6px;
+  border-radius: 4px;
+  background-color: var(--gray-200);
+  color: var(--secondary-text-color);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 18px;
+  box-sizing: border-box;
+}
+
+.dropdown-menu__status-label--active {
+  background-color: color-mix(in srgb, var(--success-color) 12%, transparent);
+  color: var(--success-color);
+}
+
 .dropdown-menu__toggle-icon {
   position: absolute;
   top: 50%;

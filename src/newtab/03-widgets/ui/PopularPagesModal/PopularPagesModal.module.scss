@@ -1,0 +1,183 @@
+.root {
+  min-width: 0;
+  color: var(--main-text-color);
+}
+
+.empty,
+.newFolderHint {
+  color: var(--secondary-text-color);
+  font-size: 12px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  max-height: min(55vh, 520px);
+  overflow-y: auto;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 7px 0;
+  border-top: 1px solid var(--border-color);
+}
+
+.pageButton {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 9px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+
+  img,
+  .faviconPlaceholder {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+    object-fit: contain;
+  }
+}
+
+.faviconPlaceholder {
+  border-radius: 50%;
+  background: var(--hover-color);
+}
+
+.pageText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pageTitle,
+.pageUrl {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pageTitle {
+  font-size: 13px;
+}
+
+.pageUrl {
+  color: var(--secondary-text-color);
+  font-size: 11px;
+}
+
+.pageStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  margin-top: 3px;
+  color: var(--secondary-text-color);
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.actionButton,
+.addButton {
+  flex: 0 0 auto;
+  padding: 5px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: inherit;
+  background: var(--surface-color);
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.addForm {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 4px 27px;
+}
+
+.destinationField {
+  display: flex;
+  flex: 0 1 156px;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.fieldLabel {
+  color: var(--secondary-text-color);
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.selectControl {
+  position: relative;
+  display: block;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    width: 5px;
+    height: 5px;
+    border-right: 1.5px solid var(--secondary-text-color);
+    border-bottom: 1.5px solid var(--secondary-text-color);
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
+  }
+
+  select {
+    appearance: none;
+    width: 100%;
+    height: 32px;
+    padding: 0 30px 0 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--main-text-color);
+    background: var(--surface-color);
+    font: inherit;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    box-sizing: border-box;
+
+    &:hover {
+      border-color: var(--secondary-text-color);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--accent-color);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.item:has(.addForm) {
+  flex-wrap: wrap;
+
+  .pageButton {
+    flex-basis: 100%;
+  }
+}
+
+.addButton {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 8px;
+}

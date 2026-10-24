@@ -50,6 +50,11 @@ export function createStorageSyncController(
       showNotUsed: preparedState.showNotUsed,
       useSearchResultsPopup: preparedState.useSearchResultsPopup,
       showGroupBackground: preparedState.showGroupBackground,
+      backupReminderEnabled: preparedState.backupReminderEnabled,
+      backupReminderIntervalDays: preparedState.backupReminderIntervalDays,
+      lastBackupExportAt: preparedState.lastBackupExportAt,
+      backupReminderEnabledAt: preparedState.backupReminderEnabledAt,
+      backupReminderSnoozedUntil: preparedState.backupReminderSnoozedUntil,
     });
   }
 
@@ -125,6 +130,11 @@ function toPersistedState(dashboard: DashboardState, ui: UiStore): PersistedNewt
     showNotUsed: ui.showNotUsed,
     useSearchResultsPopup: ui.useSearchResultsPopup,
     showGroupBackground: ui.showGroupBackground,
+    backupReminderEnabled: ui.backupReminderEnabled,
+    backupReminderIntervalDays: ui.backupReminderIntervalDays,
+    lastBackupExportAt: ui.lastBackupExportAt,
+    backupReminderEnabledAt: ui.backupReminderEnabledAt,
+    backupReminderSnoozedUntil: ui.backupReminderSnoozedUntil,
   };
 }
 
@@ -135,5 +145,10 @@ function hasPersistedPreferencesChanged(current: UiStore, previous: UiStore): bo
     || current.showRecent !== previous.showRecent
     || current.showNotUsed !== previous.showNotUsed
     || current.useSearchResultsPopup !== previous.useSearchResultsPopup
-    || current.showGroupBackground !== previous.showGroupBackground;
+    || current.showGroupBackground !== previous.showGroupBackground
+    || current.backupReminderEnabled !== previous.backupReminderEnabled
+    || current.backupReminderIntervalDays !== previous.backupReminderIntervalDays
+    || current.lastBackupExportAt !== previous.lastBackupExportAt
+    || current.backupReminderEnabledAt !== previous.backupReminderEnabledAt
+    || current.backupReminderSnoozedUntil !== previous.backupReminderSnoozedUntil;
 }

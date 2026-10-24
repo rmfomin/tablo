@@ -56,8 +56,24 @@ registerInCache("https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"
 
 export const faviconsStorage = { findInCache, registerInCache };
 
+export function getChromeFaviconUrl(
+  pageUrl: string,
+  size = 32,
+  refreshId?: number,
+): string {
+  const url = toUrl(pageUrl);
+  if (!url || (url.protocol !== "http:" && url.protocol !== "https:")) return "";
+  const faviconUrl = new URL(chrome.runtime.getURL("/_favicon/"));
+  faviconUrl.searchParams.set("pageUrl", url.toString());
+  faviconUrl.searchParams.set("size", String(size));
+  if (refreshId !== undefined) {
+    faviconUrl.searchParams.set("refresh", String(refreshId));
+  }
+  return faviconUrl.toString();
+}
+
 export async function loadFaviconUrl(bookmarkUrl: string): Promise<string> {
-  return findInCache(bookmarkUrl, true) ?? "";
+  return getChromeFaviconUrl(bookmarkUrl) || getTemporaryFaviconUrl(bookmarkUrl);
 }
 
 let brokenImgSVG: string | undefined;

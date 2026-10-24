@@ -4,6 +4,7 @@ import {
   SpaceV3,
 } from "@/newtab/05-entities/dashboard/model/types";
 import { normalizeBackupV3 } from "@/newtab/04-features/bookmarks-import/model/adapters";
+import { downloadWithSaveDialog } from "@/newtab/06-shared/api/chrome/downloads";
 
 export function createExportBackupV3(spaces: SpaceV3[]): DataBackupV3 {
   return normalizeBackupV3({ isTablo: true, version: 3, spaces });
@@ -28,9 +29,19 @@ function downloadObjectAsJson(exportObj: unknown, exportName: string) {
   downloadAnchorNode.remove();
 }
 
-export function onExportJson(spaces: SpaceV3[]) {
+export function onExportJson(spaces: SpaceV3[], onExportStarted?: () => void) {
   const currentDate = new Date().toISOString().slice(0, 10);
   downloadObjectAsJson(createExportBackupV3(spaces), `backup_tablo_${currentDate}`);
+  onExportStarted?.();
+}
+
+export function saveBackupJson(spaces: SpaceV3[]): Promise<boolean> {
+  const currentDate = new Date().toISOString().slice(0, 10);
+  const data = JSON.stringify(createExportBackupV3(spaces));
+  return downloadWithSaveDialog(
+    `data:application/json;charset=utf-8,${encodeURIComponent(data)}`,
+    `backup_tablo_${currentDate}.json`,
+  );
 }
 
 export function onExportSpaceJson(space: SpaceV3) {

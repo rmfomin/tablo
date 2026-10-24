@@ -1,6 +1,7 @@
 import { areSpacesV3Input, normalizeBackupV3 } from "@/newtab/04-features/bookmarks-import/model/adapters";
 import type { ColorTheme, SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
 import type { PersistedNewtabState, StorageSyncAdapter } from "@/newtab/01-app/model/storage-sync/types";
+import { normalizeBackupReminderIntervalDays } from "@/newtab/04-features/backup-reminder/model/settings";
 
 const storageKeys = [
   "spaces",
@@ -12,6 +13,11 @@ const storageKeys = [
   "showNotUsed",
   "useSearchResultsPopup",
   "showGroupBackground",
+  "backupReminderEnabled",
+  "backupReminderIntervalDays",
+  "lastBackupExportAt",
+  "backupReminderEnabledAt",
+  "backupReminderSnoozedUntil",
   "version",
 ] as const;
 const legacyHidingStorageKeys = ["showArchived", "hiddenFeatureIsEnabled"] as const;
@@ -100,6 +106,17 @@ export function normalizePersistedState(value: StorageRecord): PersistedNewtabSt
     showNotUsed: value.showNotUsed === true,
     useSearchResultsPopup: value.useSearchResultsPopup !== false,
     showGroupBackground: value.showGroupBackground !== false,
+    backupReminderEnabled: value.backupReminderEnabled === true,
+    backupReminderIntervalDays: normalizeBackupReminderIntervalDays(value.backupReminderIntervalDays),
+    lastBackupExportAt: typeof value.lastBackupExportAt === "number"
+      ? value.lastBackupExportAt
+      : undefined,
+    backupReminderEnabledAt: typeof value.backupReminderEnabledAt === "number"
+      ? value.backupReminderEnabledAt
+      : undefined,
+    backupReminderSnoozedUntil: typeof value.backupReminderSnoozedUntil === "number"
+      ? value.backupReminderSnoozedUntil
+      : undefined,
   };
 }
 

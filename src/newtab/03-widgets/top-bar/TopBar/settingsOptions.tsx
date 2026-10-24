@@ -28,6 +28,8 @@ import IconImportSpace from "@/newtab/03-widgets/spaces-list/SpacesList/icons/im
 import IconKeyboard from "./icons/keyboard.svg";
 import IconReload from "./icons/reload.svg";
 import IconGithub from "./icons/github.svg";
+import IconFrequentlyUsed from "./icons/frequently-used.svg";
+import IconBell from "./icons/bell.svg";
 import ToggleRightIcon from "@/newtab/06-shared/ui/DropdownMenu/img/toggle-right.svg";
 import ToggleLeftIcon from "@/newtab/06-shared/ui/DropdownMenu/img/toggle-left.svg";
 import ImportJsonIcon from "@/newtab/06-shared/ui/DropdownMenu/img/import-json.svg";
@@ -43,6 +45,7 @@ type OnClickOption = {
   accept?: string;
   icon?: React.ReactNode;
   dangerStyle?: boolean;
+  statusLabel?: { text: string; active: boolean };
 };
 type OnToggleOption = {
   onToggle: () => void;
@@ -51,7 +54,7 @@ type OnToggleOption = {
   text: string;
   hidden?: boolean;
 };
-type SegmentedOption<T extends string> = {
+type SegmentedOption<T extends string | number> = {
   onSelect: (value: T) => void;
   value: T;
   title: string;
@@ -80,6 +83,7 @@ export const HelpOptions = () => {
   const currentSpaceId = useDashboardStore((state) => state.currentSpaceId);
   const updateFolderItem = useDashboardStore((state) => state.updateFolderItem);
   const showNotification = useUiStore((state) => state.showNotification);
+  const refreshFavicons = useUiStore((state) => state.refreshFavicons);
   // const [isJoinBetaModalOpen, setJoinBetaModalOpen] = useState(false);
   const [isShortcutsModalOpen, setShortcutsModalOpen] = useState(false);
 
@@ -121,6 +125,7 @@ export const HelpOptions = () => {
 
     showNotification({ message: "updating...", isLoading: true });
     Promise.all(promises).then(() => {
+      refreshFavicons();
       showNotification({ message: "Favicons are updated" });
     });
   }
@@ -178,8 +183,12 @@ export const HelpOptions = () => {
 
 export const SettingsOptions = ({
   onClose = () => {},
+  onOpenPopularPages,
+  onOpenBackupReminders,
 }: {
   onClose?: () => void;
+  onOpenPopularPages: () => void;
+  onOpenBackupReminders: () => void;
 }) => {
   const spaces = useDashboardStore((state) => state.spaces);
   const currentSpaceId = useDashboardStore((state) => state.currentSpaceId);
@@ -206,6 +215,9 @@ export const SettingsOptions = ({
   );
   const showGroupBackground = useUiStore((state) => state.showGroupBackground);
   const setShowGroupBackground = useUiStore((state) => state.setShowGroupBackground);
+  const backupReminderEnabled = useUiStore((state) => state.backupReminderEnabled);
+  const setLastBackupExportAt = useUiStore((state) => state.setLastBackupExportAt);
+  const setBackupReminderSnoozedUntil = useUiStore((state) => state.setBackupReminderSnoozedUntil);
   const setPage = useUiStore((state) => state.setPage);
   const showNotification = useUiStore((state) => state.showNotification);
   const recentItems = useChromeRuntimeStore((state) => state.recentItems);
@@ -330,6 +342,26 @@ export const SettingsOptions = ({
       title: "Show a background behind bookmark groups",
       text: "Show group backgrounds",
     },
+    { separator: true },
+    {
+      onClick: onOpenBackupReminders,
+      title: "Configure backup reminders",
+      text: "Backup reminders",
+      icon: <IconBell className="dropdown-menu__icon" aria-hidden="true" focusable="false" />,
+      statusLabel: { text: backupReminderEnabled ? "ON" : "OFF", active: backupReminderEnabled },
+    },
+    {
+      onClick: onOpenPopularPages,
+      title: "Frequently used pages",
+      text: "Frequently used",
+      icon: (
+        <IconFrequentlyUsed
+          className="dropdown-menu__icon"
+          aria-hidden="true"
+          focusable="false"
+        />
+      ),
+    },
     {
       separator: true,
     },
@@ -387,7 +419,10 @@ export const SettingsOptions = ({
     },
     {
       onClick: () => {
-        onExportJson(spaces);
+        onExportJson(spaces, () => {
+          setLastBackupExportAt(Date.now());
+          setBackupReminderSnoozedUntil(undefined);
+        });
       },
       title: "Export all Folders and Bookmarks to JSON file",
       text: "Export to JSON",
@@ -432,7 +467,7 @@ export const Options = (props: {
     return opt.hasOwnProperty("onClick");
   }
 
-  function isSegmented(opt: any): opt is SegmentedOption<string> {
+  function isSegmented(opt: any): opt is SegmentedOption<string | number> {
     return opt.hasOwnProperty("onSelect");
   }
 
@@ -551,7 +586,16 @@ export const Options = (props: {
                 title={option.title}
               >
                 {option.icon}
-                {option.text}
+                {option.statusLabel ? (
+                  <>
+                    <span>{option.text}</span>
+                    <span className={cn("dropdown-menu__status-label", {
+                      "dropdown-menu__status-label--active": option.statusLabel.active,
+                    })}>
+                      {option.statusLabel.text}
+                    </span>
+                  </>
+                ) : option.text}
               </button>
             );
           }

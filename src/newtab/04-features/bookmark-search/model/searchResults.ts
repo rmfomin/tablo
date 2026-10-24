@@ -12,6 +12,10 @@ import type {
 
 export type SpaceSearchResult = {
   id: string;
+  spaceId: number;
+  folderId: number;
+  groupId?: number;
+  bookmarkId: number;
   title: string;
   url: string;
   favIconUrl: string;
@@ -85,6 +89,10 @@ function addResult(
 
   results.push({
     id: `${space.id}-${folder.id}-${group?.id ?? "folder"}-${item.id}`,
+    spaceId: space.id,
+    folderId: folder.id,
+    groupId: group?.id,
+    bookmarkId: item.id,
     title: item.title,
     url: item.url,
     favIconUrl: item.favIconUrl,

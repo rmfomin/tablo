@@ -5,10 +5,16 @@ import { SettingsOptions } from "./settingsOptions";
 import cn from "clsx";
 import IconSettings from "./icons/settings.svg";
 import styles from "./TopBar.module.scss";
+import { PopularPagesModal } from "@/newtab/03-widgets/ui/PopularPagesModal/PopularPagesModal";
+import { BackupReminderSettingsModal } from "@/newtab/03-widgets/ui/BackupReminder/BackupReminderSettingsModal";
+import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 
 export function TopBar() {
   const [settingsMenuVisibility, setSettingsMenuVisibility] = useState(false);
   const [settingsMenuPosition, setSettingsMenuPosition] = useState<Point>();
+  const [isPopularPagesModalOpen, setPopularPagesModalOpen] = useState(false);
+  const [isBackupReminderSettingsOpen, setBackupReminderSettingsOpen] = useState(false);
+  const setBackupReminderVisible = useUiStore((state) => state.setBackupReminderVisible);
 
   function onToggleSettings(event: React.MouseEvent) {
     setSettingsMenuPosition(getPointerPosition(event));
@@ -43,11 +49,33 @@ export function TopBar() {
               }}
               absPosition={settingsMenuPosition}
             >
-              <SettingsOptions onClose={() => setSettingsMenuVisibility(false)} />
+              <SettingsOptions
+                onClose={() => setSettingsMenuVisibility(false)}
+                onOpenPopularPages={() => {
+                  setSettingsMenuVisibility(false);
+                  setPopularPagesModalOpen(true);
+                }}
+                onOpenBackupReminders={() => {
+                  setSettingsMenuVisibility(false);
+                  setBackupReminderSettingsOpen(true);
+                }}
+              />
             </DropdownMenu>
           )}
         </div>
       </div>
+      {isPopularPagesModalOpen && (
+        <PopularPagesModal onClose={() => setPopularPagesModalOpen(false)} />
+      )}
+      {isBackupReminderSettingsOpen && (
+        <BackupReminderSettingsModal
+          onClose={() => setBackupReminderSettingsOpen(false)}
+          onCheckNow={() => {
+            setBackupReminderSettingsOpen(false);
+            setBackupReminderVisible(true);
+          }}
+        />
+      )}
     </header>
   );
 }

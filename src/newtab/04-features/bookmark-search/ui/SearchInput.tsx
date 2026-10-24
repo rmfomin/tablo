@@ -5,15 +5,18 @@ import { hasSearch } from "@/newtab/04-features/bookmark-search/model/filters";
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { SearchResults } from "./SearchResults";
 import styles from "./SearchInput.module.scss";
+import type { SpaceSearchResult } from "../model/searchResults";
 
 export function SearchInput({
   inputRef,
   onEscape,
   onResultOpen,
+  onBookmarkReveal,
 }: {
   inputRef: React.Ref<HTMLInputElement>;
   onEscape: () => void;
   onResultOpen: () => void;
+  onBookmarkReveal: (result: SpaceSearchResult) => void;
 }) {
   const search = useUiStore((state) => state.search);
   const searchFilters = useUiStore((state) => state.searchFilters);
@@ -40,7 +43,11 @@ export function SearchInput({
       return;
     }
 
-    const currentIndex = results.indexOf(document.activeElement as HTMLButtonElement);
+    const activeElement = document.activeElement;
+    const activeResult = activeElement
+      ?.closest("[data-search-result-row]")
+      ?.querySelector<HTMLButtonElement>("[data-search-result]") ?? activeElement;
+    const currentIndex = results.indexOf(activeResult as HTMLButtonElement);
     if (currentIndex === 0 && offset < 0) {
       document.querySelector<HTMLInputElement>("input.search")?.focus();
       return;
@@ -104,7 +111,11 @@ export function SearchInput({
           <span className={styles.shortcutHint}>⌘F</span>
         )}
       </div>
-      <SearchResults onOpen={onResultOpen} onNavigate={navigateSearchResults} />
+      <SearchResults
+        onBookmarkReveal={onBookmarkReveal}
+        onOpen={onResultOpen}
+        onNavigate={navigateSearchResults}
+      />
     </div>
   );
 }

@@ -1,0 +1,42 @@
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.enabledOption {
+  margin-bottom: 18px;
+
+  &:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+  }
+}
+
+.intervalOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.daysInput {
+  width: 90px;
+  box-sizing: border-box;
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--main-text-color);
+  background: var(--surface-color);
+  font: inherit;
+
+  &:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+  }
+}
+
+.error {
+  margin: 12px 0 0;
+  color: var(--danger-color);
+}

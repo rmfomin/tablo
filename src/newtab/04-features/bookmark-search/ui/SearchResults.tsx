@@ -10,14 +10,18 @@ import {
 import { hlSearch } from "@/newtab/06-shared/lib/dom/html";
 import { getBaseFilteredRecentItems } from "@/newtab/06-shared/api/chrome/history";
 import { getSpaceSearchResultGroups } from "../model/searchResults";
+import type { SpaceSearchResult } from "../model/searchResults";
 import FolderIcon from "@/newtab/03-widgets/dashboard/Folder/icons/folder.svg";
 import BookIcon from "@/newtab/06-shared/ui/icons/book.svg";
 import styles from "./SearchResults.module.scss";
+import ArrowDownToDotIcon from "./icons/arrow-down-to-dot.svg";
 
 export function SearchResults({
+  onBookmarkReveal,
   onOpen,
   onNavigate,
 }: {
+  onBookmarkReveal: (result: SpaceSearchResult) => void;
   onOpen: () => void;
   onNavigate: (offset: number) => void;
 }) {
@@ -67,30 +71,45 @@ export function SearchResults({
           isSpace
         >
           {group.results.map((result) => (
-            <button
+            <div
               key={result.id}
-              type="button"
-              className={styles.result}
-              data-search-result
-              onClick={() => openResult(result.url)}
-              onKeyDown={(event) => handleResultKeyDown(event, onNavigate)}
+              className={styles.resultRow}
+              data-search-result-row
             >
-              <ResultFavicon src={result.favIconUrl} />
-              <span className={styles.resultText}>
-                <span
-                  className={styles.resultTitle}
-                  dangerouslySetInnerHTML={hlSearch(result.title, search)}
-                />
-                <span className={styles.resultMeta}>
-                  <FolderIcon className={styles.folderIcon} aria-hidden="true" />
-                  <span>
-                    {[result.folderTitle, result.groupTitle]
-                      .filter(Boolean)
-                      .join(" · ")}
+              <button
+                type="button"
+                className={styles.result}
+                data-search-result
+                onClick={() => openResult(result.url)}
+                onKeyDown={(event) => handleResultKeyDown(event, onNavigate)}
+              >
+                <ResultFavicon src={result.favIconUrl} />
+                <span className={styles.resultText}>
+                  <span
+                    className={styles.resultTitle}
+                    dangerouslySetInnerHTML={hlSearch(result.title, search)}
+                  />
+                  <span className={styles.resultMeta}>
+                    <FolderIcon className={styles.folderIcon} aria-hidden="true" />
+                    <span>
+                      {[result.folderTitle, result.groupTitle]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </span>
                   </span>
                 </span>
-              </span>
-            </button>
+              </button>
+              <button
+                type="button"
+                className={styles.jumpButton}
+                title="Jump to bookmark"
+                aria-label={`Jump to bookmark: ${result.title}`}
+                onClick={() => onBookmarkReveal(result)}
+                onKeyDown={(event) => handleResultKeyDown(event, onNavigate)}
+              >
+                <ArrowDownToDotIcon aria-hidden="true" focusable="false" />
+              </button>
+            </div>
           ))}
         </SearchSection>
       ))}

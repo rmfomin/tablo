@@ -54,7 +54,7 @@
     transition: background-color 0.1s ease;
   }
 
-  &:not([data-selection-active="true"]):hover::before {
+  &:not([data-selection-active="true"]):not(.searchTarget):hover::before {
     background-color: var(--hover-color);
   }
 
@@ -73,7 +73,8 @@
     );
   }
 
-  &[data-selected="true"]::before {
+  &[data-selected="true"]::before,
+  &.searchTarget::before {
     background: color-mix(in srgb, var(--selection-accent-color) 12%, transparent 88%);
   }
 

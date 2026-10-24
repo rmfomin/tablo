@@ -8,6 +8,9 @@ import { KeyboardAndMouseManager } from "@/newtab/01-app/ui/KeyboardAndMouseMana
 import { SearchInput } from "@/newtab/04-features/bookmark-search/ui/SearchInput";
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import styles from "./NewtabPage.module.scss";
+import type { SpaceSearchResult } from "@/newtab/04-features/bookmark-search/model/searchResults";
+import { useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
+import { BackupReminder } from "@/newtab/03-widgets/ui/BackupReminder/BackupReminder";
 
 type NewtabPageProps = {
   page: "default" | "import";
@@ -23,6 +26,12 @@ export function NewtabPage({
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchPanelRef = useRef<HTMLDivElement>(null);
   const setSearch = useUiStore((state) => state.setSearch);
+  const setSearchNavigationTargetId = useUiStore((state) => state.setSearchNavigationTargetId);
+  const selectSpace = useDashboardStore((state) => state.selectSpace);
+  const spaces = useDashboardStore((state) => state.spaces);
+  const updateFolder = useDashboardStore((state) => state.updateFolder);
+  const updateFolderItem = useDashboardStore((state) => state.updateFolderItem);
+  const highlightTimeoutRef = useRef<number>();
 
   const openSearch = useCallback(() => {
     if (searchOpen) {
@@ -36,6 +45,39 @@ export function NewtabPage({
     setSearchOpen(false);
     setSearch("");
   }, [setSearch]);
+
+  const navigateToBookmark = useCallback((result: SpaceSearchResult) => {
+    selectSpace(result.spaceId);
+    const folder = spaces
+      .find((space) => space.id === result.spaceId)
+      ?.folders.find((candidate) => candidate.id === result.folderId);
+    if (folder?.collapsed) {
+      updateFolder(result.folderId, { collapsed: false });
+    }
+    if (result.groupId !== undefined) {
+      const group = folder?.items.find((item) => item.id === result.groupId);
+      if (group?.type === "group" && group.collapsed) {
+        updateFolderItem(result.groupId, { collapsed: false });
+      }
+    }
+    setSearch("");
+    setSearchOpen(false);
+    setSearchNavigationTargetId(result.bookmarkId);
+    if (highlightTimeoutRef.current) window.clearTimeout(highlightTimeoutRef.current);
+    highlightTimeoutRef.current = window.setTimeout(
+      () => setSearchNavigationTargetId(undefined),
+      1800,
+    );
+    requestAnimationFrame(() => {
+      document
+        .querySelector<HTMLElement>(`[data-id="${result.bookmarkId}"]`)
+        ?.scrollIntoView({ block: "center", behavior: "smooth" });
+    });
+  }, [selectSpace, spaces, updateFolder, updateFolderItem, setSearch, setSearchNavigationTargetId]);
+
+  useEffect(() => () => {
+    if (highlightTimeoutRef.current) window.clearTimeout(highlightTimeoutRef.current);
+  }, []);
 
   useEffect(() => {
     if (!searchOpen) {
@@ -61,6 +103,7 @@ export function NewtabPage({
   return (
     <div className={cn("app", { "collapsible-sidebar": sidebarCollapsed })}>
       <Notification />
+      {page === "default" ? <BackupReminder /> : null}
       {page === "import" ? <ImportBookmarksFromSettings /> : null}
       {page === "default" ? (
         <>
@@ -70,6 +113,7 @@ export function NewtabPage({
                 inputRef={searchInputRef}
                 onEscape={closeSearch}
                 onResultOpen={closeSearch}
+                onBookmarkReveal={navigateToBookmark}
               />
             </div>
           ) : null}
