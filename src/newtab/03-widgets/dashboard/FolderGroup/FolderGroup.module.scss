@@ -33,6 +33,10 @@
     background: color-mix(in srgb, var(--accent-color) 14%, transparent 86%);
   }
 
+  &[data-background-visible="false"]::before {
+    opacity: 0;
+  }
+
   &[data-selected="true"] {
     &::before {
       opacity: 1;

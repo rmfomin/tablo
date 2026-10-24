@@ -27,5 +27,6 @@ export function persistedPreferencesSelector(state: UiStore): UiPreferences {
     showRecent: state.showRecent,
     showNotUsed: state.showNotUsed,
     useSearchResultsPopup: state.useSearchResultsPopup,
+    showGroupBackground: state.showGroupBackground,
   };
 }

@@ -11,6 +11,7 @@ const storageKeys = [
   "showRecent",
   "showNotUsed",
   "useSearchResultsPopup",
+  "showGroupBackground",
   "version",
 ] as const;
 const legacyHidingStorageKeys = ["showArchived", "hiddenFeatureIsEnabled"] as const;
@@ -98,6 +99,7 @@ export function normalizePersistedState(value: StorageRecord): PersistedNewtabSt
     showRecent: value.showRecent === true,
     showNotUsed: value.showNotUsed === true,
     useSearchResultsPopup: value.useSearchResultsPopup !== false,
+    showGroupBackground: value.showGroupBackground !== false,
   };
 }
 

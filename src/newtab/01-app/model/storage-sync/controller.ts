@@ -49,6 +49,7 @@ export function createStorageSyncController(
       showRecent: preparedState.showRecent,
       showNotUsed: preparedState.showNotUsed,
       useSearchResultsPopup: preparedState.useSearchResultsPopup,
+      showGroupBackground: preparedState.showGroupBackground,
     });
   }
 
@@ -123,6 +124,7 @@ function toPersistedState(dashboard: DashboardState, ui: UiStore): PersistedNewt
     showRecent: ui.showRecent,
     showNotUsed: ui.showNotUsed,
     useSearchResultsPopup: ui.useSearchResultsPopup,
+    showGroupBackground: ui.showGroupBackground,
   };
 }
 
@@ -132,5 +134,6 @@ function hasPersistedPreferencesChanged(current: UiStore, previous: UiStore): bo
     || current.colorTheme !== previous.colorTheme
     || current.showRecent !== previous.showRecent
     || current.showNotUsed !== previous.showNotUsed
-    || current.useSearchResultsPopup !== previous.useSearchResultsPopup;
+    || current.useSearchResultsPopup !== previous.useSearchResultsPopup
+    || current.showGroupBackground !== previous.showGroupBackground;
 }

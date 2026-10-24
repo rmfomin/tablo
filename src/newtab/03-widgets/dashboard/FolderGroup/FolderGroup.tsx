@@ -38,6 +38,7 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
     (state) => state.convertFolderGroupToFolder,
   );
   const setItemInEdit = useUiStore((state) => state.setItemInEdit);
+  const showGroupBackground = useUiStore((state) => state.showGroupBackground);
   const isSelected = useUiStore((state) =>
     state.selectedItemIds.includes(p.group.id),
   );
@@ -110,6 +111,7 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
       data-role={DOM_ROLE.folderGroup}
       data-group-id={p.group.id}
       data-group-fragment={p.fragmentIndex ?? 0}
+      data-background-visible={showGroupBackground}
       data-selected={isSelected || undefined}
     >
       <div

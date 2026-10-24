@@ -204,6 +204,8 @@ export const SettingsOptions = ({
   const setUseSearchResultsPopup = useUiStore(
     (state) => state.setUseSearchResultsPopup,
   );
+  const showGroupBackground = useUiStore((state) => state.showGroupBackground);
+  const setShowGroupBackground = useUiStore((state) => state.setShowGroupBackground);
   const setPage = useUiStore((state) => state.setPage);
   const showNotification = useUiStore((state) => state.showNotification);
   const recentItems = useChromeRuntimeStore((state) => state.recentItems);
@@ -321,6 +323,12 @@ export const SettingsOptions = ({
       value: useSearchResultsPopup,
       title: "Show search results in a popup under the search field",
       text: "Show search popup",
+    },
+    {
+      onToggle: () => setShowGroupBackground(!showGroupBackground),
+      value: showGroupBackground,
+      title: "Show a background behind bookmark groups",
+      text: "Show group backgrounds",
     },
     {
       separator: true,

@@ -21,10 +21,12 @@ export type UiPreferences = {
   showRecent: boolean;
   showNotUsed: boolean;
   useSearchResultsPopup?: boolean;
+  showGroupBackground?: boolean;
 };
 
-export type UiState = Omit<UiPreferences, "useSearchResultsPopup"> & {
+export type UiState = Omit<UiPreferences, "useSearchResultsPopup" | "showGroupBackground"> & {
   useSearchResultsPopup: boolean;
+  showGroupBackground: boolean;
   search: string;
   searchFilters: SearchFilter[];
   searchFilterMode: SearchFilterMode;
@@ -53,6 +55,7 @@ export type UiActions = {
   setShowRecent(showRecent: boolean): void;
   setShowNotUsed(showNotUsed: boolean): void;
   setUseSearchResultsPopup(useSearchResultsPopup: boolean): void;
+  setShowGroupBackground(showGroupBackground: boolean): void;
   hydratePreferences(preferences: UiPreferences): void;
 };
 
@@ -65,11 +68,13 @@ export const defaultUiPreferences: UiPreferences = {
   showRecent: false,
   showNotUsed: false,
   useSearchResultsPopup: true,
+  showGroupBackground: true,
 };
 
 const defaultUiState: UiState = {
   ...defaultUiPreferences,
   useSearchResultsPopup: true,
+  showGroupBackground: true,
   search: "",
   searchFilters: [],
   searchFilterMode: "or",
@@ -110,8 +115,13 @@ function createUiSlice(initialState: Partial<UiState>): StateCreator<UiStore> {
     setShowNotUsed: (showNotUsed) => set({ showNotUsed }),
     setUseSearchResultsPopup: (useSearchResultsPopup) =>
       set({ useSearchResultsPopup }),
+    setShowGroupBackground: (showGroupBackground) =>
+      set({ showGroupBackground }),
 
-    hydratePreferences: (preferences) => set(preferences),
+    hydratePreferences: (preferences) => set({
+      ...preferences,
+      showGroupBackground: preferences.showGroupBackground !== false,
+    }),
   });
 }
 

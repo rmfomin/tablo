@@ -77,17 +77,6 @@
     background: color-mix(in srgb, var(--selection-accent-color) 12%, transparent 88%);
   }
 
-  &[data-selected="true"]::after {
-    content: "";
-    position: absolute;
-    z-index: 1;
-    inset: 0 var(--folder-item-background-right, 0)
-      0 var(--folder-item-background-left, 0);
-    box-sizing: border-box;
-    border: 1px solid color-mix(in srgb, var(--selection-accent-color) 35%, transparent);
-    pointer-events: none;
-  }
-
   &.dragPreviewSelected::before {
     background-color: color-mix(
       in srgb,
