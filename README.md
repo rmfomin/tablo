@@ -18,6 +18,12 @@ Tablo — расширение Chrome, которое открывает ваш�
 
 Посмотрите, как Tablo выглядит в работе: [открыть демо](https://rmfomin.github.io/tablo/). Его можно попробовать прямо в браузере, без установки расширения.
 
+![Tablo в светлой теме](docs/images/demo-light-theme.jpg)
+
+![Поиск по закладкам и результаты в разных папках](docs/images/demo-search.jpg)
+
+![Меню закладки: название, адрес, копирование, перенос и удаление](docs/images/demo-bookmark-menu.jpg)
+
 ## Установка в Chrome
 
 1. [Скачайте последнюю версию Tablo](https://github.com/rmfomin/tablo/releases/latest/download/tablo-chrome-extension.zip).
