@@ -32,3 +32,9 @@
 .demo-toolbar__reset:hover {
   background: #e8e8e8;
 }
+
+@media (min-width: 1280px) {
+  .demo-mode [data-role="bookmarks"] > div:nth-child(2) {
+    --folder-grid-columns: 4;
+  }
+}

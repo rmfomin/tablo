@@ -3,6 +3,7 @@ import { demoBookmarkTree, demoHistory, demoSpaces, demoTabs } from "./fixture";
 export const demoStorageKey = "tablo-demo-state";
 const storageDataKey = "tablo-demo-chrome-storage";
 const currentWindowId = 1;
+const demoFixtureVersion = 2;
 
 type Listener<Args extends unknown[]> = (...args: Args) => void;
 
@@ -17,6 +18,7 @@ function event<Args extends unknown[]>() {
 
 function initialState() {
   return {
+    demoFixtureVersion,
     version: 3,
     spaces: demoSpaces,
     currentSpaceId: demoSpaces[0].id,
@@ -26,11 +28,10 @@ function initialState() {
 }
 
 function ensureDemoState() {
-  if (localStorage.getItem(storageDataKey) === null) {
-    const state = initialState();
-    localStorage.setItem(storageDataKey, JSON.stringify(state));
-    localStorage.setItem(demoStorageKey, JSON.stringify(state));
-  }
+  if (readStorage().demoFixtureVersion === demoFixtureVersion) return;
+  const state = initialState();
+  localStorage.setItem(storageDataKey, JSON.stringify(state));
+  localStorage.setItem(demoStorageKey, JSON.stringify(state));
 }
 
 function readStorage(): Record<string, unknown> {
@@ -96,7 +97,7 @@ export function installDemoChrome(): void {
         callback(result.map((tab) => ({ ...tab })) as chrome.tabs.Tab[]);
       },
       getCurrent(callback: (tab: chrome.tabs.Tab) => void) {
-        callback({ ...tabs.find((tab) => tab.id === 4)! } as chrome.tabs.Tab);
+        callback({ ...tabs.find((tab) => tab.id === 17)! } as chrome.tabs.Tab);
       },
       create(properties: chrome.tabs.CreateProperties, callback?: (tab: chrome.tabs.Tab) => void) {
         const tab = {
