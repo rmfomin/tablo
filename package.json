@@ -8,6 +8,7 @@
     "watch2": "vite build --watch --mode overrideless",
     "typecheck": "tsc --noEmit",
     "build": "npm run build:normal",
+    "build:demo": "vite build --config vite.demo.config.ts && cp demo-dist/demo.html demo-dist/index.html",
     "build:normal": "vite build --mode normal",
     "build:overrideless": "vite build --mode overrideless",
     "publish": "node webpack/publish.js",

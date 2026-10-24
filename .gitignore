@@ -5,6 +5,7 @@
 *.iml
 target
 dist
+demo-dist
 builds
 node_modules
 .env

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Tablo — demo</title>
+    <link rel="stylesheet" href="%BASE_URL%fonts.css">
+    <script src="%BASE_URL%js/color.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="module" src="/src/demo/main.ts"></script>
+<div class="demo-toolbar" role="region" aria-label="Режим демо">
+    <span class="demo-toolbar__label">Демо</span>
+    <button class="demo-toolbar__reset" type="button">Сбросить демо</button>
+</div>
+<div style="display: none">
+    <svg id="non-loaded-icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg">
+        <rect width="16" height="16" rx="4" ry="4" fill="#000" opacity="0.08"/>
+    </svg>
+</div>
+</body>
+</html>
