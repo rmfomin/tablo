@@ -110,7 +110,7 @@ describe("folder and group header contracts", () => {
     );
   });
 
-  test("group open-all action opens non-archived group bookmarks in background tabs", () => {
+  test("group open-all action opens every group bookmark in background tabs", () => {
     const source = readSource(
       "newtab/03-widgets/dashboard/FolderGroup/FolderGroup.tsx"
     );
@@ -120,7 +120,7 @@ describe("folder and group header contracts", () => {
     )?.[1];
 
     expect(openAllFunction).toContain("p.group.groupItems.forEach");
-    expect(openAllFunction).toContain("!item.archived");
+    expect(openAllFunction).not.toContain("archived");
     expect(openAllFunction).toContain(
       "createTab({ url: item.url, active: false })"
     );

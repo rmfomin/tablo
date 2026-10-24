@@ -333,10 +333,6 @@ describe("style build configuration", () => {
       __dirname,
       "../../src/newtab/06-shared/ui/Modal/Modal.tsx"
     );
-    const importConfirmationPath = path.join(
-      __dirname,
-      "../../src/newtab/04-features/bookmarks-import/ui/ImportConfirmationModal.tsx"
-    );
     const shortcutsPath = path.join(
       __dirname,
       "../../src/newtab/03-widgets/ui/ShortcutsModal/ShortcutsModal.tsx"
@@ -347,7 +343,6 @@ describe("style build configuration", () => {
     );
 
     expect(fs.existsSync(modalPath)).toBe(true);
-    expect(fs.existsSync(importConfirmationPath)).toBe(true);
     expect(fs.existsSync(shortcutsPath)).toBe(true);
     expect(fs.existsSync(legacyDirPath)).toBe(false);
   });

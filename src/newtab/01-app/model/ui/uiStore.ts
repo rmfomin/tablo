@@ -19,9 +19,7 @@ export type UiPreferences = {
   openBookmarksInNewTab: boolean;
   colorTheme: ColorTheme;
   showRecent: boolean;
-  showArchived: boolean;
   showNotUsed: boolean;
-  hiddenFeatureIsEnabled: boolean;
   useSearchResultsPopup?: boolean;
 };
 
@@ -53,9 +51,7 @@ export type UiActions = {
   setColorTheme(colorTheme: ColorTheme): void;
   toggleColorTheme(): void;
   setShowRecent(showRecent: boolean): void;
-  setShowArchived(showArchived: boolean): void;
   setShowNotUsed(showNotUsed: boolean): void;
-  setHiddenFeatureIsEnabled(hiddenFeatureIsEnabled: boolean): void;
   setUseSearchResultsPopup(useSearchResultsPopup: boolean): void;
   hydratePreferences(preferences: UiPreferences): void;
 };
@@ -67,9 +63,7 @@ export const defaultUiPreferences: UiPreferences = {
   openBookmarksInNewTab: false,
   colorTheme: "system",
   showRecent: false,
-  showArchived: false,
   showNotUsed: false,
-  hiddenFeatureIsEnabled: false,
   useSearchResultsPopup: true,
 };
 
@@ -113,10 +107,7 @@ function createUiSlice(initialState: Partial<UiState>): StateCreator<UiStore> {
     toggleColorTheme: () =>
       set((state) => ({ colorTheme: getNextColorTheme(state.colorTheme) })),
     setShowRecent: (showRecent) => set({ showRecent }),
-    setShowArchived: (showArchived) => set({ showArchived }),
     setShowNotUsed: (showNotUsed) => set({ showNotUsed }),
-    setHiddenFeatureIsEnabled: (hiddenFeatureIsEnabled) =>
-      set({ hiddenFeatureIsEnabled }),
     setUseSearchResultsPopup: (useSearchResultsPopup) =>
       set({ useSearchResultsPopup }),
 

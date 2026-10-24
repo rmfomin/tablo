@@ -61,7 +61,6 @@ function hasLocalBase(value: UnknownRecord): boolean {
     typeof value.id === "number" &&
     typeof value.position === "string" &&
     typeof value.title === "string" &&
-    isOptionalBoolean(value, "archived") &&
     isOptionalBoolean(value, "inEdit")
   );
 }
@@ -149,7 +148,6 @@ function normalizeBookmarkItemV3(item: BookmarkItemV3Input): BookmarkItemV3 {
     url: item.url,
     favIconUrl: item.favIconUrl,
   };
-  if (typeof source.archived === "boolean") normalized.archived = source.archived;
   if (typeof source.inEdit === "boolean") normalized.inEdit = source.inEdit;
   if (typeof source.isSection === "boolean") normalized.isSection = source.isSection;
   return normalized;
@@ -165,7 +163,6 @@ function normalizeGroupV3(item: GroupV3Input): GroupV3 {
     objectType: "group",
     groupItems: sortByPosition(item.groupItems.map(normalizeBookmarkItemV3)),
   };
-  if (typeof source.archived === "boolean") normalized.archived = source.archived;
   if (typeof source.inEdit === "boolean") normalized.inEdit = source.inEdit;
   if (typeof source.collapsed === "boolean") normalized.collapsed = source.collapsed;
   return normalized;
@@ -195,7 +192,6 @@ function normalizeFolderV3(folder: FolderV3Input): FolderV3 {
     normalized.columnSpan = source.columnSpan;
   }
   if (typeof source.collapsed === "boolean") normalized.collapsed = source.collapsed;
-  if (typeof source.archived === "boolean") normalized.archived = source.archived;
   return normalized;
 }
 

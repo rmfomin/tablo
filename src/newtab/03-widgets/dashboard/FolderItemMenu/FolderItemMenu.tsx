@@ -21,11 +21,9 @@ export const FolderItemMenu = React.memo(
     onSave: (title: string, url: string) => void;
     onClose: () => void;
     item: BookmarkItemV3;
-    hiddenFeatureIsEnabled: boolean;
     position?: Point;
   }) => {
     const deleteFolderItems = useDashboardStore((state) => state.deleteFolderItems);
-    const updateFolderItem = useDashboardStore((state) => state.updateFolderItem);
     const moveFolderItems = useDashboardStore((state) => state.moveFolderItems);
     const createFolder = useDashboardStore((state) => state.createFolder);
     const createSpace = useDashboardStore((state) => state.createSpace);
@@ -63,22 +61,6 @@ export const FolderItemMenu = React.memo(
         }
       });
       p.onClose();
-    }
-
-    // support multiple
-    function onArchive() {
-      alert(
-        "The “Hiding” feature will be deprecated soon due to very low usage.\n" +
-          "All previously hidden bookmarks will became visible again.\n" +
-          "Sorry for the inconvenience, and thank you for understanding!",
-      );
-      selectedItems.forEach((item) => updateFolderItem(item.id, { archived: true }));
-      showNotification({ message: "Bookmark has been hidden" });
-    }
-
-    function onRestore() {
-      selectedItems.forEach((item) => updateFolderItem(item.id, { archived: false }));
-      showNotification({ message: "Bookmark has been restored" });
     }
 
     function onSaveAndClose() {
@@ -146,23 +128,6 @@ export const FolderItemMenu = React.memo(
               <DropdownMenuIcon name="openAll" />
               Open all
             </button>
-            {p.hiddenFeatureIsEnabled ? (
-              selectedItems.some((item) => item.archived) ? (
-                <button
-                  className="dropdown-menu__button focusable"
-                  onClick={onRestore}
-                >
-                  Unhide
-                </button>
-              ) : (
-                <button
-                  className="dropdown-menu__button focusable"
-                  onClick={onArchive}
-                >
-                  Hide
-                </button>
-              )
-            ) : null}
             <DropdownSubMenu
               menuId={1}
               title={"Move to"}
@@ -209,26 +174,6 @@ export const FolderItemMenu = React.memo(
                   />
                 </label>
                 <div className="dropdown-menu__separator" />
-                {p.hiddenFeatureIsEnabled ? (
-                  p.item.archived ? (
-                    <button
-                      className="dropdown-menu__button focusable"
-                      onClick={onRestore}
-                    >
-                      Unhide
-                    </button>
-                  ) : (
-                    <button
-                      className="dropdown-menu__button focusable"
-                      onClick={onArchive}
-                    >
-                      Hide
-                    </button>
-                  )
-                ) : null}
-                {p.hiddenFeatureIsEnabled ? (
-                  <div className="dropdown-menu__separator" />
-                ) : null}
                 <button
                   className="dropdown-menu__button dropdown-menu__button--dander focusable"
                   onClick={onDeleteItem}
@@ -275,23 +220,6 @@ export const FolderItemMenu = React.memo(
                   <DropdownMenuIcon name="bookmarkCopy" />
                   Copy URL
                 </button>
-                {p.hiddenFeatureIsEnabled ? (
-                  p.item.archived ? (
-                    <button
-                      className="dropdown-menu__button focusable"
-                      onClick={onRestore}
-                    >
-                      Unhide
-                    </button>
-                  ) : (
-                    <button
-                      className="dropdown-menu__button focusable"
-                      onClick={onArchive}
-                    >
-                      Hide
-                    </button>
-                  )
-                ) : null}
                 <DropdownSubMenu
                   menuId={1}
                   title={"Move to"}

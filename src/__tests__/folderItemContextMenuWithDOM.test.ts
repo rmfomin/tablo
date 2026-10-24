@@ -36,7 +36,6 @@ test("repeated right click on a bookmark toggles its context menu", () => {
         recentItems: [],
         showNotUsed: false,
         search: "",
-        hiddenFeatureIsEnabled: false,
       }),
     );
   });
@@ -101,7 +100,6 @@ test("right click on a selected bookmark preserves the complete selection", () =
         recentItems: [],
         showNotUsed: false,
         search: "",
-        hiddenFeatureIsEnabled: false,
       }),
     );
   });

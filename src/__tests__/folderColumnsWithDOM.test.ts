@@ -21,8 +21,8 @@ function Fixture({ availableColumns }: { availableColumns: number }) {
   const spaces = useDashboardStore((state) => state.spaces);
   return React.createElement(Folder, {
     spaces, folder: spaces[0].folders[0], availableColumns,
-    tabs: [], recentItems: [], showNotUsed: false, showArchived: false,
-    search: "", searchFilters: [], searchFilterMode: "or", itemInEdit: undefined, hiddenFeatureIsEnabled: false,
+    tabs: [], recentItems: [], showNotUsed: false,
+    search: "", searchFilters: [], searchFilterMode: "or", itemInEdit: undefined,
   });
 }
 
@@ -86,10 +86,32 @@ test("keyboard resizing changes the saved width once and undo restores it", () =
   expect(folderState().columnSpan).toBe(3);
 });
 
-test("open all from a continuation opens the whole logical group and skips archived bookmarks", () => {
+test("folder deletion asks for confirmation even when it contains no hidden items", () => {
+  const confirm = vi.fn(() => false);
+  const originalDeleteFolder = dashboardStore.getState().deleteFolder;
+  const deleteFolder = vi.fn();
+  dashboardStore.setState({ deleteFolder });
+  vi.stubGlobal("confirm", confirm);
+  render();
+
+  try {
+    flushSync(() => host.querySelector<HTMLButtonElement>('button[aria-label="Folder actions"]')!.click());
+    const deleteButton = Array.from(document.querySelectorAll<HTMLButtonElement>(".dropdown-menu button"))
+      .find((button) => button.textContent?.includes("Delete"));
+    expect(deleteButton).toBeDefined();
+    flushSync(() => deleteButton!.click());
+
+    expect(confirm).toHaveBeenCalledWith("Delete folder 'Folder'?");
+    expect(deleteFolder).not.toHaveBeenCalled();
+  } finally {
+    dashboardStore.setState({ deleteFolder: originalDeleteFolder });
+  }
+});
+
+test("open all from a continuation opens the whole logical group", () => {
   const createTab = vi.fn();
   vi.stubGlobal("chrome", { tabs: { create: createTab } });
-  const children = bookmarks.map((item) => item.id === 3 ? { ...item, archived: true } : item);
+  const children = bookmarks;
   const state = dashboardStore.getState();
   state.hydrate({
     currentSpaceId: state.currentSpaceId,
@@ -108,6 +130,7 @@ test("open all from a continuation opens the whole logical group and skips archi
   expect(createTab.mock.calls.map(([properties]) => properties)).toEqual([
     { url: "https://example.com/0", active: false },
     { url: "https://example.com/1", active: false },
+    { url: "https://example.com/2", active: false },
     { url: "https://example.com/3", active: false },
     { url: "https://example.com/4", active: false },
     { url: "https://example.com/5", active: false },

@@ -37,12 +37,10 @@ function bookmarksUiSelector(state: UiStore) {
     search: state.search,
     searchFilters: state.searchFilters,
     searchFilterMode: state.searchFilterMode,
-    showArchived: state.showArchived,
     showNotUsed: state.showNotUsed,
     itemInEdit: state.itemInEdit,
     sidebarCollapsed: state.sidebarCollapsed,
     openBookmarksInNewTab: state.openBookmarksInNewTab,
-    hiddenFeatureIsEnabled: state.hiddenFeatureIsEnabled,
     useSearchResultsPopup: state.useSearchResultsPopup,
   };
 }
@@ -72,7 +70,6 @@ export function useBookmarksScreen(): {
   search: string;
   searchFilters: ReturnType<typeof bookmarksUiSelector>["searchFilters"];
   searchFilterMode: ReturnType<typeof bookmarksUiSelector>["searchFilterMode"];
-  showArchived: boolean;
   showNotUsed: boolean;
   openBookmarksInNewTab: boolean;
   tabs: ReturnType<typeof bookmarksRuntimeSelector>["tabs"];
@@ -95,11 +92,9 @@ export function useBookmarksScreen(): {
         search: ui.search,
         searchFilters: ui.searchFilters,
         searchFilterMode: ui.searchFilterMode,
-        showArchived: ui.showArchived,
         showNotUsed: ui.showNotUsed,
         itemInEdit: ui.itemInEdit,
         sidebarCollapsed: ui.sidebarCollapsed,
-        hiddenFeatureIsEnabled: ui.hiddenFeatureIsEnabled,
         useSearchResultsPopup: ui.useSearchResultsPopup,
       },
       runtime,
@@ -125,7 +120,6 @@ export function useBookmarksScreen(): {
     search: ui.search,
     searchFilters: ui.searchFilters,
     searchFilterMode: ui.searchFilterMode,
-    showArchived: ui.showArchived,
     showNotUsed: ui.showNotUsed,
     openBookmarksInNewTab: ui.openBookmarksInNewTab,
     tabs: runtime.tabs,

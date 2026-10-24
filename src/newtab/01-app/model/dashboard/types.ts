@@ -13,7 +13,7 @@ export type DashboardState = {
 
 export type FolderPatch = Pick<
   Partial<FolderV3>,
-  "title" | "color" | "archived" | "collapsed" | "position" | "columnSpan"
+  "title" | "color" | "collapsed" | "position" | "columnSpan"
 >;
 
 export type MoveFolderInput = {
@@ -67,5 +67,5 @@ export type SpacePatch = Pick<
 
 export type FolderItemPatch = Pick<
   Partial<BookmarkItemV3>,
-  "title" | "archived" | "url" | "favIconUrl"
+  "title" | "url" | "favIconUrl"
 > & { collapsed?: boolean };

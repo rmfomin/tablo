@@ -14,8 +14,8 @@
   }
 
   &[data-selected="true"] {
-    outline: 1px solid var(--accent-color);
-    background: color-mix(in srgb, var(--accent-color) 12%, transparent 88%);
+    outline: 1px solid var(--selection-accent-color);
+    background: color-mix(in srgb, var(--selection-accent-color) 12%, transparent 88%);
   }
 }
 

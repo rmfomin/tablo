@@ -18,11 +18,9 @@ export type BookmarksScreenSnapshot = {
     search: string;
     searchFilters: SearchFilter[];
     searchFilterMode: SearchFilterMode;
-    showArchived: boolean;
     showNotUsed: boolean;
     itemInEdit: number | undefined;
     sidebarCollapsed: boolean;
-    hiddenFeatureIsEnabled: boolean;
     useSearchResultsPopup?: boolean;
   };
   runtime: {
@@ -40,12 +38,10 @@ export type BookmarksFolderProps = {
   tabs: BrowserTab[];
   recentItems: RecentItem[];
   showNotUsed: boolean;
-  showArchived: boolean;
   search: string;
   searchFilters: SearchFilter[];
   searchFilterMode: SearchFilterMode;
   itemInEdit: number | undefined;
-  hiddenFeatureIsEnabled: boolean;
 };
 
 export type BookmarksScreenModel = {
@@ -71,7 +67,6 @@ export function buildBookmarksScreenModel(
     search,
     searchFilters,
     searchFilterMode: ui.searchFilterMode,
-    showArchived: ui.showArchived,
   });
   const showNewFolderPlaceholder = !searchActive;
 
@@ -82,12 +77,10 @@ export function buildBookmarksScreenModel(
       tabs: runtime.tabs,
       recentItems: runtime.recentItems,
       showNotUsed: ui.showNotUsed,
-      showArchived: ui.showArchived,
       search,
       searchFilters,
       searchFilterMode: ui.searchFilterMode,
       itemInEdit: ui.itemInEdit,
-      hiddenFeatureIsEnabled: ui.hiddenFeatureIsEnabled,
     },
     sidebarCollapsed: ui.sidebarCollapsed,
     showNewFolderPlaceholder,

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
+import CloseIcon from "./icons/close.svg";
 
 export const Modal = (props: {
   onClose: () => void;
@@ -31,9 +32,14 @@ export const Modal = (props: {
         // Prevent closing when clicking inside modal content
         onClick={(e) => e.stopPropagation()}
       >
-        <div onClick={props.onClose} className="modal-close-x">
-          ⨉
-        </div>
+        <button
+          type="button"
+          onClick={props.onClose}
+          className="modal-close-x"
+          aria-label="Close dialog"
+        >
+          <CloseIcon aria-hidden="true" />
+        </button>
         {props.children}
       </div>
     </div>,

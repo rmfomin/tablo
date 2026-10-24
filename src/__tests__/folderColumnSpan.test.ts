@@ -99,6 +99,7 @@ test("width persists through store updates, collapse, undo and Chrome storage re
       stored = JSON.parse(JSON.stringify(value));
       callback?.();
     },
+    remove: (_keys, callback) => callback?.(),
   }, { postMessage() {}, addEventListener() {}, removeEventListener() {} });
   await adapter.save({ ...stored, spaces: store.getState().spaces, currentSpaceId: 1 });
   const reloaded = await adapter.load();

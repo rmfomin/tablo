@@ -49,12 +49,10 @@ export const Folder = React.memo(function Folder(p: {
   tabs: BrowserTab[];
   recentItems: RecentItem[];
   showNotUsed: boolean;
-  showArchived: boolean;
   search: string;
   searchFilters: SearchFilter[];
   searchFilterMode: SearchFilterMode;
   itemInEdit: undefined | number;
-  hiddenFeatureIsEnabled: boolean;
   availableColumns?: number;
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -91,16 +89,8 @@ export const Folder = React.memo(function Folder(p: {
   }, [p.folder.title]);
 
   function onDelete() {
-    const archivedItemsCount = p.folder.items.filter((item) => item.archived)
-      .length;
-    if (archivedItemsCount > 0) {
-      const itemsText = archivedItemsCount > 1 ? "items" : "item";
-      const res = confirm(
-        `Folder contains ${archivedItemsCount} hidden ${itemsText}. Do you still want to delete it?`,
-      );
-      if (!res) {
-        return;
-      }
+    if (!confirm(`Delete folder '${p.folder.title}'?`)) {
+      return;
     }
 
     deleteFolder(p.folder.id);
@@ -112,23 +102,6 @@ export const Folder = React.memo(function Folder(p: {
       updateFolder(p.folder.id, { title: newTitle });
     }
     setEditing(false);
-  }
-
-  function onArchiveOrRestore() {
-    alert(
-      "The “Hiding” feature will be deprecated soon due to very low usage.\n" +
-        "All previously hidden folders will became visible again.\n" +
-        "Sorry for the inconvenience, and thank you for understanding!",
-    );
-
-    const newArchiveState = !p.folder.archived;
-    updateFolder(p.folder.id, { archived: newArchiveState });
-
-    const message = `Folder has been ${
-      newArchiveState ? "hidden" : "restored"
-    }`;
-    showNotification({ message });
-    setShowMenu(false);
   }
 
   function onAddSection() {
@@ -161,7 +134,7 @@ export const Folder = React.memo(function Folder(p: {
 
   function onOpenAll() {
     flatFolderDisplayItems.forEach((item) => {
-      if (!item.archived && !item.isSection) {
+      if (!item.isSection) {
         createTab({ url: item.url, active: false });
       }
     });
@@ -227,9 +200,7 @@ export const Folder = React.memo(function Folder(p: {
     return item.items;
   });
 
-  const folderItems = flatFolderDisplayItems.filter(
-    (item) => p.showArchived || p.search.length > 0 || !item.archived,
-  );
+  const folderItems = flatFolderDisplayItems;
   const bookmarksCount = countDisplayItems.reduce(
     (count, item) =>
       count +
@@ -243,14 +214,7 @@ export const Folder = React.memo(function Folder(p: {
     (p.search !== "" || p.searchFilters.some((filter) => filter.enabled)) &&
     folderItems.length === 0;
 
-  const displayItems = visibleFolderDisplayItems.flatMap<FolderDisplayItem>((item) => {
-    if (item.type === "bookmark") {
-      return !p.showArchived && p.search.length === 0 && item.item.archived ? [] : [item];
-    }
-    const items = item.items.filter((child) => p.showArchived || p.search.length > 0 || !child.archived);
-    if (p.search !== "" && items.length === 0) return [];
-    return [{ ...item, items }];
-  });
+  const displayItems = visibleFolderDisplayItems;
   const { columns, headerHeight } = useFolderColumns(displayItems, effectiveColumns, rootRef, headerRef);
 
   const folderClassName = cn(styles.root, {
@@ -261,7 +225,6 @@ export const Folder = React.memo(function Folder(p: {
   const color = new Color();
   const color2 = new Color();
   color.setColor(localColor ?? p.folder.color ?? DEFAULT_FOLDER_COLOR);
-  color.setAlpha(p.folder.archived ? 0.2 : 1);
   color2.value = { ...color.value };
   color2.setSaturation(color2.value.s + 0.1);
   color2.value.h = color2.value.h + 0.05;
@@ -310,9 +273,6 @@ export const Folder = React.memo(function Folder(p: {
       style={{
         gridColumn: `span ${effectiveColumns}`,
         "--folder-column-count": effectiveColumns,
-        outline: p.folder.archived
-          ? "1px solid color-mix(in srgb, var(--overlay-color) 30%, transparent)"
-          : "none",
       } as React.CSSProperties}
     >
       <h2
@@ -338,9 +298,6 @@ export const Folder = React.memo(function Folder(p: {
           onClick={onMainMenuClick}
           onDoubleClick={() => setEditing(true)}
         />
-        {p.folder.archived ? (
-          <span className={styles.archivedLabel}>Hidden</span>
-        ) : null}
         {bookmarksCount > 0 ? (
           <span className={styles.bookmarksCount}>{bookmarksCount}</span>
         ) : null}
@@ -415,14 +372,6 @@ export const Folder = React.memo(function Folder(p: {
               Expand all
             </button>
             <div className="dropdown-menu__separator" />
-            {p.hiddenFeatureIsEnabled && (
-              <button
-                className="dropdown-menu__button focusable"
-                onClick={onArchiveOrRestore}
-              >
-                {p.folder.archived ? "Unhide" : "Hide"}
-              </button>
-            )}
             {p.spaces.length > 1 ? (
               <DropdownSubMenu
                 menuId={1}
@@ -540,10 +489,6 @@ export const Folder = React.memo(function Folder(p: {
         ) : null}
         {column.items.map((item) => {
           if (item.type === "bookmark") {
-            if (!p.showArchived && p.search.length === 0 && item.item.archived) {
-              return null;
-            }
-
             return (
               <FolderItem
                 key={item.item.id}
@@ -554,24 +499,18 @@ export const Folder = React.memo(function Folder(p: {
                 recentItems={p.recentItems}
                 showNotUsed={p.showNotUsed}
                 search={p.search}
-                hiddenFeatureIsEnabled={p.hiddenFeatureIsEnabled}
               />
             );
           }
 
-          const visibleGroupItems = item.items.filter(
-            (groupItem) => p.showArchived || p.search.length > 0 || !groupItem.archived,
-          );
+          const visibleGroupItems = item.items;
           const countedGroup = countDisplayItems.find(
             (countedItem) =>
               countedItem.type === "group" &&
               countedItem.group.id === item.group.id,
           );
           const groupCount = countedGroup?.type === "group"
-            ? countedGroup.items.filter(
-                (groupItem) =>
-                  p.showArchived || p.search.length > 0 || !groupItem.archived,
-              ).length
+            ? countedGroup.items.length
             : 0;
 
           if (p.search !== "" && visibleGroupItems.length === 0) {
@@ -594,7 +533,6 @@ export const Folder = React.memo(function Folder(p: {
               showNotUsed={p.showNotUsed}
               search={p.search}
               itemInEdit={p.itemInEdit}
-              hiddenFeatureIsEnabled={p.hiddenFeatureIsEnabled}
             />
           );
         })}

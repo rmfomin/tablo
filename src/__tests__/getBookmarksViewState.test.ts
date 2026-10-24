@@ -22,8 +22,7 @@ function createViewState(): BookmarksViewStateInput {
             id: 11,
             position: "a1",
             objectType: "folder",
-            title: "Archived folder",
-            archived: true,
+            title: "Second folder",
             items: [],
           },
         ],
@@ -64,11 +63,10 @@ function createViewState(): BookmarksViewStateInput {
       },
     ],
     search: "",
-    showArchived: false,
   };
 }
 
-test("getBookmarksViewState uses current v3 space when search is empty", () => {
+test("getBookmarksViewState returns every folder from current space when search is empty", () => {
   const appState = createViewState();
 
   expect(getBookmarksViewState(appState)).toEqual({
@@ -78,6 +76,13 @@ test("getBookmarksViewState uses current v3 space when search is empty", () => {
         position: "a0",
         objectType: "folder",
         title: "Visible folder",
+        items: [],
+      },
+      {
+        id: 11,
+        position: "a1",
+        objectType: "folder",
+        title: "Second folder",
         items: [],
       },
     ],

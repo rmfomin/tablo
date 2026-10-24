@@ -110,6 +110,14 @@
   }
 }
 
+:global(.dark-theme) .searchInput {
+  border-color: var(--secondary-text-color);
+
+  &:focus {
+    border-color: var(--secondary-text-color);
+  }
+}
+
 .visibilityToggle {
   appearance: none;
   position: absolute;

@@ -1,7 +1,4 @@
-import {
-  collectBookmarksV3,
-  hasArchivedItemsV3,
-} from "@/newtab/05-entities/dashboard/model/traversal";
+import { collectBookmarksV3 } from "@/newtab/05-entities/dashboard/model/traversal";
 import { SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
 
 function createSpacesFixture(): SpaceV3[] {
@@ -51,7 +48,6 @@ function createSpacesFixture(): SpaceV3[] {
                   title: "Nested B",
                   url: "https://b.example",
                   favIconUrl: "https://b.example/favicon.ico",
-                  archived: true,
                 },
               ],
             },
@@ -90,24 +86,6 @@ test("collectBookmarksV3 returns top-level and nested group bookmarks", () => {
       title: "Nested B",
       url: "https://b.example",
       favIconUrl: "https://b.example/favicon.ico",
-      archived: true,
     },
   ]);
-});
-
-test("hasArchivedItemsV3 detects archived bookmark inside groupItems", () => {
-  expect(hasArchivedItemsV3(createSpacesFixture())).toBe(true);
-});
-
-test("hasArchivedItemsV3 returns false when nothing is archived", () => {
-  const spaces = createSpacesFixture();
-  const group = spaces[0].folders[0].items[1];
-  if (group.type === "group") {
-    group.groupItems[1] = {
-      ...group.groupItems[1],
-      archived: false,
-    };
-  }
-
-  expect(hasArchivedItemsV3(spaces)).toBe(false);
 });

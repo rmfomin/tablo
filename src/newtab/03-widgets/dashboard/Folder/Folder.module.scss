@@ -95,17 +95,6 @@
   text-align: center;
 }
 
-.archivedLabel {
-  flex-shrink: 0;
-  padding: 2px 7px;
-  border-radius: 6px;
-  background-color: var(--gray-200);
-  color: var(--secondary-text-color);
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 16px;
-}
-
 .collapseToggle,
 .menuButton {
   appearance: none;
@@ -202,6 +191,10 @@
   }
 }
 
+:global(.dark-theme) .resizeHandle::after {
+  background: var(--main-text-color);
+}
+
 .resizing {
   outline: 2px solid var(--accent-color) !important;
 
@@ -257,7 +250,7 @@
     var(--accent-color) 14%,
     transparent
   );
-  color: var(--accent-color);
+  color: var(--main-text-color);
   cursor: pointer;
   font-family: inherit;
   font-size: 11px;

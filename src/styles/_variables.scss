@@ -1,5 +1,6 @@
 :root {
   --accent-color: #0f296d;
+  --selection-accent-color: var(--accent-color);
   --background-color: #f4f4f4;
   --surface-color: #ffffff;
   --main-text-color: rgb(5, 0, 56);
@@ -43,6 +44,7 @@
 }
 
 .dark-theme {
+  --selection-accent-color: #8ab4f8;
   --background-color: #343434;
   --surface-color: #252525;
   --main-text-color: #ffffff;

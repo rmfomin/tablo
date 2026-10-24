@@ -9,17 +9,17 @@ const storageKeys = [
   "openBookmarksInNewTab",
   "colorTheme",
   "showRecent",
-  "showArchived",
   "showNotUsed",
-  "hiddenFeatureIsEnabled",
   "useSearchResultsPopup",
   "version",
 ] as const;
+const legacyHidingStorageKeys = ["showArchived", "hiddenFeatureIsEnabled"] as const;
 
-type StorageRecord = Partial<Record<(typeof storageKeys)[number], unknown>>;
+type StorageRecord = Partial<Record<(typeof storageKeys)[number] | (typeof legacyHidingStorageKeys)[number], unknown>>;
 type ChromeStorageArea = {
   get(keys: readonly string[], callback: (items: StorageRecord) => void): void;
   set(items: PersistedNewtabState, callback?: () => void): void;
+  remove(keys: string | string[], callback?: () => void): void;
 };
 type BroadcastPort = {
   postMessage(message: unknown): void;
@@ -37,10 +37,23 @@ export function createChromeStorageAdapter(
 ): StorageSyncAdapter {
   return {
     async load() {
-      const result = await new Promise<StorageRecord>((resolve) => storage.get(storageKeys, resolve));
-      return normalizePersistedState(result);
+      const result = await new Promise<StorageRecord>((resolve) =>
+        storage.get([...storageKeys, ...legacyHidingStorageKeys], resolve),
+      );
+      const state = normalizePersistedState(result);
+      if (hasLegacyHidingData(result)) {
+        if (result.version === 3 && areSpacesV3Input(result.spaces)) {
+          await this.save(state);
+        } else {
+          await new Promise<void>((resolve) =>
+            storage.remove([...legacyHidingStorageKeys], resolve),
+          );
+        }
+      }
+      return state;
     },
     async save(state) {
+      await new Promise<void>((resolve) => storage.remove([...legacyHidingStorageKeys], resolve));
       await new Promise<void>((resolve) => storage.set(toCanonicalState(state), resolve));
     },
     broadcastUpdated() {
@@ -83,11 +96,21 @@ export function normalizePersistedState(value: StorageRecord): PersistedNewtabSt
       : !__OVERRIDE_NEWTAB,
     colorTheme: normalizeColorTheme(value.colorTheme),
     showRecent: value.showRecent === true,
-    showArchived: value.showArchived === true,
     showNotUsed: value.showNotUsed === true,
-    hiddenFeatureIsEnabled: value.hiddenFeatureIsEnabled === true,
     useSearchResultsPopup: value.useSearchResultsPopup !== false,
   };
+}
+
+function hasLegacyHidingData(value: StorageRecord): boolean {
+  if (legacyHidingStorageKeys.some((key) => Object.hasOwn(value, key))) return true;
+  return hasArchivedMarker(value.spaces);
+}
+
+function hasArchivedMarker(value: unknown): boolean {
+  if (Array.isArray(value)) return value.some(hasArchivedMarker);
+  if (typeof value !== "object" || value === null) return false;
+  if (Object.hasOwn(value, "archived")) return true;
+  return Object.values(value).some(hasArchivedMarker);
 }
 
 function toCanonicalState(state: PersistedNewtabState): PersistedNewtabState {

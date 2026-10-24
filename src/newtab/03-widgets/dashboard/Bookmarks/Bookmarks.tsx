@@ -138,7 +138,6 @@ export function Bookmarks() {
     search,
     searchFilters,
     searchFilterMode,
-    showArchived,
     showNotUsed,
     openBookmarksInNewTab,
     tabs,
@@ -288,7 +287,6 @@ export function Bookmarks() {
     search,
     searchFilters,
     searchFilterMode,
-    showArchived,
     showNotUsed,
   ]);
 

@@ -317,7 +317,6 @@ export function convertFolderGroupToFolder(
     title: group.title,
     position: insertBetween(getLast([...space.folders])?.position ?? "", ""),
     items: sortByPosition([...group.groupItems]),
-    archived: group.archived,
     collapsed: group.collapsed,
   };
 

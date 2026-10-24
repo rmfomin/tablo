@@ -12,7 +12,6 @@ export type BookmarksViewStateInput = {
   search: string;
   searchFilters?: SearchFilter[];
   searchFilterMode?: SearchFilterMode;
-  showArchived: boolean;
 };
 
 export function getBookmarksViewState(
@@ -23,7 +22,6 @@ export function getBookmarksViewState(
   const searchFilters = appState.searchFilters ?? [];
   const searchFilterMode: SearchFilterMode = appState.searchFilterMode ?? "or";
   const searchActive = hasSearch(appState.search, searchFilters);
-  const canShowArchived = appState.showArchived || searchActive;
   let folders: FolderV3[] = [];
 
   if (!searchActive) {
@@ -32,11 +30,7 @@ export function getBookmarksViewState(
     );
 
     if (currentSpace) {
-      folders = appState.showArchived
-        ? currentSpace.folders ?? []
-        : currentSpace.folders.filter(
-            (folder) => canShowArchived || !folder.archived,
-          );
+      folders = currentSpace.folders ?? [];
     }
   } else {
     appState.spaces.forEach((space) => {

@@ -28,7 +28,6 @@ export const FolderItem = React.memo(
     recentItems: RecentItem[];
     showNotUsed: boolean;
     search: string;
-    hiddenFeatureIsEnabled: boolean;
   }) => {
     const updateFolderItem = useDashboardStore((state) => state.updateFolderItem);
     const setItemInEdit = useUiStore((state) => state.setItemInEdit);
@@ -84,16 +83,12 @@ export const FolderItem = React.memo(
 
     return (
       <div
-        className={cn(styles.root, {
-          [styles.section]: p.item.isSection,
-          [styles.archived]: p.item.archived,
-        })}
+        className={cn(styles.root, { [styles.section]: p.item.isSection })}
       >
         {showMenu ? (
           <FolderItemMenu
             spaces={p.spaces}
             item={p.item}
-            hiddenFeatureIsEnabled={p.hiddenFeatureIsEnabled}
             localTitle={localTitle}
             setLocalTitle={setLocalTitle}
             onSave={trySaveTitleAndURL}

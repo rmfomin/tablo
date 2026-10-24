@@ -27,16 +27,59 @@
   font-size: 16px;
 }
 
+.modal-inner.modal-app {
+  border-radius: var(--container-border-radius);
+  font-family: "OpenSans", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 17px;
+
+  h2 {
+    margin: 0 0 24px;
+    color: var(--main-text-color);
+    font-family: var(--title-font-family);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24px;
+  }
+}
+
 .modal-close-x {
+  appearance: none;
   position: absolute;
   top: 10px;
   right: 10px;
-  font-size: 26px;
-  line-height: 16px;
-  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--main-text-color);
   cursor: pointer;
-  height: 24px;
-  vertical-align: top;
+  transition: background-color 0.12s ease;
+
+  svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+    color: currentColor;
+  }
+
+  &:hover {
+    background: var(--hover-color);
+  }
+}
+
+.modal-inner.modal-shortcuts .modal-close-x {
+  color: var(--danger-color);
+
+  &:hover {
+    background: color-mix(in srgb, var(--danger-color) 14%, transparent);
+  }
 }
 
 .modal-no-override {

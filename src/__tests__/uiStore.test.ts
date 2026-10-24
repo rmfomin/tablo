@@ -9,13 +9,11 @@ test("ui store меняет transient state и сохраняемые preference
   const store = createUiStore();
 
   store.getState().setSearch("grafana");
-  store.getState().setShowArchived(true);
   store.getState().setColorTheme("dark");
   store.getState().setItemInEdit(101);
 
   expect(store.getState()).toMatchObject({
     search: "grafana",
-    showArchived: true,
     colorTheme: "dark",
     itemInEdit: 101,
   });
@@ -50,9 +48,7 @@ test("hydratePreferences не перезаписывает transient UI state", 
     openBookmarksInNewTab: true,
     colorTheme: "light",
     showRecent: true,
-    showArchived: true,
     showNotUsed: true,
-    hiddenFeatureIsEnabled: true,
   });
 
   expect(store.getState()).toMatchObject({
@@ -61,23 +57,20 @@ test("hydratePreferences не перезаписывает transient UI state", 
     openBookmarksInNewTab: true,
     colorTheme: "light",
     showRecent: true,
-    showArchived: true,
     showNotUsed: true,
-    hiddenFeatureIsEnabled: true,
   });
 });
 
 test("ui selectors возвращают только нужный срез state", () => {
   const store = createUiStore();
   store.getState().setSearch("grafana");
-  store.getState().setShowArchived(true);
 
   expect(searchStateSelector(store.getState())).toEqual({
     search: "grafana",
     searchFilters: [],
     searchFilterMode: "or",
   });
-  expect(persistedPreferencesSelector(store.getState()).showArchived).toBe(true);
+  expect(persistedPreferencesSelector(store.getState())).not.toHaveProperty("showArchived");
 });
 
 test("search controller selector объединяет search state и commands", () => {

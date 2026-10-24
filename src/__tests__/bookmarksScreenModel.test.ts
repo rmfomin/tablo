@@ -29,11 +29,9 @@ function createSnapshot(): BookmarksScreenSnapshot {
       search: "",
       searchFilters: [],
       searchFilterMode: "or",
-      showArchived: false,
       showNotUsed: true,
       itemInEdit: 10,
       sidebarCollapsed: true,
-      hiddenFeatureIsEnabled: true,
     },
     runtime: {
       tabs: [],
@@ -54,12 +52,10 @@ test("buildBookmarksScreenModel provides Folder props and empty-screen state fro
     tabs: snapshot.runtime.tabs,
     recentItems: snapshot.runtime.recentItems,
     showNotUsed: true,
-    showArchived: false,
     search: "",
     searchFilters: [],
     searchFilterMode: "or",
     itemInEdit: 10,
-    hiddenFeatureIsEnabled: true,
   });
   expect(model.sidebarCollapsed).toBe(true);
   expect(model.showNewFolderPlaceholder).toBe(true);

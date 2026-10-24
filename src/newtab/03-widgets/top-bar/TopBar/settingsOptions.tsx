@@ -8,14 +8,13 @@ import {
   focusWindow,
   type BrowserTab,
 } from "@/newtab/06-shared/api/chrome/tabs";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { hasItemsToHighlight } from "@/newtab/04-features/bookmarks/model/bookmarkUsage";
 import { useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { useChromeRuntimeStore } from "@/newtab/01-app/model/chrome-runtime/chromeRuntimeStore";
 import { importFromJsonWithCallbacks } from "@/newtab/04-features/bookmarks-import/model/dashboardImportExport";
 import { onExportJson } from "@/newtab/04-features/bookmarks-export/model/dashboardExport";
-import { ImportConfirmationModal } from "@/newtab/04-features/bookmarks-import/ui/ImportConfirmationModal";
 import { loadFaviconUrl } from "@/newtab/06-shared/api/chrome/favicons";
 import { ShortcutsModal } from "@/newtab/03-widgets/ui/ShortcutsModal/ShortcutsModal";
 import type { BookmarkItemV3, ColorTheme } from "@/newtab/05-entities/dashboard/model/types";
@@ -182,8 +181,6 @@ export const SettingsOptions = ({
 }: {
   onClose?: () => void;
 }) => {
-  const [importConfirmationOpen, setImportConfirmationOpen] = useState(false);
-  const fileEvent = useRef(null);
   const spaces = useDashboardStore((state) => state.spaces);
   const currentSpaceId = useDashboardStore((state) => state.currentSpaceId);
   const hydrate = useDashboardStore((state) => state.hydrate);
@@ -195,8 +192,6 @@ export const SettingsOptions = ({
   const setColorTheme = useUiStore((state) => state.setColorTheme);
   const showNotUsed = useUiStore((state) => state.showNotUsed);
   const setShowNotUsed = useUiStore((state) => state.setShowNotUsed);
-  const showArchived = useUiStore((state) => state.showArchived);
-  const setShowArchived = useUiStore((state) => state.setShowArchived);
   const openBookmarksInNewTab = useUiStore(
     (state) => state.openBookmarksInNewTab
   );
@@ -208,9 +203,6 @@ export const SettingsOptions = ({
   );
   const setUseSearchResultsPopup = useUiStore(
     (state) => state.setUseSearchResultsPopup,
-  );
-  const hiddenFeatureIsEnabled = useUiStore(
-    (state) => state.hiddenFeatureIsEnabled
   );
   const setPage = useUiStore((state) => state.setPage);
   const showNotification = useUiStore((state) => state.showNotification);
@@ -235,14 +227,6 @@ export const SettingsOptions = ({
     }
   }
 
-  function onToggleHidden() {
-    setShowArchived(!showArchived);
-    const message = !showArchived
-      ? "Hidden items are visible"
-      : "Hidden items are hidden";
-    showNotification({ message });
-  }
-
   function onImportExistingBookmarks() {
     setPage("import");
   }
@@ -255,25 +239,23 @@ export const SettingsOptions = ({
     setUseSearchResultsPopup(!useSearchResultsPopup);
   }
 
-  function onImportClick(e: any) {
-    fileEvent.current = e;
-    setImportConfirmationOpen(true);
-  }
-
-  function onImportTypeConfirmed(opt: string) {
-    setImportConfirmationOpen(false);
-    if (opt === "import" && fileEvent.current) {
-      importFromJsonWithCallbacks(
-        fileEvent.current,
-        (importedSpaces) => {
-          hydrate({
-            spaces: importedSpaces,
-            currentSpaceId: importedSpaces[0]?.id ?? -1,
-          });
-        },
-        (message, isError) => showNotification({ message, isError })
-      );
+  function onImportClick(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.currentTarget.files?.[0]) return;
+    if (!confirm("Importing JSON backup will replace all current bookmarks. Continue?")) {
+      e.currentTarget.value = "";
+      return;
     }
+
+    importFromJsonWithCallbacks(
+      e,
+      (importedSpaces) => {
+        hydrate({
+          spaces: importedSpaces,
+          currentSpaceId: importedSpaces[0]?.id ?? -1,
+        });
+      },
+      (message, isError) => showNotification({ message, isError }),
+    );
   }
 
   function onAddSpace() {
@@ -323,15 +305,8 @@ export const SettingsOptions = ({
       onToggle: onToggleNotUsed,
       value: showNotUsed,
       title:
-        "Highlight not used in past 60 days to archive them. It helps to keep workspace clean.",
+        "Highlight bookmarks that have not been opened in the past 60 days.",
       text: showNotUsed ? "Unhighlight not used" : "Highlight not used",
-    },
-    {
-      onToggle: onToggleHidden,
-      value: showArchived,
-      title: "You can hide unused folders and bookmarks to keep space clean",
-      text: "Show hidden items",
-      hidden: !hiddenFeatureIsEnabled,
     },
     {
       onToggle: onToggleOpenInTheNewTab,
@@ -427,10 +402,6 @@ export const SettingsOptions = ({
         icon="help"
         submenuContent={<HelpOptions />}
       />
-
-      {importConfirmationOpen && (
-        <ImportConfirmationModal onClose={onImportTypeConfirmed} />
-      )}
 
       {/* {isOverrideModalOpen && <OverrideModal setOpen={setOverrideModalOpen} />} */}
     </>

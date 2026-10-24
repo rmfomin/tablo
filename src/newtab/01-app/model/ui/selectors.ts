@@ -25,9 +25,7 @@ export function persistedPreferencesSelector(state: UiStore): UiPreferences {
     openBookmarksInNewTab: state.openBookmarksInNewTab,
     colorTheme: state.colorTheme,
     showRecent: state.showRecent,
-    showArchived: state.showArchived,
     showNotUsed: state.showNotUsed,
-    hiddenFeatureIsEnabled: state.hiddenFeatureIsEnabled,
     useSearchResultsPopup: state.useSearchResultsPopup,
   };
 }

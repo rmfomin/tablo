@@ -16,9 +16,7 @@ function createAdapter(): VitestMocked<StorageSyncAdapter> {
       openBookmarksInNewTab: false,
       colorTheme: "system",
       showRecent: false,
-      showArchived: false,
       showNotUsed: false,
-      hiddenFeatureIsEnabled: false,
     }),
     save: vi.fn().mockResolvedValue(undefined),
     broadcastUpdated: vi.fn(),
@@ -60,9 +58,7 @@ test("hydration создаёт default space и выбирает первый sp
     openBookmarksInNewTab: false,
     colorTheme: "system",
     showRecent: false,
-    showArchived: false,
     showNotUsed: false,
-    hiddenFeatureIsEnabled: false,
   });
   const withInvalidSelection = preparePersistedState({
     ...empty,

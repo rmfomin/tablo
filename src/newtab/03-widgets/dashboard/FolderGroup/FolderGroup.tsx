@@ -26,7 +26,6 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
   showNotUsed: boolean;
   search: string;
   itemInEdit: number | undefined;
-  hiddenFeatureIsEnabled: boolean;
   continuation?: boolean;
   fragmentIndex?: number;
   insertBeforeItemId?: number;
@@ -81,9 +80,7 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
 
   function onOpenAllTabs() {
     p.group.groupItems.forEach((item) => {
-      if (!item.archived) {
-        createTab({ url: item.url, active: false });
-      }
+      createTab({ url: item.url, active: false });
     });
 
     setShowMenu(false);
@@ -207,7 +204,6 @@ export const FolderGroup = React.memo(function FolderGroup(p: {
             recentItems={p.recentItems}
             showNotUsed={p.showNotUsed}
             search={p.search}
-            hiddenFeatureIsEnabled={p.hiddenFeatureIsEnabled}
           />
         ))}
       </div>

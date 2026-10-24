@@ -79,7 +79,6 @@ export interface FolderV3 {
   /** Positive safe integer; an absent value means one column */
   columnSpan?: number;
   collapsed?: boolean;
-  archived?: boolean;
 }
 
 export interface ItemBaseV3 {
@@ -88,7 +87,6 @@ export interface ItemBaseV3 {
   title: string;
   type: ItemTypeV3;
   objectType: "bookmark" | "group";
-  archived?: boolean;
   inEdit?: boolean;
 }
 

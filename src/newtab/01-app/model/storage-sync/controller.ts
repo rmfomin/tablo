@@ -47,9 +47,7 @@ export function createStorageSyncController(
       openBookmarksInNewTab: preparedState.openBookmarksInNewTab,
       colorTheme: preparedState.colorTheme,
       showRecent: preparedState.showRecent,
-      showArchived: preparedState.showArchived,
       showNotUsed: preparedState.showNotUsed,
-      hiddenFeatureIsEnabled: preparedState.hiddenFeatureIsEnabled,
       useSearchResultsPopup: preparedState.useSearchResultsPopup,
     });
   }
@@ -123,9 +121,7 @@ function toPersistedState(dashboard: DashboardState, ui: UiStore): PersistedNewt
     openBookmarksInNewTab: ui.openBookmarksInNewTab,
     colorTheme: ui.colorTheme,
     showRecent: ui.showRecent,
-    showArchived: ui.showArchived,
     showNotUsed: ui.showNotUsed,
-    hiddenFeatureIsEnabled: ui.hiddenFeatureIsEnabled,
     useSearchResultsPopup: ui.useSearchResultsPopup,
   };
 }
@@ -135,8 +131,6 @@ function hasPersistedPreferencesChanged(current: UiStore, previous: UiStore): bo
     || current.openBookmarksInNewTab !== previous.openBookmarksInNewTab
     || current.colorTheme !== previous.colorTheme
     || current.showRecent !== previous.showRecent
-    || current.showArchived !== previous.showArchived
     || current.showNotUsed !== previous.showNotUsed
-    || current.hiddenFeatureIsEnabled !== previous.hiddenFeatureIsEnabled
     || current.useSearchResultsPopup !== previous.useSearchResultsPopup;
 }
