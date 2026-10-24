@@ -5,6 +5,7 @@ import {
 } from "@/newtab/05-entities/dashboard/model/types";
 import { generateLocalId } from "@/newtab/05-entities/dashboard/model/itemUtils";
 import { insertBetween } from "@/newtab/05-entities/dashboard/model/fractionalIndexes";
+import type { UiPreferences } from "@/newtab/05-entities/preferences/model/preferences";
 import {
   isDataBackupV3Input,
   isSpaceV3Input,
@@ -53,14 +54,17 @@ function getImportableSpaceV3(data: unknown): SpaceV3 | undefined {
 }
 
 export type DashboardImportResult =
-  | { ok: true; spaces: SpaceV3[] }
+  | { ok: true; spaces: SpaceV3[]; settings?: Partial<UiPreferences> }
   | { ok: false; message: string };
 
 export function parseDashboardImportJson(text: string): DashboardImportResult {
   try {
     const parsed = JSON.parse(text);
     if (isDataBackupV3Input(parsed)) {
-      return { ok: true, spaces: normalizeBackupV3(parsed).spaces };
+      const backup = normalizeBackupV3(parsed);
+      const result: DashboardImportResult = { ok: true, spaces: backup.spaces };
+      if (backup.settings) result.settings = backup.settings.values;
+      return result;
     }
     return {
       ok: false,
@@ -75,7 +79,7 @@ export function parseDashboardImportJson(text: string): DashboardImportResult {
 
 export function importFromJsonWithCallbacks(
   event: FileInputChangeEvent,
-  onImported: (spaces: SpaceV3[]) => void,
+  onImported: (spaces: SpaceV3[], settings?: Partial<UiPreferences>) => void,
   onMessage: (message: string, isError?: boolean) => void,
 ): void {
   const file = event.target.files?.[0];
@@ -84,7 +88,8 @@ export function importFromJsonWithCallbacks(
   reader.onload = (loadEvent) => {
     const result = parseDashboardImportJson(String(loadEvent.target?.result ?? ""));
     if (result.ok) {
-      onImported(result.spaces);
+      if (result.settings) onImported(result.spaces, result.settings);
+      else onImported(result.spaces);
       onMessage("Backup has been imported");
     } else {
       onMessage(result.message, true);

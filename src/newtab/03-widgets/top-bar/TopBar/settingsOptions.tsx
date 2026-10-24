@@ -181,6 +181,7 @@ export const SettingsOptions = ({
   const showGroupBackground = useUiStore((state) => state.showGroupBackground);
   const setShowGroupBackground = useUiStore((state) => state.setShowGroupBackground);
   const backupReminderEnabled = useUiStore((state) => state.backupReminderEnabled);
+  const restorePreferences = useUiStore((state) => state.restorePreferences);
   const setLastBackupExportAt = useUiStore((state) => state.setLastBackupExportAt);
   const setBackupReminderSnoozedUntil = useUiStore((state) => state.setBackupReminderSnoozedUntil);
   const setPage = useUiStore((state) => state.setPage);
@@ -220,18 +221,19 @@ export const SettingsOptions = ({
 
   function onImportClick(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.currentTarget.files?.[0]) return;
-    if (!confirm("Importing JSON backup will replace all current bookmarks. Continue?")) {
+    if (!confirm("Importing JSON backup will replace all current bookmarks and restore saved settings. Continue?")) {
       e.currentTarget.value = "";
       return;
     }
 
     importFromJsonWithCallbacks(
       e,
-      (importedSpaces) => {
+      (importedSpaces, settings) => {
         hydrate({
           spaces: importedSpaces,
           currentSpaceId: importedSpaces[0]?.id ?? -1,
         });
+        if (settings) restorePreferences(settings);
       },
       (message, isError) => showNotification({ message, isError }),
     );
@@ -371,7 +373,7 @@ export const SettingsOptions = ({
     },
     {
       onClick: (e) => onImportClick(e),
-      title: "Open exported Tablo JSON file",
+      title: "Restore bookmarks and saved settings from a Tablo JSON backup",
       text: "Import from JSON",
       isFile: true,
       icon: (
@@ -389,7 +391,7 @@ export const SettingsOptions = ({
           setBackupReminderSnoozedUntil(undefined);
         });
       },
-      title: "Export all Folders and Bookmarks to JSON file",
+      title: "Export all spaces, bookmarks and settings to a JSON file",
       text: "Export to JSON",
       icon: (
         <ExportJsonIcon

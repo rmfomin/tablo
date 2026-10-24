@@ -4,6 +4,7 @@ import type { DashboardStore } from "@/newtab/01-app/model/dashboard/dashboardSt
 import type { DashboardState } from "@/newtab/01-app/model/dashboard/types";
 import type { StorageSyncAdapter, PersistedNewtabState } from "@/newtab/01-app/model/storage-sync/types";
 import type { UiStore } from "@/newtab/01-app/model/ui/uiStore";
+import { normalizeUiPreferences, uiPreferenceKeys } from "@/newtab/05-entities/preferences/model/preferences";
 
 export type StorageSyncController = {
   hydrate(): Promise<void>;
@@ -42,20 +43,7 @@ export function createStorageSyncController(
       spaces: preparedState.spaces,
       currentSpaceId: preparedState.currentSpaceId,
     });
-    uiStore.getState().hydratePreferences({
-      sidebarCollapsed: preparedState.sidebarCollapsed,
-      openBookmarksInNewTab: preparedState.openBookmarksInNewTab,
-      colorTheme: preparedState.colorTheme,
-      showRecent: preparedState.showRecent,
-      showNotUsed: preparedState.showNotUsed,
-      useSearchResultsPopup: preparedState.useSearchResultsPopup,
-      showGroupBackground: preparedState.showGroupBackground,
-      backupReminderEnabled: preparedState.backupReminderEnabled,
-      backupReminderIntervalDays: preparedState.backupReminderIntervalDays,
-      lastBackupExportAt: preparedState.lastBackupExportAt,
-      backupReminderEnabledAt: preparedState.backupReminderEnabledAt,
-      backupReminderSnoozedUntil: preparedState.backupReminderSnoozedUntil,
-    });
+    uiStore.getState().hydratePreferences(preparedState);
   }
 
   function scheduleSave(): void {
@@ -123,32 +111,10 @@ function toPersistedState(dashboard: DashboardState, ui: UiStore): PersistedNewt
     version: 3,
     spaces: dashboard.spaces,
     currentSpaceId: dashboard.currentSpaceId === -1 ? undefined : dashboard.currentSpaceId,
-    sidebarCollapsed: ui.sidebarCollapsed,
-    openBookmarksInNewTab: ui.openBookmarksInNewTab,
-    colorTheme: ui.colorTheme,
-    showRecent: ui.showRecent,
-    showNotUsed: ui.showNotUsed,
-    useSearchResultsPopup: ui.useSearchResultsPopup,
-    showGroupBackground: ui.showGroupBackground,
-    backupReminderEnabled: ui.backupReminderEnabled,
-    backupReminderIntervalDays: ui.backupReminderIntervalDays,
-    lastBackupExportAt: ui.lastBackupExportAt,
-    backupReminderEnabledAt: ui.backupReminderEnabledAt,
-    backupReminderSnoozedUntil: ui.backupReminderSnoozedUntil,
+    ...normalizeUiPreferences(ui),
   };
 }
 
 function hasPersistedPreferencesChanged(current: UiStore, previous: UiStore): boolean {
-  return current.sidebarCollapsed !== previous.sidebarCollapsed
-    || current.openBookmarksInNewTab !== previous.openBookmarksInNewTab
-    || current.colorTheme !== previous.colorTheme
-    || current.showRecent !== previous.showRecent
-    || current.showNotUsed !== previous.showNotUsed
-    || current.useSearchResultsPopup !== previous.useSearchResultsPopup
-    || current.showGroupBackground !== previous.showGroupBackground
-    || current.backupReminderEnabled !== previous.backupReminderEnabled
-    || current.backupReminderIntervalDays !== previous.backupReminderIntervalDays
-    || current.lastBackupExportAt !== previous.lastBackupExportAt
-    || current.backupReminderEnabledAt !== previous.backupReminderEnabledAt
-    || current.backupReminderSnoozedUntil !== previous.backupReminderSnoozedUntil;
+  return uiPreferenceKeys.some((key) => current[key] !== previous[key]);
 }

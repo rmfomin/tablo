@@ -14,6 +14,7 @@ import {
   SpaceV3,
   SpaceV3Input,
 } from "@/newtab/05-entities/dashboard/model/types";
+import { parseSettingsBackup } from "@/newtab/05-entities/preferences/model/preferences";
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -231,8 +232,8 @@ function normalizeBackupBrandMarker(data: DataBackupV3Input): BackupBrandMarker 
 export function normalizeBackupV3(data: DataBackupV3Input): DataBackupV3 {
   const spaces = sortByPosition(data.spaces.map(normalizeSpaceV3));
   const marker = normalizeBackupBrandMarker(data);
-
-  if (marker.isTablo) return { isTablo: true, version: 3, spaces };
-  if (marker.isAppVersion3) return { isAppVersion3: true, version: 3, spaces };
-  return { isAppVersion1: true, version: 3, spaces };
+  const settings = parseSettingsBackup(data.settings);
+  const backup: DataBackupV3 = { ...marker, version: 3, spaces };
+  if (settings) backup.settings = settings;
+  return backup;
 }

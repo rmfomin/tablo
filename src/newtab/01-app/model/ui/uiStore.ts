@@ -2,7 +2,10 @@ import { useStore } from "zustand";
 import { createStore, type StateCreator, type StoreApi } from "zustand/vanilla";
 import type { ColorTheme } from "@/newtab/05-entities/dashboard/model/types";
 import type { SearchFilter, SearchFilterMode } from "@/newtab/04-features/bookmark-search/model/filters";
-import { defaultBackupReminderIntervalDays, normalizeBackupReminderIntervalDays } from "@/newtab/04-features/backup-reminder/model/settings";
+import { defaultUiPreferences, normalizeBackupReminderIntervalDays, normalizeUiPreferences, readUiPreferences, type UiPreferences } from "@/newtab/05-entities/preferences/model/preferences";
+
+export { defaultUiPreferences };
+export type { UiPreferences };
 
 export type NotificationState = {
   visible: boolean;
@@ -13,22 +16,6 @@ export type NotificationState = {
 };
 
 export type NotificationInput = Omit<NotificationState, "visible">;
-
-// Поля, которые сохраняются вместе с dashboard в chrome.storage.local
-export type UiPreferences = {
-  sidebarCollapsed: boolean;
-  openBookmarksInNewTab: boolean;
-  colorTheme: ColorTheme;
-  showRecent: boolean;
-  showNotUsed: boolean;
-  useSearchResultsPopup?: boolean;
-  showGroupBackground?: boolean;
-  backupReminderEnabled?: boolean;
-  backupReminderIntervalDays?: number;
-  lastBackupExportAt?: number;
-  backupReminderEnabledAt?: number;
-  backupReminderSnoozedUntil?: number;
-};
 
 export type UiState = Omit<
   UiPreferences,
@@ -84,28 +71,17 @@ export type UiActions = {
   setLastBackupExportAt(timestamp: number): void;
   setBackupReminderSnoozedUntil(timestamp: number | undefined): void;
   hydratePreferences(preferences: UiPreferences): void;
+  restorePreferences(preferences: unknown): void;
 };
 
 export type UiStore = UiState & UiActions;
 
-export const defaultUiPreferences: UiPreferences = {
-  sidebarCollapsed: false,
-  openBookmarksInNewTab: false,
-  colorTheme: "system",
-  showRecent: false,
-  showNotUsed: false,
-  useSearchResultsPopup: true,
-  showGroupBackground: true,
-  backupReminderEnabled: false,
-  backupReminderIntervalDays: defaultBackupReminderIntervalDays,
-};
-
 const defaultUiState: UiState = {
   ...defaultUiPreferences,
-  useSearchResultsPopup: true,
-  showGroupBackground: true,
-  backupReminderEnabled: false,
-  backupReminderIntervalDays: defaultBackupReminderIntervalDays,
+  useSearchResultsPopup: defaultUiPreferences.useSearchResultsPopup!,
+  showGroupBackground: defaultUiPreferences.showGroupBackground!,
+  backupReminderEnabled: defaultUiPreferences.backupReminderEnabled!,
+  backupReminderIntervalDays: defaultUiPreferences.backupReminderIntervalDays!,
   backupReminderVisible: false,
   search: "",
   searchFilters: [],
@@ -179,14 +155,16 @@ function createUiSlice(initialState: Partial<UiState>): StateCreator<UiStore> {
     setBackupReminderSnoozedUntil: (backupReminderSnoozedUntil) =>
       set({ backupReminderSnoozedUntil }),
 
-    hydratePreferences: (preferences) => set({
-      ...preferences,
-      showGroupBackground: preferences.showGroupBackground !== false,
-      backupReminderEnabled: preferences.backupReminderEnabled === true,
-      backupReminderIntervalDays: normalizeBackupReminderIntervalDays(preferences.backupReminderIntervalDays),
-      lastBackupExportAt: preferences.lastBackupExportAt,
-      backupReminderEnabledAt: preferences.backupReminderEnabledAt,
-      backupReminderSnoozedUntil: preferences.backupReminderSnoozedUntil,
+    hydratePreferences: (preferences) => set(normalizeUiPreferences(preferences)),
+    restorePreferences: (preferences) => set((state) => {
+      const patch = readUiPreferences(preferences, true);
+      if (patch.backupReminderEnabled === false) {
+        return { ...patch, backupReminderEnabledAt: undefined, backupReminderVisible: false };
+      }
+      if (patch.backupReminderEnabled === true && !state.backupReminderEnabled && !state.lastBackupExportAt) {
+        return { ...patch, backupReminderEnabledAt: Date.now() };
+      }
+      return patch;
     }),
   });
 }

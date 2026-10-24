@@ -1,4 +1,5 @@
 import type { UiPreferences, UiStore } from "@/newtab/01-app/model/ui/uiStore";
+import { normalizeUiPreferences } from "@/newtab/05-entities/preferences/model/preferences";
 
 /** Селекторы дают компонентам стабильный узкий контракт вместо полного store. */
 export function searchStateSelector(state: UiStore) {
@@ -20,13 +21,5 @@ export function searchControllerSelector(state: UiStore) {
 }
 
 export function persistedPreferencesSelector(state: UiStore): UiPreferences {
-  return {
-    sidebarCollapsed: state.sidebarCollapsed,
-    openBookmarksInNewTab: state.openBookmarksInNewTab,
-    colorTheme: state.colorTheme,
-    showRecent: state.showRecent,
-    showNotUsed: state.showNotUsed,
-    useSearchResultsPopup: state.useSearchResultsPopup,
-    showGroupBackground: state.showGroupBackground,
-  };
+  return normalizeUiPreferences(state);
 }

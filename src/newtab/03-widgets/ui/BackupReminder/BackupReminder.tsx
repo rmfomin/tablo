@@ -86,7 +86,7 @@ export function BackupReminder() {
     }}>
       <div className="modal-no-override">
         <h2>Time to back up Tablo</h2>
-        <p>Save a backup of your spaces and bookmarks? You can choose a folder on your computer.</p>
+        <p>Save a backup of your spaces, bookmarks and settings? You can choose a folder on your computer.</p>
         {exportError ? <p className={styles.error} role="alert">{exportError}</p> : null}
         <div className={styles.actions}>
           <button type="button" className="btn__setting primary" disabled={isExporting} onClick={exportBackup}>

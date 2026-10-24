@@ -132,7 +132,8 @@ test("createExportBackupV3 preserves grouped and collapsed v3 structure", () => 
     },
   ];
 
-  expect(createExportBackupV3(spaces)).toEqual({
+  const { settings: _settings, ...bookmarkBackup } = createExportBackupV3(spaces);
+  expect(bookmarkBackup).toEqual({
     isTablo: true,
     version: 3,
     spaces: [

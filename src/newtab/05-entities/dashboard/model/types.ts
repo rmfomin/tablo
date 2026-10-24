@@ -1,3 +1,7 @@
+import type { SettingsBackup } from "@/newtab/05-entities/preferences/model/preferences";
+
+export type { ColorTheme } from "@/newtab/05-entities/preferences/model/preferences";
+
 export interface FolderItemToCreate {
   id: number;
   title: string;
@@ -8,8 +12,6 @@ export interface FolderItemToCreate {
 }
 
 export type ItemToCreateV3 = FolderItemToCreate | ItemV3;
-
-export type ColorTheme = "light" | "system" | "dark";
 
 export type ItemTypeV3 = "bookmark" | "group";
 
@@ -52,6 +54,7 @@ export type BackupBrandMarker =
 export type DataBackupV3 = BackupBrandMarker & {
   version: 3;
   spaces: SpaceV3[];
+  settings?: SettingsBackup;
 };
 
 export type SpaceBackupV3 = BackupBrandMarker & {
@@ -131,4 +134,5 @@ export type SpaceV3Input = Omit<SpaceV3, "folders"> & {
 export type DataBackupV3Input = BackupBrandMarker & {
   version: 3;
   spaces: SpaceV3Input[];
+  settings?: unknown;
 };

@@ -1,23 +1,12 @@
 import { areSpacesV3Input, normalizeBackupV3 } from "@/newtab/04-features/bookmarks-import/model/adapters";
-import type { ColorTheme, SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
+import type { SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
 import type { PersistedNewtabState, StorageSyncAdapter } from "@/newtab/01-app/model/storage-sync/types";
-import { normalizeBackupReminderIntervalDays } from "@/newtab/04-features/backup-reminder/model/settings";
+import { defaultUiPreferences, normalizeUiPreferences, uiPreferenceKeys } from "@/newtab/05-entities/preferences/model/preferences";
 
 const storageKeys = [
   "spaces",
   "currentSpaceId",
-  "sidebarCollapsed",
-  "openBookmarksInNewTab",
-  "colorTheme",
-  "showRecent",
-  "showNotUsed",
-  "useSearchResultsPopup",
-  "showGroupBackground",
-  "backupReminderEnabled",
-  "backupReminderIntervalDays",
-  "lastBackupExportAt",
-  "backupReminderEnabledAt",
-  "backupReminderSnoozedUntil",
+  ...uiPreferenceKeys,
   "version",
 ] as const;
 const legacyHidingStorageKeys = ["showArchived", "hiddenFeatureIsEnabled"] as const;
@@ -95,28 +84,12 @@ export function normalizePersistedState(value: StorageRecord): PersistedNewtabSt
     currentSpaceId: spaces.length > 0 && typeof value.currentSpaceId === "number"
       ? value.currentSpaceId
       : undefined,
-    sidebarCollapsed: value.sidebarCollapsed === true,
     // Сохраняем поведение legacy storage: в обычном new tab новая закладка
-    // открывается в отдельной вкладке, а в override mode — в текущей.
-    openBookmarksInNewTab: typeof value.openBookmarksInNewTab === "boolean"
-      ? value.openBookmarksInNewTab
-      : !__OVERRIDE_NEWTAB,
-    colorTheme: normalizeColorTheme(value.colorTheme),
-    showRecent: value.showRecent === true,
-    showNotUsed: value.showNotUsed === true,
-    useSearchResultsPopup: value.useSearchResultsPopup !== false,
-    showGroupBackground: value.showGroupBackground !== false,
-    backupReminderEnabled: value.backupReminderEnabled === true,
-    backupReminderIntervalDays: normalizeBackupReminderIntervalDays(value.backupReminderIntervalDays),
-    lastBackupExportAt: typeof value.lastBackupExportAt === "number"
-      ? value.lastBackupExportAt
-      : undefined,
-    backupReminderEnabledAt: typeof value.backupReminderEnabledAt === "number"
-      ? value.backupReminderEnabledAt
-      : undefined,
-    backupReminderSnoozedUntil: typeof value.backupReminderSnoozedUntil === "number"
-      ? value.backupReminderSnoozedUntil
-      : undefined,
+    // открывается в отдельной вкладке, а в override mode — в текущей
+    ...normalizeUiPreferences(value, {
+      ...defaultUiPreferences,
+      openBookmarksInNewTab: !__OVERRIDE_NEWTAB,
+    }),
   };
 }
 
@@ -136,9 +109,5 @@ function toCanonicalState(state: PersistedNewtabState): PersistedNewtabState {
   const spaces: SpaceV3[] = areSpacesV3Input(state.spaces)
     ? normalizeBackupV3({ isTablo: true, version: 3, spaces: state.spaces }).spaces
     : [];
-  return { ...state, version: 3, spaces };
-}
-
-function normalizeColorTheme(value: unknown): ColorTheme {
-  return value === "light" || value === "dark" || value === "system" ? value : "system";
+  return { ...state, ...normalizeUiPreferences(state), version: 3, spaces };
 }

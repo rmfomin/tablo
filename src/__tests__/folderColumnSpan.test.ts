@@ -48,7 +48,7 @@ test.each([1, 3, Number.MAX_SAFE_INTEGER])("column span %s survives dashboard an
   state.spaces[0].folders[0].columnSpan = columnSpan;
 
   const dashboard = parseDashboardImportJson(JSON.stringify(createExportBackupV3(state.spaces)));
-  expect(dashboard).toEqual({ ok: true, spaces: state.spaces });
+  expect(dashboard).toMatchObject({ ok: true, spaces: state.spaces });
 
   const singleSpace = parseSpaceImportJson(JSON.stringify(createExportSpaceBackupV3(state.spaces[0])), []);
   expect(singleSpace.ok).toBe(true);
@@ -61,7 +61,7 @@ test("old JSON keeps the absent width field after export and storage normalizati
   const state = createState();
   const backup = createExportBackupV3(state.spaces);
   const imported = parseDashboardImportJson(JSON.stringify(backup));
-  expect(imported).toEqual({ ok: true, spaces: state.spaces });
+  expect(imported).toMatchObject({ ok: true, spaces: state.spaces });
   expect(backup.spaces[0].folders[0]).not.toHaveProperty("columnSpan");
   expect(normalizePersistedState({ version: 3, spaces: state.spaces }).spaces[0].folders[0]).not.toHaveProperty("columnSpan");
 });

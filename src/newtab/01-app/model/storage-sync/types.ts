@@ -1,5 +1,5 @@
 import type { SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
-import type { UiPreferences } from "@/newtab/01-app/model/ui/uiStore";
+import type { UiPreferences } from "@/newtab/05-entities/preferences/model/preferences";
 
 /** Точный v3-снимок, который хранится в chrome.storage.local. */
 export type PersistedNewtabState = UiPreferences & {
