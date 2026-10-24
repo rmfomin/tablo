@@ -22,6 +22,7 @@ import { Folder } from "@/newtab/03-widgets/dashboard/Folder/Folder";
 import { NewFolderPlaceholder } from "@/newtab/03-widgets/dashboard/Folder/NewFolderPlaceholder";
 import { handleBookmarksKeyDown } from "@/newtab/04-features/bookmarks/model/handleBookmarksKeyDown";
 import { findBookmarkItem } from "@/newtab/05-entities/dashboard/model/itemUtils";
+import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
 import { useAreaSelection } from "@/newtab/04-features/area-selection/ui/useAreaSelection";
 import { useBookmarksScreen } from "@/newtab/04-features/bookmarks/model/useBookmarksScreen";
@@ -104,7 +105,14 @@ function moveTabGroupUrl(
 let __prevCurrentSpaceId: number | undefined = undefined;
 let __prevSearch: string | undefined = undefined;
 
-function updateMasonryLayout(grid: HTMLDivElement) {
+function updateMasonryLayout(grid: HTMLDivElement, alignFolderRows: boolean) {
+  if (alignFolderRows) {
+    Array.from(grid.children).forEach((child) => {
+      (child as HTMLElement).style.gridRowEnd = "";
+    });
+    return;
+  }
+
   const gridStyles = getComputedStyle(grid);
   const rowHeight = Number.parseFloat(gridStyles.gridAutoRows);
   const itemGap = Number.parseFloat(gridStyles.columnGap);
@@ -120,6 +128,7 @@ function updateMasonryLayout(grid: HTMLDivElement) {
 }
 
 export function Bookmarks() {
+  const alignFolderRows = useUiStore((state) => state.alignFolderRows);
   const {
     screen,
     spaces,
@@ -314,7 +323,7 @@ export function Bookmarks() {
         if (document.body.classList.contains("dragging")) return;
         const columns = Number(getComputedStyle(grid).getPropertyValue("--folder-grid-columns"));
         if (columns > 0) setAvailableColumns(columns);
-        updateMasonryLayout(grid);
+        updateMasonryLayout(grid, alignFolderRows);
       });
     };
     const resizeObserver = new ResizeObserver(scheduleLayout);
@@ -343,7 +352,7 @@ export function Bookmarks() {
       resizeObserver.disconnect();
       document.removeEventListener("tablo-drag-state", onDragState);
     };
-  }, []);
+  }, [alignFolderRows]);
 
   function startDragAndDrop(mouseDownEvent: React.MouseEvent) {
     dragCleanupRef.current?.();
@@ -635,7 +644,12 @@ export function Bookmarks() {
             );
           })}
         </div>
-        <div className={styles.folderGrid} ref={folderGridRef}>
+        <div
+          className={cn(styles.folderGrid, {
+            [styles.folderGridAlignedRows]: alignFolderRows,
+          })}
+          ref={folderGridRef}
+        >
           {folders.map((folder) => (
             <Folder key={folder.id} folder={folder} availableColumns={availableColumns} {...folderProps} />
           ))}

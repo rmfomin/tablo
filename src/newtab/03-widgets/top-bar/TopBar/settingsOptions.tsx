@@ -180,6 +180,8 @@ export const SettingsOptions = ({
   );
   const showGroupBackground = useUiStore((state) => state.showGroupBackground);
   const setShowGroupBackground = useUiStore((state) => state.setShowGroupBackground);
+  const alignFolderRows = useUiStore((state) => state.alignFolderRows);
+  const setAlignFolderRows = useUiStore((state) => state.setAlignFolderRows);
   const backupReminderEnabled = useUiStore((state) => state.backupReminderEnabled);
   const restorePreferences = useUiStore((state) => state.restorePreferences);
   const setLastBackupExportAt = useUiStore((state) => state.setLastBackupExportAt);
@@ -308,6 +310,12 @@ export const SettingsOptions = ({
       value: showGroupBackground,
       title: "Show a background behind bookmark groups",
       text: "Show group backgrounds",
+    },
+    {
+      onToggle: () => setAlignFolderRows(!alignFolderRows),
+      value: alignFolderRows,
+      title: "Align folders in rows",
+      text: "Align folders in rows",
     },
     { separator: true },
     {

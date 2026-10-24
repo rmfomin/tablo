@@ -21,11 +21,13 @@ export type UiState = Omit<
   UiPreferences,
   | "useSearchResultsPopup"
   | "showGroupBackground"
+  | "alignFolderRows"
   | "backupReminderEnabled"
   | "backupReminderIntervalDays"
 > & {
   useSearchResultsPopup: boolean;
   showGroupBackground: boolean;
+  alignFolderRows: boolean;
   search: string;
   searchFilters: SearchFilter[];
   searchFilterMode: SearchFilterMode;
@@ -62,6 +64,7 @@ export type UiActions = {
   setShowNotUsed(showNotUsed: boolean): void;
   setUseSearchResultsPopup(useSearchResultsPopup: boolean): void;
   setShowGroupBackground(showGroupBackground: boolean): void;
+  setAlignFolderRows(alignFolderRows: boolean): void;
   refreshFavicons(itemIds: number[]): void;
   setFaviconRefreshInProgress(inProgress: boolean): void;
   setSearchNavigationTargetId(itemId: number | undefined): void;
@@ -80,6 +83,7 @@ const defaultUiState: UiState = {
   ...defaultUiPreferences,
   useSearchResultsPopup: defaultUiPreferences.useSearchResultsPopup!,
   showGroupBackground: defaultUiPreferences.showGroupBackground!,
+  alignFolderRows: defaultUiPreferences.alignFolderRows!,
   backupReminderEnabled: defaultUiPreferences.backupReminderEnabled!,
   backupReminderIntervalDays: defaultUiPreferences.backupReminderIntervalDays!,
   backupReminderVisible: false,
@@ -128,6 +132,7 @@ function createUiSlice(initialState: Partial<UiState>): StateCreator<UiStore> {
       set({ useSearchResultsPopup }),
     setShowGroupBackground: (showGroupBackground) =>
       set({ showGroupBackground }),
+    setAlignFolderRows: (alignFolderRows) => set({ alignFolderRows }),
     refreshFavicons: (itemIds) => set((state) => {
       const faviconRefreshVersions = { ...state.faviconRefreshVersions };
       for (const id of itemIds) faviconRefreshVersions[id] = (faviconRefreshVersions[id] ?? 0) + 1;

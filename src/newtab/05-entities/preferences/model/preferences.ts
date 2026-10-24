@@ -18,6 +18,7 @@ export type UiPreferences = {
   showNotUsed: boolean;
   useSearchResultsPopup?: boolean;
   showGroupBackground?: boolean;
+  alignFolderRows?: boolean;
   backupReminderEnabled?: boolean;
   backupReminderIntervalDays?: number;
   lastBackupExportAt?: number;
@@ -47,6 +48,7 @@ const preferenceDefinitions = {
   showNotUsed: { defaultValue: false, isValid: isBoolean, includeInBackup: true },
   useSearchResultsPopup: { defaultValue: true, isValid: isBoolean, includeInBackup: true },
   showGroupBackground: { defaultValue: true, isValid: isBoolean, includeInBackup: true },
+  alignFolderRows: { defaultValue: false, isValid: isBoolean, includeInBackup: true },
   backupReminderEnabled: { defaultValue: false, isValid: isBoolean, includeInBackup: true },
   backupReminderIntervalDays: { defaultValue: defaultBackupReminderIntervalDays, isValid: isValidBackupReminderIntervalDays, includeInBackup: true },
   lastBackupExportAt: { defaultValue: undefined, isValid: isTimestamp, includeInBackup: false },
