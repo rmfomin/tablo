@@ -56,6 +56,12 @@ npm run build
 
 После завершения команды выберите каталог `dist` через **Загрузить распакованное расширение** на `chrome://extensions`.
 
+### Скачать архив из GitHub
+
+Стабильная сборка доступна в [последнем GitHub Release](https://github.com/rmfomin/tablo/releases/latest). Скачайте [архив расширения](https://github.com/rmfomin/tablo/releases/latest/download/tablo-chrome-extension.zip), распакуйте его и выберите распакованный каталог через **Загрузить распакованное расширение** на `chrome://extensions`.
+
+Для публикации новой версии создайте и отправьте тег `v<версия>` после обновления версии расширения, например `v1.0`. GitHub Actions соберёт normal-версию и приложит ZIP к релизу. Для локальной сборки ZIP выполните `npm run build:archive`; архив появится в `builds/tablo-chrome-extension.zip`.
+
 ## Доступные команды
 
 | Команда | Описание |
@@ -63,6 +69,7 @@ npm run build
 | `npm run watch` | Собирает расширение в режиме разработки и пересобирает его при изменении файлов. Расширение заменяет страницу новой вкладки. |
 | `npm run watch2` | Собирает расширение в режиме разработки, не заменяя страницу новой вкладки. |
 | `npm run build` | Создаёт оптимизированную normal production-сборку в `dist`. |
+| `npm run build:archive` | Собирает normal-версию и создаёт ZIP для установки в Chrome. |
 | `npm run build:demo` | Собирает отдельную браузерную демо-версию в `demo-dist`. |
 | `npm run build:overrideless` | Создаёт production-сборку без замены страницы новой вкладки. |
 | `npm run typecheck` | Запускает проверку типов TypeScript без создания файлов сборки. |

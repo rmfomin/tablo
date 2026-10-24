@@ -1,0 +1,29 @@
+name: release-extension
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.15.0
+          cache: npm
+      - run: npm ci
+      - run: npm run build:archive
+      - name: Publish Chrome extension archive
+        uses: softprops/action-gh-release@v3
+        with:
+          name: Tablo ${{ github.ref_name }}
+          generate_release_notes: true
+          make_latest: true
+          fail_on_unmatched_files: true
+          files: builds/tablo-chrome-extension.zip
