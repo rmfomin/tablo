@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tablo — холст</title>
+  </head>
+  <body>
+    <header class="canvas-header">
+      <button id="back" type="button">← Назад</button>
+      <strong id="canvas-title" tabindex="0" role="button" aria-label="Переименовать холст" title="Двойной щелчок — переименовать">Холст 1</strong>
+      <button id="menu-toggle" type="button" popovertarget="canvas-menu">Меню</button>
+    </header>
+    <section id="canvas-menu" class="canvas-menu" popover aria-label="Меню холста">
+      <div class="canvas-menu-info">
+        <span class="prototype-badge">Прототип</span>
+        <span id="status" role="status" aria-live="polite">Загрузка редактора…</span>
+      </div>
+      <div class="canvas-list-section">
+        <div id="canvas-list" role="radiogroup" aria-label="Холсты"></div>
+        <button id="canvas-add" type="button" disabled>Добавить холст</button>
+      </div>
+      <button id="import" type="button" disabled>Импорт JSON</button>
+      <button id="export" type="button" disabled>Экспорт JSON</button>
+      <button id="settings" class="menu-section" type="button" disabled>Настройки холстов</button>
+      <a class="menu-section" href="https://github.com/toeverything/blocksuite/tree/v0.19.5" target="_blank" rel="noreferrer">BlockSuite · MPL 2.0</a>
+    </section>
+    <dialog id="canvas-settings" class="canvas-settings" aria-labelledby="settings-title">
+      <form id="settings-form">
+        <h2 id="settings-title">Настройки холстов</h2>
+        <label for="canvas-toolbar-mode">Панель инструментов</label>
+        <select id="canvas-toolbar-mode" name="toolbarMode">
+          <option value="compact">Компактная</option>
+          <option value="detailed">Подробная</option>
+        </select>
+        <label class="settings-field" for="canvas-background">Фон холста</label>
+        <select id="canvas-background" name="background">
+          <option value="dots">Точки</option>
+          <option value="lines">Линии</option>
+          <option value="none">Без сетки</option>
+        </select>
+        <label class="settings-toggle" for="canvas-snap">
+          <span>Привязка к сетке<small>При перемещении объектов · шаг 20 px</small></span>
+          <input id="canvas-snap" name="snap" type="checkbox" />
+        </label>
+        <label class="settings-toggle" for="canvas-guides">
+          <span>Направляющие при перемещении<small>Выравнивание по краям и центрам объектов</small></span>
+          <input id="canvas-guides" name="guides" type="checkbox" />
+        </label>
+        <label class="settings-field" for="canvas-opening">Открытие холста</label>
+        <select id="canvas-opening" name="opening">
+          <option value="restore">Восстанавливать позицию и масштаб</option>
+          <option value="fit">Показывать весь холст</option>
+        </select>
+        <label class="settings-toggle" for="canvas-optimize-images">
+          <span>Оптимизировать изображения при вставке<small>WebP · качество 85% · до 1920 px</small></span>
+          <input id="canvas-optimize-images" name="optimizeImages" type="checkbox" />
+        </label>
+        <div class="settings-actions">
+          <button id="settings-cancel" type="button">Отмена</button>
+          <button id="settings-save" class="primary-button" type="submit" disabled>Сохранить</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="canvas-rename" class="canvas-settings" aria-labelledby="rename-title">
+      <form id="rename-form">
+        <h2 id="rename-title">Переименовать холст</h2>
+        <label for="canvas-name">Название холста</label>
+        <input id="canvas-name" name="name" type="text" required maxlength="120" autocomplete="off" />
+        <div class="settings-actions">
+          <button id="rename-cancel" type="button">Отмена</button>
+          <button id="rename-save" class="primary-button" type="submit" disabled>Сохранить</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="canvas-export" class="canvas-settings" aria-labelledby="export-title">
+      <form id="export-form">
+        <h2 id="export-title">Экспорт JSON</h2>
+        <label for="export-scope">Холсты</label>
+        <select id="export-scope" name="scope">
+          <option value="current">Только текущий холст</option>
+          <option value="all">Все холсты</option>
+        </select>
+        <label class="settings-field" for="export-images">Картинки</label>
+        <select id="export-images" name="images">
+          <option value="include">С картинками</option>
+          <option value="omit">Без картинок</option>
+        </select>
+        <p class="settings-hint">Без картинок сохранятся их места и подписи. Исходные изображения останутся в этом холсте.</p>
+        <div class="settings-actions">
+          <button id="export-cancel" type="button">Отмена</button>
+          <button id="export-save" class="primary-button" type="submit" disabled>Скачать JSON</button>
+        </div>
+      </form>
+    </dialog>
+    <input id="file" type="file" accept="application/json,.json" hidden />
+    <input id="image-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden />
+    <main id="editor" aria-label="Редактор холста">
+      <div id="loading" class="loading-state">Загрузка холста…</div>
+    </main>
+    <nav id="canvas-toolbar" class="canvas-toolbar" aria-label="Панель инструментов" hidden></nav>
+    <p id="error" class="error-message" role="alert" hidden></p>
+    <script type="module" src="/src/canvas-prototype/index.ts"></script>
+  </body>
+</html>

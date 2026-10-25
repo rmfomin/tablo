@@ -9,12 +9,22 @@ import { uiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { createBrowserStorageAdapter } from "@/newtab/01-app/model/storage-sync/chromeStorageAdapter";
 import { createStorageSyncController } from "@/newtab/01-app/model/storage-sync/controller";
 import { createBrowserThemeController } from "@/newtab/01-app/model/ui/themeController";
+import { renderStartupError } from "@/newtab/01-app/ui/startupError";
+import { bindStoragePageLifecycle } from "@/newtab/01-app/model/storage-sync/pageLifecycle";
 
 async function startNewtab(): Promise<void> {
   const storageSync = createStorageSyncController(
     dashboardStore,
     uiStore,
     createBrowserStorageAdapter(),
+    300,
+    (error) => {
+      console.error("Storage synchronization failed", error);
+      uiStore.getState().showNotification({
+        message: "Не удалось синхронизировать данные. Если ошибка повторится, экспортируйте JSON перед закрытием вкладки",
+        isError: true,
+      });
+    },
   );
   const themeController = createBrowserThemeController();
 
@@ -29,6 +39,7 @@ async function startNewtab(): Promise<void> {
     }
   });
   storageSync.start();
+  bindStoragePageLifecycle(storageSync);
   mountApp();
 }
 
@@ -49,4 +60,4 @@ function registerStoredFavicons(): void {
 }
 
 // Запуск
-void startNewtab();
+void startNewtab().catch(renderStartupError);

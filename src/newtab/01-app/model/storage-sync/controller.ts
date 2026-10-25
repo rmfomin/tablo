@@ -5,11 +5,13 @@ import type { DashboardState } from "@/newtab/01-app/model/dashboard/types";
 import type { StorageSyncAdapter, PersistedNewtabState } from "@/newtab/01-app/model/storage-sync/types";
 import type { UiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { normalizeUiPreferences, uiPreferenceKeys } from "@/newtab/05-entities/preferences/model/preferences";
+import { createLatestWriteQueue } from "./writeQueue";
 
 export type StorageSyncController = {
   hydrate(): Promise<void>;
   start(): void;
   stop(): void;
+  flush(): Promise<boolean>;
 };
 
 /**
@@ -21,19 +23,47 @@ export function createStorageSyncController(
   uiStore: StoreApi<UiStore>,
   adapter: StorageSyncAdapter,
   delayMs = 300,
+  onError: (error: unknown) => void = (error) => console.error("Storage synchronization failed", error),
 ): StorageSyncController {
   let saveTimer: ReturnType<typeof setTimeout> | undefined;
   let stopDashboard: (() => void) | undefined;
   let stopUi: (() => void) | undefined;
   let stopBroadcast: (() => void) | undefined;
-  let isHydrating = false;
+  let applyingStoredState = false;
+  let localRevision = 0;
+  let savedRevision = 0;
+  let enqueuedRevision = -1;
+  let loadRevision = 0;
+  let lifecycle = 0;
+
+  const writes = createLatestWriteQueue<{ state: PersistedNewtabState; revision: number }>({
+    write: ({ state }) => adapter.save(state),
+    onSaved: ({ revision }) => {
+      savedRevision = Math.max(savedRevision, revision);
+      try { adapter.broadcastUpdated(); }
+      catch (error) { onError(error); }
+    },
+    onError: (error) => {
+      enqueuedRevision = -1;
+      onError(error);
+    },
+  });
 
   async function hydrate(): Promise<void> {
-    isHydrating = true;
+    if (localRevision > savedRevision) return;
+    const expectedLocalRevision = localRevision;
+    const expectedLoadRevision = ++loadRevision;
+    const expectedLifecycle = lifecycle;
+    const state = await adapter.load();
+    if (
+      expectedLocalRevision !== localRevision || expectedLoadRevision !== loadRevision ||
+      expectedLifecycle !== lifecycle || localRevision > savedRevision
+    ) return;
+    applyingStoredState = true;
     try {
-      applyPersistedState(await adapter.load());
+      applyPersistedState(state);
     } finally {
-      isHydrating = false;
+      applyingStoredState = false;
     }
   }
 
@@ -47,13 +77,22 @@ export function createStorageSyncController(
   }
 
   function scheduleSave(): void {
-    if (isHydrating) return;
+    if (applyingStoredState) return;
+    localRevision++;
     if (saveTimer) clearTimeout(saveTimer);
     saveTimer = setTimeout(() => {
       saveTimer = undefined;
-      void adapter.save(toPersistedState(dashboardStore.getState(), uiStore.getState()))
-        .then(() => adapter.broadcastUpdated());
+      void persistLatest();
     }, delayMs);
+  }
+
+  function persistLatest(): Promise<boolean> {
+    if (localRevision <= savedRevision || enqueuedRevision === localRevision) return writes.wait();
+    enqueuedRevision = localRevision;
+    return writes.enqueue({
+      state: toPersistedState(dashboardStore.getState(), uiStore.getState()),
+      revision: localRevision,
+    });
   }
 
   return {
@@ -66,7 +105,7 @@ export function createStorageSyncController(
       stopUi = uiStore.subscribe((state, previous) => {
         if (hasPersistedPreferencesChanged(state, previous)) scheduleSave();
       });
-      stopBroadcast = adapter.onUpdated(() => { void hydrate(); });
+      stopBroadcast = adapter.onUpdated(() => { void hydrate().catch(onError); });
     },
     stop() {
       stopDashboard?.();
@@ -77,6 +116,12 @@ export function createStorageSyncController(
       stopBroadcast = undefined;
       if (saveTimer) clearTimeout(saveTimer);
       saveTimer = undefined;
+      lifecycle++;
+    },
+    flush() {
+      if (saveTimer) clearTimeout(saveTimer);
+      saveTimer = undefined;
+      return persistLatest();
     },
   };
 }

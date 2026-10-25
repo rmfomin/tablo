@@ -19,6 +19,15 @@ export default defineConfig({
   build: {
     outDir: "demo-dist",
     emptyOutDir: true,
-    rollupOptions: { input: path.resolve(__dirname, "demo.html") },
+    rollupOptions: {
+      output: {
+        // Сохраняем идентификаторы сервисов BlockSuite и в статическом демо
+        keepNames: true,
+      },
+      input: {
+        demo: path.resolve(__dirname, "demo.html"),
+        canvasPrototype: path.resolve(__dirname, "canvas-prototype.html"),
+      },
+    },
   },
 });

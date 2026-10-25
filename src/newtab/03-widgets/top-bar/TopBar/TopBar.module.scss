@@ -8,6 +8,14 @@
   z-index: 5;
 }
 
+.spread {
+  flex-grow: 1;
+}
+
+.root.centered {
+  width: 100%;
+}
+
 .menuButtons {
   position: relative;
   display: flex;
@@ -16,6 +24,14 @@
   flex-wrap: wrap;
   gap: 8px;
   width: 100%;
+}
+
+.menuButtons.spread {
+  justify-content: space-between;
+}
+
+.menuButtons.centered {
+  justify-content: center;
 }
 
 .controlButton {

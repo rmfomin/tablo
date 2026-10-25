@@ -33,6 +33,10 @@
   background: #e8e8e8;
 }
 
+.demo-mode:has(iframe[title="Холст Tablo"]) .demo-toolbar {
+  display: none;
+}
+
 @media (min-width: 1280px) {
   .demo-mode [data-role="bookmarks"] > div:nth-child(2) {
     --folder-grid-columns: 4;

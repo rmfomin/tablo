@@ -53,8 +53,11 @@ export default defineConfig(({ mode }) => {
         input: {
           newtab: path.resolve(__dirname, "newtab.html"),
           background: path.resolve(__dirname, "src/background.ts"),
+          canvasPrototype: path.resolve(__dirname, "canvas-prototype.html"),
         },
         output: {
+          // BlockSuite использует имена конструкторов как идентификаторы сервисов
+          keepNames: true,
           entryFileNames: "js/[name].js",
           chunkFileNames: "js/[name]-[hash].js",
           assetFileNames: (asset) =>

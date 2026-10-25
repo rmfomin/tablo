@@ -11,9 +11,10 @@ import styles from "./NewtabPage.module.scss";
 import type { SpaceSearchResult } from "@/newtab/04-features/bookmark-search/model/searchResults";
 import { useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
 import { BackupReminder } from "@/newtab/03-widgets/ui/BackupReminder/BackupReminder";
+import { CanvasPrototype } from "@/newtab/02-pages/canvas/ui/CanvasPrototype";
 
 type NewtabPageProps = {
-  page: "default" | "import";
+  page: "default" | "import" | "canvas";
   sidebarCollapsed: boolean;
 };
 
@@ -105,6 +106,7 @@ export function NewtabPage({
       <Notification />
       {page === "default" ? <BackupReminder /> : null}
       {page === "import" ? <ImportBookmarksFromSettings /> : null}
+      {page === "canvas" ? <CanvasPrototype /> : null}
       {page === "default" ? (
         <>
           {searchOpen ? (

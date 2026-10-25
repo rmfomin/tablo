@@ -30,27 +30,39 @@ type BroadcastPort = {
 export function createChromeStorageAdapter(
   storage: ChromeStorageArea,
   broadcast: BroadcastPort,
+  getLastError: () => { message?: string } | undefined = () =>
+    typeof chrome === "undefined" ? undefined : chrome.runtime?.lastError,
 ): StorageSyncAdapter {
+  function callStorage<T>(operation: (callback: (result: T) => void) => void): Promise<T> {
+    return new Promise<T>((resolve, reject) => {
+      operation((result) => {
+        const error = getLastError();
+        if (error) reject(new Error(error.message || "Chrome storage operation failed"));
+        else resolve(result);
+      });
+    });
+  }
+
+  const removeLegacyKeys = () => callStorage<void>((done) => storage.remove([...legacyHidingStorageKeys], done));
+
   return {
     async load() {
-      const result = await new Promise<StorageRecord>((resolve) =>
-        storage.get([...storageKeys, ...legacyHidingStorageKeys], resolve),
+      const result = await callStorage<StorageRecord>((done) =>
+        storage.get([...storageKeys, ...legacyHidingStorageKeys], done),
       );
       const state = normalizePersistedState(result);
       if (hasLegacyHidingData(result)) {
         if (result.version === 3 && areSpacesV3Input(result.spaces)) {
           await this.save(state);
         } else {
-          await new Promise<void>((resolve) =>
-            storage.remove([...legacyHidingStorageKeys], resolve),
-          );
+          await removeLegacyKeys();
         }
       }
       return state;
     },
     async save(state) {
-      await new Promise<void>((resolve) => storage.remove([...legacyHidingStorageKeys], resolve));
-      await new Promise<void>((resolve) => storage.set(toCanonicalState(state), resolve));
+      await removeLegacyKeys();
+      await callStorage<void>((done) => storage.set(toCanonicalState(state), done));
     },
     broadcastUpdated() {
       broadcast.postMessage({ type: "folders-updated" });

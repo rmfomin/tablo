@@ -6,7 +6,7 @@
   "scripts": {
     "watch": "vite build --watch --mode normal",
     "watch2": "vite build --watch --mode overrideless",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.canvas-prototype.json",
     "build": "npm run build:normal",
     "build:demo": "vite build --config vite.demo.config.ts && cp demo-dist/demo.html demo-dist/index.html",
     "build:archive": "npm run build:normal && node webpack/archive-extension.js",
@@ -27,6 +27,12 @@
     "url": "https://github.com/chibat/chrome-extension-typescript-starter.git"
   },
   "dependencies": {
+    "@blocksuite/block-std": "0.19.5",
+    "@blocksuite/blocks": "0.19.5",
+    "@blocksuite/presets": "0.19.5",
+    "@blocksuite/store": "0.19.5",
+    "@blocksuite/sync": "0.19.5",
+    "@toeverything/theme": "1.1.23",
     "@types/react-transition-group": "^4.4.1",
     "archiver": "^7.0.1",
     "clsx": "1.2.1",
@@ -36,6 +42,9 @@
     "react-dom": "^18.3.1",
     "react-transition-group": "^4.4.1",
     "zustand": "^5.0.14"
+  },
+  "overrides": {
+    "@blocksuite/icons": "2.1.75"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.100",

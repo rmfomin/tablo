@@ -3,7 +3,7 @@
   "short_name": "Tablo",
   "name": "Tablo",
   "description": "Tablo",
-  "version": "1.1",
+  "version": "1.3",
   "author": "Tablo",
   "icons": {
     "16": "icon_16.png",
@@ -13,7 +13,8 @@
   },
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAj0vsHVuIis9Th9O60t8jw0O+Y64l5kyMEefHj40pnl6pVAAX7+/bembk3QDBsEb1YrgaiKA4ZCeJaNL5zYNXmlIHbOZCV3+MTcXLQfyem4dUW1uhm7VPZWjd4KFx6aM+X7qgq467wMUPvrcbJRN1jFL6UA8mr/qYCBFqxxlnYjNLHtViPFXCUcdgSazXhLbs5bq0vYCtVSkecPEap0HES11QM0kbZO+xS3PXQCC6NzeXUoZ/yylaYzYOuNI0DI3v2aFb8vDDE4enp8kzF0I0B1VN+KDtKM0ov/651t7cKy/SgxQF0paxi7JVPXVL8KaoaFk6aQSYMISrzxHzjG/ihwIDAQAB",
   "background": {
-    "service_worker": "js/background.js"
+    "service_worker": "js/background.js",
+    "type": "module"
   },
   "action": {
     "default_icon": "icon_48.png",
@@ -21,6 +22,9 @@
   },
   "chrome_url_overrides": {
     "newtab": "newtab.html"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
   },
   "permissions": ["bookmarks", "storage", "history", "tabs", "tabGroups", "favicon", "downloads"]
 }

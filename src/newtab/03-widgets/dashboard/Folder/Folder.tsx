@@ -2,7 +2,6 @@ import { createTab, updateTab, removeTabs, getCurrentTab, queryTabs, getCurrentW
 import React, { useEffect, useRef, useState } from "react";
 import { FolderV3, SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
 import {
-  colors,
   DEFAULT_FOLDER_COLOR,
   FOLDER_ICON_DARK_COLOR,
   FOLDER_ICON_LIGHT_COLOR,
@@ -42,6 +41,7 @@ import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
 import styles from "./Folder.module.scss";
 import { useFolderColumns } from "./useFolderColumns";
 import { useFolderResize } from "./useFolderResize";
+import { FolderColorMenu } from "./FolderColorMenu";
 
 export const Folder = React.memo(function Folder(p: {
   spaces: SpaceV3[];
@@ -405,57 +405,16 @@ export const Folder = React.memo(function Folder(p: {
           </DropdownMenu>
         ) : null}
         {showColorMenu ? (
-          <DropdownMenu
+          <FolderColorMenu
+            position={colorMenuPosition}
+            color={folderColor}
+            onPreview={setColorLocally}
+            onCommit={setColorConfirmed}
             onClose={() => {
               setShowColorMenu(false);
               setLocalColor(undefined);
             }}
-            className="dropdown-menu--folder dropdown-menu--context"
-            absPosition={colorMenuPosition}
-          >
-            <div className="dropdown-menu__colors-row">
-              <PresetColor
-                color={PRESET_COLORS[0]}
-                onClick={setColorConfirmed}
-                currentColor={folderColor}
-              />
-              <PresetColor
-                color={PRESET_COLORS[1]}
-                onClick={setColorConfirmed}
-                currentColor={folderColor}
-              />
-              <PresetColor
-                color={PRESET_COLORS[2]}
-                onClick={setColorConfirmed}
-                currentColor={folderColor}
-              />
-              <PresetColor
-                color={PRESET_COLORS[3]}
-                onClick={setColorConfirmed}
-                currentColor={folderColor}
-              />
-              <PresetColor
-                color={PRESET_COLORS[4]}
-                onClick={setColorConfirmed}
-                currentColor={folderColor}
-              />
-              <PresetColor
-                color={PRESET_COLORS[5]}
-                onClick={setColorConfirmed}
-                currentColor={folderColor}
-              />
-              <PresetColor
-                color={PRESET_COLORS[6]}
-                onClick={setColorConfirmed}
-                currentColor={folderColor}
-              />
-              <CustomColorInput
-                onChange={setColorLocally}
-                onBlur={setColorConfirmed}
-                currentColor={folderColor}
-              />
-            </div>
-          </DropdownMenu>
+          />
         ) : null}
       </h2>
 
@@ -557,54 +516,3 @@ export const Folder = React.memo(function Folder(p: {
     </div>
   );
 });
-
-const PRESET_COLORS = [...colors];
-PRESET_COLORS.length = 7;
-
-function PresetColor(p: {
-  onClick: (color: string) => void;
-  color: string;
-  currentColor?: string;
-}) {
-  const borderColor = window.pSBC(-0.5, p.color);
-  const onClick = () => {
-    p.onClick(p.color);
-  };
-  const active = p.color === p.currentColor;
-  return (
-    <button
-      className={"dropdown-menu__preset_color " + (active ? "selected" : "")}
-      tabIndex={0}
-      onClick={onClick}
-    >
-      <span style={{ backgroundColor: p.color, borderColor }}></span>
-    </button>
-  );
-}
-
-function CustomColorInput(p: {
-  onChange: (color: string) => void;
-  onBlur: (color: string) => void;
-  currentColor?: string;
-}) {
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    p.onChange(e.target.value);
-  };
-  const onBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
-    p.onBlur(e.target.value);
-  };
-
-  const active = !PRESET_COLORS.includes(p.currentColor!);
-  return (
-    <div className={"color-picker-container " + (active ? "selected" : "")}>
-      <input
-        type="color"
-        id="colorInput"
-        value={p.currentColor}
-        onChange={(e) => onChange(e)}
-        onBlur={(e) => onBlur(e)}
-      />
-      <label htmlFor="colorInput" className="custom-color-picker"></label>
-    </div>
-  );
-}

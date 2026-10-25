@@ -34,7 +34,7 @@ export type UiState = Omit<
   selectedItemIds: number[];
   itemInEdit: number | undefined;
   notification: NotificationState;
-  page: "default" | "import";
+  page: "default" | "import" | "canvas";
   sidebarHovered: boolean;
   faviconRefreshVersions: Record<number, number>;
   faviconRefreshInProgress: boolean;

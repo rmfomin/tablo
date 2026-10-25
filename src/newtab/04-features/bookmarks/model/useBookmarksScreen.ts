@@ -28,6 +28,7 @@ function bookmarksDashboardSelector(state: DashboardStore) {
 
 function bookmarksUiSelector(state: UiStore) {
   return {
+    alignFolderRows: state.alignFolderRows,
     setItemInEdit: state.setItemInEdit,
     setPage: state.setPage,
     setSelectedItemIds: state.setSelectedItemIds,
@@ -71,6 +72,7 @@ export function useBookmarksScreen(): {
   searchFilters: ReturnType<typeof bookmarksUiSelector>["searchFilters"];
   searchFilterMode: ReturnType<typeof bookmarksUiSelector>["searchFilterMode"];
   showNotUsed: boolean;
+  alignFolderRows: boolean;
   openBookmarksInNewTab: boolean;
   tabs: ReturnType<typeof bookmarksRuntimeSelector>["tabs"];
 } {
@@ -104,6 +106,7 @@ export function useBookmarksScreen(): {
 
   return {
     screen,
+    alignFolderRows: ui.alignFolderRows,
     spaces: dashboard.spaces,
     currentSpaceId: dashboard.currentSpaceId,
     createFolder: dashboard.createFolder,

@@ -256,7 +256,7 @@ export function Sidebar() {
             >
               <IconPanelRightOpen />
             </button>
-            <TopBar />
+            <TopBar centerActions />
           </div>
 
           <div className={styles.collapsedSpaces} aria-label="Spaces">
@@ -305,7 +305,7 @@ export function Sidebar() {
       ) : (
         <>
           <div className={styles.toolbarRow}>
-            <TopBar />
+            <TopBar spreadActions />
             <button
               id="toggle-sidebar-btn"
               className={styles.collapseButton}
