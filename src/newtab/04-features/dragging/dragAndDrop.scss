@@ -10,9 +10,10 @@ body.folder-resizing * {
   user-select: none;
 }
 
-body.spaces-drag-outside,
-body.spaces-drag-outside * {
-  cursor: not-allowed !important;
+body.space-sorting,
+body.space-sorting * {
+  cursor: grabbing !important;
+  user-select: none;
 }
 
 .dad-dummy {
@@ -23,6 +24,13 @@ body.spaces-drag-outside * {
   box-sizing: content-box;
   border-radius: 8px;
   pointer-events: none;
+}
+
+.dad-dummy--space {
+  position: fixed;
+  z-index: 10;
+  box-sizing: border-box;
+  opacity: 0.7;
 }
 
 .dad-dummy--folder-item {

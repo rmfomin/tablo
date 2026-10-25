@@ -38,9 +38,52 @@ afterEach(() => {
   host.remove();
   dashboardStore.getState().hydrate({ currentSpaceId: -1, spaces: [] });
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 const render = (availableColumns = 3) => flushSync(() => root.render(React.createElement(Fixture, { availableColumns })));
 const folderState = () => dashboardStore.getState().spaces[0].folders[0];
+
+test("moving a bookmark into a new folder does not loop when measured heights fluctuate", () => {
+  const state = dashboardStore.getState();
+  const source = { ...folderState(), id: 20, items: [bookmarks[0]] };
+  state.hydrate({
+    currentSpaceId: 1,
+    spaces: [{ ...state.spaces[0], folders: [source] }],
+  });
+  state.createFolder({ id: 30 });
+
+  function Folders() {
+    const spaces = useDashboardStore((current) => current.spaces);
+    return React.createElement(React.Fragment, null, spaces[0].folders.map((folder) =>
+      React.createElement(Folder, {
+        key: folder.id, spaces, folder, availableColumns: 3,
+        tabs: [], recentItems: [], showNotUsed: false,
+        search: "", searchFilters: [], searchFilterMode: "or", itemInEdit: undefined,
+      }),
+    ));
+  }
+
+  const getRect = HTMLElement.prototype.getBoundingClientRect;
+  vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
+    const rect = getRect.call(this);
+    if (this.tagName !== "H2") return rect;
+    const folder = this.parentElement!;
+    const column = folder.querySelector<HTMLElement>('[data-role="folder-items"]')!;
+    const hasBookmark = folder.querySelector('[data-role="folder-item"]') !== null;
+    const height = folder.dataset.folderId === "30" && hasBookmark && column.style.marginTop === "66px" ? 48.001 : 48;
+    return { ...rect, height } as DOMRect;
+  });
+
+  flushSync(() => root.render(React.createElement(Folders)));
+  expect(() => flushSync(() => dashboardStore.getState().moveFolderItems({
+    itemIds: [bookmarks[0].id], targetFolderId: 30,
+  }))).not.toThrow();
+
+  const destination = host.querySelector('[data-folder-id="30"][data-role="folder"]');
+  expect(destination?.querySelectorAll('[data-role="folder-item"]')).toHaveLength(1);
+  expect(host.querySelectorAll('[data-role="folder-item"]')).toHaveLength(1);
+  expect(dashboardStore.getState().spaces[0].folders[0].items).toEqual([]);
+});
 
 test("renders one bookmark once while a single group continues across three columns", () => {
   render();

@@ -1,5 +1,5 @@
 import { createTab, updateTab, removeTabs, getCurrentTab, queryTabs, getCurrentWindow, focusWindow, type BrowserTab } from "@/newtab/06-shared/api/chrome/tabs";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FolderV3, SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
 import {
   DEFAULT_FOLDER_COLOR,
@@ -179,11 +179,14 @@ export const Folder = React.memo(function Folder(p: {
     setItemInEdit(val ? p.folder.id : undefined);
   }
 
-  const visibleFolderDisplayItems = getVisibleFolderDisplayItems(
-    p.folder,
-    p.search,
-    p.searchFilters,
-    p.searchFilterMode,
+  const visibleFolderDisplayItems = useMemo(
+    () => getVisibleFolderDisplayItems(
+      p.folder,
+      p.search,
+      p.searchFilters,
+      p.searchFilterMode,
+    ),
+    [p.folder, p.search, p.searchFilters, p.searchFilterMode],
   );
   const countDisplayItems = getVisibleFolderDisplayItems(
     p.folder,

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import cn from "clsx";
 import { SpaceV3 } from "@/newtab/05-entities/dashboard/model/types";
-import { useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
+import { dashboardStore, useDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
 import { useUiStore } from "@/newtab/01-app/model/ui/uiStore";
 import { SimpleEditableTitle } from "@/newtab/03-widgets/ui/EditableTitle/EditableTitle";
 import { DropdownMenu, getPointerPosition } from "@/newtab/06-shared/ui/DropdownMenu/DropdownMenu";
@@ -10,6 +10,7 @@ import type { Point } from "@/newtab/06-shared/lib/math";
 import { collectBookmarksV3 } from "@/newtab/05-entities/dashboard/model/traversal";
 import { onExportSpaceJson } from "@/newtab/04-features/bookmarks-export/model/dashboardExport";
 import { DOM_ROLE } from "@/newtab/06-shared/lib/dom/roles";
+import { processSpacesDragAndDrop } from "@/newtab/04-features/dragging/model/processSpacesDragAndDrop";
 import IconExportSpace from "./icons/space-export.svg";
 import styles from "./SpacesList.module.scss";
 
@@ -26,10 +27,12 @@ export function SpacesList() {
   const deleteDashboardSpace = useDashboardStore((state) => state.deleteSpace);
   const itemInEdit = useUiStore((state) => state.itemInEdit);
   const setItemInEdit = useUiStore((state) => state.setItemInEdit);
+  const clearSelectedItemIds = useUiStore((state) => state.clearSelectedItemIds);
   const spacesListRef = useRef<HTMLDivElement>(null);
   const scrollbarRef = useRef<HTMLDivElement>(null);
   const activeTimeoutRef = useRef<number>();
   const dragCleanupRef = useRef<(() => void) | null>(null);
+  const spaceDragCleanupRef = useRef<(() => void) | undefined>();
   const [menuSpaceId, setMenuSpaceId] = useState(-1);
   const [menuPosition, setMenuPosition] = useState<Point>();
   const thumbWidth =
@@ -91,6 +94,21 @@ export function SpacesList() {
     updateScrollbar();
     setScrollbarActive();
   }, [setScrollbarActive, updateScrollbar]);
+
+  useEffect(() => () => spaceDragCleanupRef.current?.(), []);
+
+  function onSpaceMouseDown(event: React.MouseEvent<HTMLDivElement>) {
+    const target = event.target as HTMLElement;
+    const card = target.closest<HTMLElement>('[data-role="space-item"]');
+    if (event.button !== 0 || !card || Number(card.dataset.spaceId) === itemInEdit ||
+        target.closest("button, input, textarea, .dropdown-menu, .sub-menu")) return;
+    event.stopPropagation();
+    spaceDragCleanupRef.current?.();
+    spaceDragCleanupRef.current = processSpacesDragAndDrop(event, {
+      canSortSpaces: () => dashboardStore.getState().spaces.length > 1,
+      onChangeSpacePosition: (spaceId, position) => updateSpace(spaceId, { position }),
+    }, { selectedItemIds: [], clearSelectedItemIds });
+  }
 
   const onThumbMouseDown = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
@@ -241,6 +259,7 @@ export function SpacesList() {
           className={styles.spacesList}
           data-role={DOM_ROLE.spacesList}
           onScroll={onSpacesScroll}
+          onMouseDown={onSpaceMouseDown}
         >
           {spaces.length === 0 ? (
             <span className={styles.empty}>No spaces</span>

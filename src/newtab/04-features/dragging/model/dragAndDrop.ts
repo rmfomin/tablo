@@ -97,7 +97,7 @@ export function bindDADItemEffect(
         spacesConfig.canSortSpaces()
       ) {
         dependencies.clearSelectedItemIds();
-        processSpacesDragAndDrop(mouseDownEvent, spacesConfig, dependencies);
+        return processSpacesDragAndDrop(mouseDownEvent, spacesConfig, dependencies);
       }
     }
   }

@@ -53,7 +53,9 @@ export function useFolderColumns(
     });
   };
 
-  useLayoutEffect(() => measureRef.current());
+  useLayoutEffect(() => {
+    measureRef.current();
+  }, [items, columnCount, rootRef, headerRef]);
   useLayoutEffect(() => {
     const schedule = () => {
       if (frame.current !== undefined) cancelAnimationFrame(frame.current);

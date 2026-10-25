@@ -1,160 +1,172 @@
-let onMouseMove: ((event: MouseEvent, mouseMoved: boolean) => void) | undefined;
-let onMouseUp: (() => void) | undefined;
+// @vitest-environment happy-dom
+import type React from "react";
+import { createDashboardStore } from "@/newtab/01-app/model/dashboard/dashboardStore";
+import { processSpacesDragAndDrop } from "@/newtab/04-features/dragging/model/processSpacesDragAndDrop";
 
-vi.mock("@/newtab/04-features/dragging/model/dragAndDropUtils", () => ({
-  subscribeMouseEvents: vi.fn((_event, onMove, onUp) => {
-    onMouseMove = onMove;
-    onMouseUp = onUp;
-    return vi.fn();
-  }),
-}));
+let host: HTMLDivElement;
+let cancel: (() => void) | undefined;
+let store: ReturnType<typeof createDashboardStore>;
+let clearSelectedItemIds: () => void;
 
-vi.mock("@/newtab/01-app/model/selection", () => ({
-  unselectAllItems: vi.fn(),
-}));
-
-import {
-  processSpacesDragAndDrop,
-  shouldUpdateSpaceInsertPreview,
-} from "@/newtab/04-features/dragging/model/processSpacesDragAndDrop";
-
-test("space source keeps its place while hidden until the drag ends", () => {
-  const clearSelectedItemIds = vi.fn();
-  const source = createSpaceElement("1", "a", { left: 100, right: 150 });
-  const spacesList = ({
-    getBoundingClientRect: () =>
-      ({
-        left: 100,
-        right: 300,
-        top: 0,
-        bottom: 40,
-        width: 200,
-        height: 40,
-      } as DOMRect),
-    querySelectorAll: () => [source],
-    cloneNode: () => createSpacesListClone(),
-  } as unknown) as HTMLElement;
-  const body = {
-    appendChild: vi.fn(),
-    classList: { add: vi.fn(), remove: vi.fn() },
-  };
-  (global as any).document = {
-    body,
-    querySelector: vi.fn(() => spacesList),
-  };
-
-  processSpacesDragAndDrop(
-    ({
-      clientX: 110,
-      clientY: 20,
-      target: { closest: () => source },
-    } as unknown) as React.MouseEvent,
-    { canSortSpaces: vi.fn(() => true), onChangeSpacePosition: vi.fn() },
-    { selectedItemIds: [], clearSelectedItemIds }
-  );
-
-  onMouseMove!({ clientX: 160, clientY: 20 } as MouseEvent, true);
-
-  expect(source.style).toMatchObject({ display: "", visibility: "hidden" });
-
-  onMouseUp!();
-
-  expect(source.style).toMatchObject({ display: "", visibility: "" });
-  expect(clearSelectedItemIds).toHaveBeenCalledTimes(1);
+beforeEach(() => {
+  store = createDashboardStore({
+    currentSpaceId: 1,
+    spaces: [1, 2, 3, 4].map((id) => ({
+      id, position: `a${id}`, title: `Space ${id}`, objectType: "space", folders: [],
+    })),
+  });
+  clearSelectedItemIds = vi.fn();
+  host = document.createElement("div");
+  host.dataset.role = "spaces-list";
+  host.innerHTML = store.getState().spaces.map((space) =>
+    `<div data-role="space-item" data-space-id="${space.id}" data-position="${space.position}"><span>${space.title}</span></div>`,
+  ).join("");
+  document.body.append(host);
+  const rect = (left: number, top: number, width: number, height: number) =>
+    ({ left, top, width, height, right: left + width, bottom: top + height } as DOMRect);
+  vi.spyOn(host, "getBoundingClientRect").mockReturnValue(rect(0, 0, 165, 105));
+  Array.from(host.children).forEach((card, index) => {
+    vi.spyOn(card, "getBoundingClientRect").mockReturnValue(rect(index % 2 * 85, Math.floor(index / 2) * 55, 80, 50));
+  });
 });
 
-test("dragged space returns to its initial position below the spaces list", () => {
-  const source = createSpaceElement("1", "a", { left: 100, right: 150 });
-  const spacesList = ({
-    getBoundingClientRect: () =>
-      ({
-        left: 100,
-        right: 300,
-        top: 0,
-        bottom: 40,
-        width: 200,
-        height: 40,
-      } as DOMRect),
-    querySelectorAll: () => [source],
-    cloneNode: () => createSpacesListClone(),
-  } as unknown) as HTMLElement;
-  const body = {
-    appendChild: vi.fn(),
-    classList: { add: vi.fn(), remove: vi.fn() },
-  };
-  (global as any).document = {
-    body,
-    querySelector: vi.fn(() => spacesList),
-  };
-
-  processSpacesDragAndDrop(
-    ({
-      clientX: 110,
-      clientY: 20,
-      target: { closest: () => source },
-    } as unknown) as React.MouseEvent,
-    { canSortSpaces: vi.fn(() => true), onChangeSpacePosition: vi.fn() },
-    { selectedItemIds: [], clearSelectedItemIds: vi.fn() }
-  );
-
-  onMouseMove!({ clientX: 160, clientY: 20 } as MouseEvent, true);
-  const clonedSpacesList = body.appendChild.mock.calls[0][0] as HTMLElement;
-  const draggedSpace = (clonedSpacesList.append as VitestMock).mock
-    .calls[0][0] as HTMLElement;
-
-  onMouseMove!({ clientX: 170, clientY: 20 } as MouseEvent, true);
-  onMouseMove!({ clientX: 170, clientY: 100 } as MouseEvent, true);
-
-  expect(draggedSpace.style.left).toBe("0px");
-  expect(body.classList.add).toHaveBeenCalledWith("spaces-drag-outside");
+afterEach(() => {
+  cancel?.();
+  cancel = undefined;
+  host.remove();
+  document.body.classList.remove("dragging", "space-sorting");
+  vi.restoreAllMocks();
 });
 
-test("space drag preview updates when the hovered space changes", () => {
-  const previous = {} as HTMLElement;
-  const next = {} as HTMLElement;
-
-  expect(
-    shouldUpdateSpaceInsertPreview(previous, "before", next, "before")
-  ).toBe(true);
-});
-
-test("space drag preview updates when insert side changes on the same space", () => {
-  const space = {} as HTMLElement;
-
-  expect(shouldUpdateSpaceInsertPreview(space, "before", space, "after")).toBe(
-    true
-  );
-});
-
-test("space drag preview stays unchanged for the same space and insert side", () => {
-  const space = {} as HTMLElement;
-
-  expect(shouldUpdateSpaceInsertPreview(space, "before", space, "before")).toBe(
-    false
-  );
-});
-
-function createSpaceElement(
-  spaceId: string,
-  position: string,
-  rect: { left: number; right: number }
-) {
-  const element = ({
-    dataset: { spaceId, position },
-    style: { display: "", visibility: "" },
-    classList: { add: vi.fn() },
-    getBoundingClientRect: () =>
-      ({ ...rect, width: rect.right - rect.left } as DOMRect),
-  } as unknown) as HTMLElement;
-  element.cloneNode = () => createSpaceElement(spaceId, position, rect);
-  return element;
+function start(id = 1) {
+  const target = host.querySelector<HTMLElement>(`[data-space-id="${id}"] span`)!;
+  const { left, top } = target.parentElement!.getBoundingClientRect();
+  cancel = processSpacesDragAndDrop({
+    target, button: 0, clientX: left + 20, clientY: top + 20,
+  } as unknown as React.MouseEvent, {
+    canSortSpaces: () => true,
+    onChangeSpacePosition: (spaceId, position) => store.getState().updateSpace(spaceId, { position }),
+  }, { selectedItemIds: [], clearSelectedItemIds });
 }
 
-function createSpacesListClone() {
-  return ({
-    style: {},
-    classList: { add: vi.fn() },
-    append: vi.fn(),
-    remove: vi.fn(),
-  } as unknown) as HTMLElement;
-}
+const move = (clientX: number, clientY: number) => document.dispatchEvent(new MouseEvent("mousemove", { clientX, clientY }));
+const drop = (clientX: number, clientY: number) => document.dispatchEvent(new MouseEvent("mouseup", { clientX, clientY }));
+const order = () => store.getState().spaces.map((space) => space.id);
+const visibleOrder = () => Array.from(host.children)
+  .filter((card) => (card as HTMLElement).style.display !== "none")
+  .map((card) => Number((card as HTMLElement).dataset.spaceId));
+
+test("shows a moving copy and an insertion preview across rows, saving only on release", () => {
+  start();
+  move(20, 75);
+  expect(host.querySelector<HTMLElement>('[data-space-id="1"]:not([data-dad-preview])')?.style.display).toBe("none");
+  expect(document.querySelector<HTMLElement>(".dad-dummy--space")?.style.transform).toBe("translate(20px, 75px)");
+  expect(host.querySelector('[data-dad-preview="true"]')?.getAttribute("data-space-id")).toBe("1");
+  expect(visibleOrder()).toEqual([2, 3, 1, 4]);
+  expect(order()).toEqual([1, 2, 3, 4]);
+  drop(20, 75);
+  expect(order()).toEqual([2, 3, 1, 4]);
+  expect(store.getState().currentSpaceId).toBe(1);
+  expect(store.getState().undoSteps).toHaveLength(1);
+  expect(host.querySelector('[data-dad-preview="true"]')).toBeNull();
+  expect(document.querySelector(".dad-dummy--space")).toBeNull();
+  expect(visibleOrder()).toEqual([1, 2, 3, 4]);
+});
+
+test("removes the space from the list outside the drop area and restores its preview on return", () => {
+  start();
+  move(200, 200);
+  expect(visibleOrder()).toEqual([2, 3, 4]);
+  expect(host.querySelector('[data-dad-preview="true"]')).toBeNull();
+  expect(document.querySelector(".dad-dummy--space")).not.toBeNull();
+  move(110, 75);
+  expect(visibleOrder()).toEqual([2, 3, 4, 1]);
+  move(20, 75);
+  expect(visibleOrder()).toEqual([2, 3, 1, 4]);
+  drop(20, 75);
+  expect(order()).toEqual([2, 3, 1, 4]);
+});
+
+test("moves a space backwards to the destination slot and undo restores the order", () => {
+  start(4);
+  move(20, 20);
+  drop(20, 20);
+  expect(order()).toEqual([4, 1, 2, 3]);
+  store.getState().undo();
+  expect(order()).toEqual([1, 2, 3, 4]);
+});
+
+test("uses the release position when it differs from the last mouse move", () => {
+  start();
+  move(20, 75);
+  drop(110, 75);
+  expect(order()).toEqual([2, 3, 4, 1]);
+});
+
+test.each(["outside", "source", "escape", "blur", "dispose"])("cancels without changing order on %s", (reason) => {
+  start();
+  move(20, 75);
+  if (reason === "escape") document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+  if (reason === "blur") window.dispatchEvent(new Event("blur"));
+  if (reason === "dispose") cancel?.();
+  if (reason === "outside") drop(200, 200);
+  else if (reason === "source") drop(20, 20);
+  else drop(20, 75);
+  expect(order()).toEqual([1, 2, 3, 4]);
+  expect(store.getState().undoSteps).toHaveLength(0);
+  expect(host.querySelector('[data-dad-preview="true"]')).toBeNull();
+  expect(document.querySelector(".dad-dummy--space")).toBeNull();
+  expect(visibleOrder()).toEqual([1, 2, 3, 4]);
+  expect(document.body.classList.contains("space-sorting")).toBe(false);
+});
+
+test("a press without movement remains an ordinary click", () => {
+  start();
+  move(22, 22);
+  drop(22, 22);
+  const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+  host.firstElementChild!.dispatchEvent(click);
+  expect(click.defaultPrevented).toBe(false);
+  expect(order()).toEqual([1, 2, 3, 4]);
+  expect(store.getState().undoSteps).toHaveLength(0);
+});
+
+test("a completed drag suppresses its follow-up click", () => {
+  start();
+  move(110, 20);
+  drop(110, 20);
+  const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+  host.children[1].dispatchEvent(click);
+  expect(click.defaultPrevented).toBe(true);
+  expect(order()).toEqual([2, 1, 3, 4]);
+});
+
+test("Escape suppresses the held gesture's click after restoring the source", () => {
+  start(2);
+  move(20, 75);
+  document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+  drop(110, 20);
+  const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+  host.children[1].dispatchEvent(click);
+  expect(click.defaultPrevented).toBe(true);
+  expect(order()).toEqual([1, 2, 3, 4]);
+});
+
+test("the next ordinary press clears click suppression if cancellation lost the mouse release", () => {
+  start();
+  move(110, 20);
+  window.dispatchEvent(new Event("blur"));
+  host.children[1].dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+  const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+  host.children[1].dispatchEvent(click);
+  expect(click.defaultPrevented).toBe(false);
+});
+
+test.each([true, false])("disposing a finished gesture preserves a later bookmark drag (moved: %s)", (moved) => {
+  start();
+  if (moved) move(110, 20);
+  drop(110, 20);
+  document.body.classList.add("dragging");
+  cancel?.();
+  expect(document.body.classList.contains("dragging")).toBe(true);
+});
