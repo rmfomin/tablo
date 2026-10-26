@@ -48,7 +48,7 @@ const preferenceDefinitions = {
   showNotUsed: { defaultValue: false, isValid: isBoolean, includeInBackup: true },
   useSearchResultsPopup: { defaultValue: true, isValid: isBoolean, includeInBackup: true },
   showGroupBackground: { defaultValue: true, isValid: isBoolean, includeInBackup: true },
-  alignFolderRows: { defaultValue: false, isValid: isBoolean, includeInBackup: true },
+  alignFolderRows: { defaultValue: true, isValid: isBoolean, includeInBackup: true },
   backupReminderEnabled: { defaultValue: false, isValid: isBoolean, includeInBackup: true },
   backupReminderIntervalDays: { defaultValue: defaultBackupReminderIntervalDays, isValid: isValidBackupReminderIntervalDays, includeInBackup: true },
   lastBackupExportAt: { defaultValue: undefined, isValid: isTimestamp, includeInBackup: false },
